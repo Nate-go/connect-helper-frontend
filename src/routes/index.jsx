@@ -4,7 +4,7 @@ import { MainLayout } from "@/layouts";
 import { Home } from "@pages/home";
 import { Login } from "@pages/authentication";
 
-const isAuthenticated = false; //handle check authen later
+const isAuthenticated = true; //handle check authen later
 const publicLoader = () => {
   if (isAuthenticated) {
     return redirect("/");
@@ -18,17 +18,6 @@ const protectedLoader = () => {
   }
   return null;
 };
-
-// const userRoutes = [
-//   {
-//     path: "users",
-//     element: <UserList />,
-//   },
-//   {
-//     path: "users/:id",
-//     element: <UserDetail />,
-//   },
-// ];
 
 const router = createBrowserRouter([
   {
@@ -48,10 +37,9 @@ const router = createBrowserRouter([
     loader: protectedLoader,
     children: [
       {
-        path: "home",
+        path: "/",
         element: <Home />,
       },
-      // ...userRoutes
     ],
   },
 ]);
