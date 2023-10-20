@@ -3,6 +3,7 @@ import { createBrowserRouter, redirect } from "react-router-dom";
 import { MainLayout } from "@/layouts";
 import { Home } from "@pages/home";
 import { Login } from "@pages/authentication";
+import { userRoutes } from "./protectedRoutes";
 
 const isAuthenticated = true; //handle check authen later
 const publicLoader = () => {
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
+      ...userRoutes,
     ],
   },
 ]);
