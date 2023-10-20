@@ -9,6 +9,10 @@ const AuthenticatedRoute = [
     {
         path: "/users-detail",
         element: <UserDetail />,
+    },
+    {
+        path: "/users",
+        element: <UserList />,
     }
 ]
 
