@@ -1,17 +1,14 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
 
-import BaseRouter from '@/routes/index.jsx'
+// import BaseRouter from '@/routes/index.jsx'
+import { RouterProvider } from "react-router-dom";
+import router from "@/routes";
 import '@/App.css'
+
 
 function App() {
   return (
     <>
-      <div>
-        {/* <Link to="/home">Home</Link>
-        <Link to="/login">Login</Link> */}
-        <BaseRouter />
-      </div>
+       <RouterProvider router={ router} />
     </>
   )
 }

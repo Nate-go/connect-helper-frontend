@@ -1,15 +1,47 @@
-import { Routes, Route } from 'react-router-dom'
+import { createBrowserRouter, redirect } from "react-router-dom";
 
+import { MainLayout } from "@/layouts";
 import { Home } from "@pages/home";
 import { Login } from "@pages/authentication";
 
-function BaseRouter() {
-    return (
-        <Routes>
-            <Route path="/home" element={ <Home/>} />
-            <Route path="/login" element={<Login />} />
-        </Routes>
-    )
-}
+const isAuthenticated = false; //handle check authen later
+const publicLoader = () => {
+  if (isAuthenticated) {
+    return redirect("/");
+  }
+  return null;
+};
 
-export default BaseRouter
+const protectedLoader = () => {
+  if (!isAuthenticated) {
+    return redirect("/login");
+  }
+  return null;
+};
+
+const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login />,
+    loader: publicLoader,
+  },
+  {
+    path: "/register",
+    element: <Login />,
+    loader: publicLoader,
+  },
+  {
+    path: "/",
+    element: <MainLayout />,
+    errorElement: <div>Not found</div>,
+    loader: protectedLoader,
+    children: [
+      {
+        path: "home",
+        element: <Home />,
+      },
+    ],
+  },
+]);
+
+export default router;
