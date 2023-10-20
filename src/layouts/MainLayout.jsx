@@ -5,12 +5,10 @@ import { Sidebar } from "@/fregments";
 
 const MainLayout = () => {
     return (
-        <>
-            <div className="flex-col">
-                <Sidebar />
-                <Outlet></Outlet>
-            </div>
-        </>
+        <div className="flex flex-row w-full">
+            <Sidebar />
+            <Outlet></Outlet>
+        </div>
     );
 }
 
