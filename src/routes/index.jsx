@@ -1,13 +1,13 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
 
-import { MainLayout } from "@/layouts";
-import { Home } from "@pages/home";
-import { Login } from "@pages/authentication";
+import { MainLayout, PublicLayout } from "@/layouts";
+import AuthenticatedRoute from './AuthenticatedRoute'
+import PublicRoute from './PublicRoute'
 
 const isAuthenticated = true; //handle check authen later
 const publicLoader = () => {
   if (isAuthenticated) {
-    return redirect("/");
+    return redirect("/home");
   }
   return null;
 };
@@ -21,14 +21,12 @@ const protectedLoader = () => {
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <Login />,
+    path: "/",
+    element: <PublicLayout />,
     loader: publicLoader,
-  },
-  {
-    path: "/register",
-    element: <Login />,
-    loader: publicLoader,
+    children: [
+        ...PublicRoute
+    ],
   },
   {
     path: "/",
@@ -36,10 +34,7 @@ const router = createBrowserRouter([
     errorElement: <div>Not found</div>,
     loader: protectedLoader,
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
+        ...AuthenticatedRoute
     ],
   },
 ]);

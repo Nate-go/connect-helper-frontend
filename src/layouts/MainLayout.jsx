@@ -1,13 +1,17 @@
 
 import { Outlet } from "react-router-dom";
+import { Sidebar } from "@/fregments";
 
-function MainLayout() {
+
+const MainLayout = () => {
     return (
-        <div>
-            Main Layout here
-            <Outlet></Outlet>
-        </div>
-    )
+        <>
+            <div className="flex-col">
+                <Sidebar />
+                <Outlet></Outlet>
+            </div>
+        </>
+    );
 }
 
 export default MainLayout
