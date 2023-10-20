@@ -19,6 +19,17 @@ const protectedLoader = () => {
   return null;
 };
 
+// const userRoutes = [
+//   {
+//     path: "users",
+//     element: <UserList />,
+//   },
+//   {
+//     path: "users/:id",
+//     element: <UserDetail />,
+//   },
+// ];
+
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -40,6 +51,7 @@ const router = createBrowserRouter([
         path: "home",
         element: <Home />,
       },
+      // ...userRoutes
     ],
   },
 ]);
