@@ -1,4 +1,5 @@
 import { Login, SignUp } from '@pages/authentication'
+import { About } from '@/pages/guest'
 
 const AuthenticatedRoute = [
     {
@@ -8,7 +9,12 @@ const AuthenticatedRoute = [
     {
         path: "/signup",
         element: <SignUp />,
+    },
+    {
+        path: '/About',
+        element: <About/>
     }
+
 ]
 
 export default AuthenticatedRoute

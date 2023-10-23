@@ -1,11 +1,13 @@
 
 import { Outlet } from "react-router-dom";
-
+import { GuestComponent } from "@/fregments";
 
 const PublicLayout = () => {
     return (
         <div>
-            <Outlet></Outlet>
+            <GuestComponent>
+                <Outlet></Outlet>
+            </GuestComponent>
         </div>
     )
 }

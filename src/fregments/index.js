@@ -1,1 +1,3 @@
-export { default as Sidebar} from './Sidebar'
+export { default as BaseBody} from './BaseBody'
+export { default as BaseComponent } from './BaseComponent'
+export { default as GuestComponent } from './GuestComponent' 

@@ -4,9 +4,20 @@ import { MainLayout, PublicLayout } from "@/layouts";
 import AuthenticatedRoute from './AuthenticatedRoute'
 import PublicRoute from './PublicRoute'
 
-const isAuthenticated = true; //handle check authen later
+const isAuthenticated = false; //handle check authen later
+
+const currentPath = () => {
+  return window.location.pathname;
+};
+
+const isUnauthenPath = () => {
+  const unauthenPath = ['/login', '/signup']
+  return unauthenPath.includes(currentPath());
+};
+
 const publicLoader = () => {
-  if (isAuthenticated) {
+  console.log();
+  if (isAuthenticated && isUnauthenPath()) {
     return redirect("/home");
   }
   return null;
