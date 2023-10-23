@@ -94,7 +94,7 @@ const BaseBody = ({ children }) => {
                 </Sidebar>
 
                 <Container>
-                    <Content>{children}</Content>
+                    <Content className='p-8'>{children}</Content>
                 </Container>
             </Container>
         </div>

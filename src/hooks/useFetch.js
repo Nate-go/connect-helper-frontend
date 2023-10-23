@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import api from "@/apis/axiosConfig";
 
 export default function useFetch(endpoint, options, isCall) {
+
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -15,13 +16,9 @@ export default function useFetch(endpoint, options, isCall) {
       setData(response);
     } catch (error) {
       setLoading(false);
-      setError(error);
+      setError(error.response);
     }
   };
 
-  useEffect(() => {
-    if(isCall) fetchData();
-  }, [isCall]);
-
-  return { data, error, loading };
+  return { data, error, loading, fetchData };
 }

@@ -1,10 +1,13 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import Cookies from "js-cookie";
 
 import { MainLayout, PublicLayout } from "@/layouts";
 import AuthenticatedRoute from './AuthenticatedRoute'
 import PublicRoute from './PublicRoute'
 
-const isAuthenticated = false; //handle check authen later
+
+const isAuthenticated = Cookies.get('auth');
 
 const currentPath = () => {
   return window.location.pathname;
@@ -16,7 +19,6 @@ const isUnauthenPath = () => {
 };
 
 const publicLoader = () => {
-  console.log();
   if (isAuthenticated && isUnauthenPath()) {
     return redirect("/home");
   }

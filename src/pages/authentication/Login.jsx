@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     Container,
     Form,
@@ -7,21 +9,20 @@ import {
     FlexboxGrid,
     Message
 } from 'rsuite';
-import React, { useState } from 'react';
 
 import { vertical_bg } from '@/assets/images'
-import { useDispatch, useSelector } from 'react-redux';
-import { setAuthen, clearAuthen, selectAuthen } from '@/reduxs/AuthenSlice';
 import { authenticationEndpoints } from "@/apis";
 import { useFetch } from "@/hooks";
+import { useNavigate } from 'react-router-dom';
+import { setAuthentication } from '@/helpers/authenHelpers';
 
 const Login = () => {
     const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isCall, setIsCall] = useState(false);
+    const navigate = useNavigate();
 
-    const { data: authen, loading: authenLoading, error: authenError } = useFetch(
+    const { data, loading, error, fetchData: handleLogin } = useFetch(
         authenticationEndpoints.login,
         {
             'method': 'POST',
@@ -30,16 +31,23 @@ const Login = () => {
                 'password': password
             },
         },
-        isCall
     );
 
     const handleSetAuthen = async () => {
-        console.log(isCall);
-        setIsCall(true);
-        console.log(isCall);
+        handleLogin();
+        if (loading || !data) return <h1>Loading</h1>;
         
-        if (authenLoading || !authen) return <h1>Loading</h1>;
-        
+        if(data) {
+            setAuthentication(data);
+            navigate('/home');
+        }
+    };
+
+    const handleError = (error) => {
+        if(error.status == 401) {
+            return "Your login information is not true";
+        }
+
     };
 
     const handleSubmit = async (e) => {
@@ -51,7 +59,6 @@ const Login = () => {
 
     return (
         <div className="show-fake-browser login-page max-h-screen">
-            {authenError && <Message type="error">{authenError.response}</Message>}
             <div className='grid md:grid-cols-7 col-span-4'>
                 <div className='col-span-4 flex items-center'>
                     <Container>
@@ -67,6 +74,7 @@ const Login = () => {
                                             <Form.ControlLabel>Password</Form.ControlLabel>
                                             <Form.Control name="password" type="password" autoComplete="off" value={password} placeholder="Password" onChange={setPassword} />
                                         </Form.Group>
+                                        {error && (<Message type="error" className='mb-5'>{handleError(error)}</Message>)}
                                         <Form.Group>
                                             <ButtonToolbar>
                                                 <Button appearance="primary" type='submit'>Sign in</Button>
