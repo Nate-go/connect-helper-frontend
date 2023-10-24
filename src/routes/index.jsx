@@ -3,8 +3,9 @@ import { createBrowserRouter, redirect } from "react-router-dom";
 import { MainLayout, PublicLayout } from "@/layouts";
 import ProtectedRoutes from './ProtectedRoutes'
 import PublicRoutes from './PublicRoutes'
-import { getCurrentPath, getAuthentication } from "@/helpers/pathHelper";
+import { getCurrentPath } from "@/helpers/pathHelper";
 import { NotFound } from "@/pages/errors";
+import { getAuthentication } from "@/helpers/authenHelpers";
 
 const isAuthenticated = getAuthentication();
 
