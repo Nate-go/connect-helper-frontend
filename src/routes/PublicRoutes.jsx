@@ -1,7 +1,7 @@
 import { Login, SignUp } from '@pages/authentication'
 import { About, Home, Contact } from '@/pages/guest'
 
-const AuthenticatedRoute = [
+const PublicRoutes = [
     {
         path: "/login",
         element: <Login />,
@@ -24,4 +24,4 @@ const AuthenticatedRoute = [
     }
 ]
 
-export default AuthenticatedRoute
+export default PublicRoutes

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
     Container,
     Form,
@@ -17,7 +16,6 @@ import { useNavigate } from 'react-router-dom';
 import { setAuthentication } from '@/helpers/authenHelpers';
 
 const Login = () => {
-    const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();

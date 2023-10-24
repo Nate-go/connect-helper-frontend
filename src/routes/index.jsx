@@ -1,14 +1,12 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
-import Cookies from "js-cookie";
 
 import { MainLayout, PublicLayout } from "@/layouts";
-import AuthenticatedRoute from './AuthenticatedRoute'
-import PublicRoute from './PublicRoute'
-import { getCurrentPath } from "@/helpers/pathHelper";
+import ProtectedRoutes from './ProtectedRoutes'
+import PublicRoutes from './PublicRoutes'
+import { getCurrentPath, getAuthentication } from "@/helpers/pathHelper";
 import { NotFound } from "@/pages/errors";
 
-
-const isAuthenticated = Cookies.get('auth');
+const isAuthenticated = getAuthentication();
 
 const isUnauthenPath = () => {
   const unauthenPath = ['/login', '/signup']
@@ -36,7 +34,7 @@ const router = createBrowserRouter([
     errorElement: <NotFound/>,
     loader: publicLoader,
     children: [
-        ...PublicRoute
+        ...PublicRoutes
     ],
   },
   {
@@ -45,7 +43,7 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     loader: protectedLoader,
     children: [
-        ...AuthenticatedRoute
+        ...ProtectedRoutes
     ],
   },
 ]);

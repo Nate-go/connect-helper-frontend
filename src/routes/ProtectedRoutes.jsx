@@ -1,7 +1,7 @@
 import { UserDetail, UserList} from '@/pages/users'
 import { Dashboard } from '@/pages/authenticated'
 
-const AuthenticatedRoute = [
+const ProtectedRoutes = [
     {
         path: "/dashboard",
         element: <Dashboard />,
@@ -16,4 +16,4 @@ const AuthenticatedRoute = [
     }
 ]
 
-export default AuthenticatedRoute
+export default ProtectedRoutes
