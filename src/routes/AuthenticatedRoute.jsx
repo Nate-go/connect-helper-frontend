@@ -1,10 +1,10 @@
 import { UserDetail, UserList} from '@/pages/users'
-import { Home } from '@pages/home'
+import { Dashboard } from '@/pages/authenticated'
 
 const AuthenticatedRoute = [
     {
-        path: "/home",
-        element: <Home />,
+        path: "/dashboard",
+        element: <Dashboard />,
     },
     {
         path: "/users-detail",

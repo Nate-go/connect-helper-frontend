@@ -39,15 +39,17 @@ const Login = () => {
         
         if(data) {
             setAuthentication(data);
-            navigate('/home');
+            navigate('/dashboard');
         }
     };
 
     const handleError = (error) => {
-        if(error.status == 401) {
-            return "Your login information is not true";
+        switch (error.status) {
+            case 401:
+                return "Your login information is not true";
+            case 422:
+                return error.data.password ? error.data.password : error.data.email
         }
-
     };
 
     const handleSubmit = async (e) => {
@@ -74,7 +76,7 @@ const Login = () => {
                                             <Form.ControlLabel>Password</Form.ControlLabel>
                                             <Form.Control name="password" type="password" autoComplete="off" value={password} placeholder="Password" onChange={setPassword} />
                                         </Form.Group>
-                                        {error && (<Message type="error" className='mb-5'>{handleError(error)}</Message>)}
+                                        {error && (<Message type="error" className='mb-5' closable>{handleError(error)}</Message>)}
                                         <Form.Group>
                                             <ButtonToolbar>
                                                 <Button appearance="primary" type='submit'>Sign in</Button>

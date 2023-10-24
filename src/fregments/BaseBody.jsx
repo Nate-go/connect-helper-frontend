@@ -3,13 +3,17 @@ import React from 'react';
 import CogIcon from '@rsuite/icons/legacy/Cog';
 import AngleLeftIcon from '@rsuite/icons/legacy/AngleLeft';
 import AngleRightIcon from '@rsuite/icons/legacy/AngleRight';
-import GearCircleIcon from '@rsuite/icons/legacy/GearCircle';
 import DashboardIcon from '@rsuite/icons/Dashboard';
 import GroupIcon from '@rsuite/icons/legacy/Group';
 import MagicIcon from '@rsuite/icons/legacy/Magic';
 import UserInfoIcon from '@rsuite/icons/UserInfo';
+import HelpOutlineIcon from '@rsuite/icons/HelpOutline';
+import NoticeIcon from '@rsuite/icons/Notice';
+import MemberIcon from '@rsuite/icons/Member';
+import UserChangeIcon from '@rsuite/icons/UserChange';
 
 import { logo_image } from '@/assets/images'
+import { getCurrentPath } from '@/helpers/pathHelper';
 
 const NavToggle = ({ expand, onChange }) => {
     return (
@@ -21,9 +25,7 @@ const NavToggle = ({ expand, onChange }) => {
                     trigger="click"
                     title={<CogIcon style={{ width: 24, height: 20 }} size="sm" />}
                 >
-                    <Nav.Item>Help</Nav.Item>
-                    <Nav.Item>Settings</Nav.Item>
-                    <Nav.Item>Sign out</Nav.Item>
+                    <Nav.Item icon={<HelpOutlineIcon/>}>Help</Nav.Item>
                 </Nav.Menu>
                 
             </Nav>
@@ -34,9 +36,9 @@ const NavToggle = ({ expand, onChange }) => {
                     trigger="click"
                     title={<UserInfoIcon style={{ width: 24, height: 20 }} size="sm" />}
                 >
-                    <Nav.Item>Help</Nav.Item>
-                    <Nav.Item>Settings</Nav.Item>
-                    <Nav.Item>Sign out</Nav.Item>
+                    <Nav.Item icon={<MemberIcon/>}>Profile</Nav.Item>
+                    <Nav.Item icon={<NoticeIcon/>}>Notification</Nav.Item>
+                    <Nav.Item icon={<UserChangeIcon/>}>Sign out</Nav.Item>
                 </Nav.Menu>
 
             </Nav>
@@ -52,6 +54,11 @@ const NavToggle = ({ expand, onChange }) => {
 
 const BaseBody = ({ children }) => {
     const [expand, setExpand] = React.useState(true);
+    const currentPath = getCurrentPath();
+    const activeKey = (path) => {
+        return currentPath.includes(path);
+    };
+
     return (
         <div className="show-fake-browser sidebar-page">
             <Container>
@@ -68,11 +75,11 @@ const BaseBody = ({ children }) => {
                     <Sidenav expanded={expand} defaultOpenKeys={['3']} appearance="subtle">
                         <Sidenav.Body>
                             <Nav>
-                                <Nav.Item eventKey="1" active icon={<DashboardIcon />}>
+                                <Nav.Item eventKey="/dashboard" href='/dashboard' active={activeKey('/dashboard')} icon={<DashboardIcon />}>
                                     Dashboard
                                 </Nav.Item>
-                                <Nav.Item eventKey="2" icon={<GroupIcon />}>
-                                    User Group
+                                <Nav.Item eventKey="/users" href='/users' active={activeKey('/users')} icon={<GroupIcon />}>
+                                    Users
                                 </Nav.Item>
                                 <Nav.Menu
                                     eventKey="3"
