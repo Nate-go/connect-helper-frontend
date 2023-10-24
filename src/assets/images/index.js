@@ -1,3 +1,5 @@
 export { default as logo_image} from './logo-web.png'
 export { default as vertical_bg } from './vertical-bg.jpg'
 export { default as not_found_image } from './not-found.png'
+export { default as register_gif } from './register.gif'
+export { default as connection_bg } from './connection_bg.jpg'

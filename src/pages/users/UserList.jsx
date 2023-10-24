@@ -1,13 +1,14 @@
 import { userEndpoints } from "@/apis";
 
 import { useFetch } from "@/hooks";
+import { BaseLoader } from "@/components";
 
 const UserList = () => {
   const { data: users, loading: userLoading } = useFetch(
     userEndpoints.getAll,
     {}
   );
-  if (userLoading || !users) return <h1>Loading</h1>;
+  if (userLoading || !users) return <BaseLoader/>;
 
   return (
     <div>

@@ -9,9 +9,9 @@ export default function useFetch(endpoint, options, isCall) {
 
   const fetchData = async () => {
     try {
+      console.log('setLoading')
       setLoading(true);
       const response = await api.request(endpoint, options);
-
       setLoading(false);
       setData(response);
     } catch (error) {

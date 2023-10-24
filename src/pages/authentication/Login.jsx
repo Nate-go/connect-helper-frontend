@@ -6,20 +6,23 @@ import {
     Button,
     Panel,
     FlexboxGrid,
-    Message
+    Message,
+    Loader
 } from 'rsuite';
 
 import { vertical_bg } from '@/assets/images'
 import { authenticationEndpoints } from "@/apis";
 import { useFetch } from "@/hooks";
-import { useNavigate } from 'react-router-dom';
-import { setAuthentication } from '@/helpers/authenHelpers';
+import { useNavigate, redirect } from 'react-router-dom';
+import { setAuthentication, getAuthentication } from '@/helpers/authenHelpers';
+import { BaseLoader } from '@/components';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-
+    const isAuth = getAuthentication();
+    console.log(isAuth)
     const { data, loading, error, fetchData: handleLogin } = useFetch(
         authenticationEndpoints.login,
         {
@@ -31,16 +34,18 @@ const Login = () => {
         },
     );
 
-    const handleSetAuthen = async () => {
-        handleLogin();
-        if (loading || !data) return <h1>Loading</h1>;
-        
-        if(data) {
-            setAuthentication(data);
-            navigate('/dashboard');
-        }
-    };
+    if (data) {
+        setAuthentication(data);
+        // window.location.replace('/dashboard');
+    }
 
+    if(isAuth) {
+        navigate('/dashboard')
+    }
+    const onLogin = async () => {
+        await handleLogin();
+        console.log('set Auth');
+    }
     const handleError = (error) => {
         switch (error.status) {
             case 401:
@@ -48,13 +53,6 @@ const Login = () => {
             case 422:
                 return error.data.password ? error.data.password : error.data.email
         }
-    };
-
-    const handleSubmit = async (e) => {
-        if (e && e.preventDefault) {
-            e.preventDefault();
-        }
-        await handleSetAuthen();
     };
 
     return (
@@ -65,7 +63,7 @@ const Login = () => {
                         <FlexboxGrid justify="center">
                             <FlexboxGrid.Item colspan={12}>
                                 <Panel header={<h3>Login</h3>} bordered>
-                                    <Form fluid onSubmit={handleSubmit}>
+                                    <Form fluid onSubmit={onLogin}>
                                         <Form.Group>
                                             <Form.ControlLabel>Email address</Form.ControlLabel>
                                             <Form.Control name="email" type="email" autoComplete="on" value={email} placeholder="Email" onChange={setEmail} />
@@ -74,10 +72,11 @@ const Login = () => {
                                             <Form.ControlLabel>Password</Form.ControlLabel>
                                             <Form.Control name="password" type="password" autoComplete="off" value={password} placeholder="Password" onChange={setPassword} />
                                         </Form.Group>
-                                        {error && (<Message type="error" className='mb-5' closable>{handleError(error)}</Message>)}
+                                        {error && (<Message type="error" className='mb-5'>{handleError(error)}</Message>)}
                                         <Form.Group>
                                             <ButtonToolbar>
-                                                <Button appearance="primary" type='submit'>Sign in</Button>
+                                                {!loading && <Button appearance="primary" type='submit' className='bg-blue-500'>Sign in</Button>}
+                                                {loading && <Loader content="Loading..." />}
                                                 <Button appearance="link">Forgot password?</Button>
                                             </ButtonToolbar>
                                         </Form.Group>

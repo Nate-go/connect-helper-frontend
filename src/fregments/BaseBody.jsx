@@ -1,23 +1,25 @@
 import { Container, Header, Sidebar, Sidenav, Content, Navbar, Nav } from 'rsuite';
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import {
     CogIcon,
     AngleLeftIcon,
     AngleRightIcon,
     DashboardIcon,
     GroupIcon,
-    MagicIcon,
+    AppSelectIcon,
     UserInfoIcon,
     HelpOutlineIcon,
     NoticeIcon,
     MemberIcon,
-    UserChangeIcon
+    UserChangeIcon,
 } from '@/components/icons.js';
 
 import { logo_image } from '@/assets/images'
 import { getCurrentPath } from '@/helpers/pathHelper';
+import { signOut } from '@/helpers/authenHelpers';
 
-const NavToggle = ({ expand, onChange }) => {
+const NavToggle = ({ expand, onChange, handleSignOut }) => {
     return (
         <Navbar appearance="subtle" className="nav-toggle">
             <Nav>
@@ -40,7 +42,7 @@ const NavToggle = ({ expand, onChange }) => {
                 >
                     <Nav.Item icon={<MemberIcon/>}>Profile</Nav.Item>
                     <Nav.Item icon={<NoticeIcon/>}>Notification</Nav.Item>
-                    <Nav.Item icon={<UserChangeIcon/>}>Sign out</Nav.Item>
+                    <Nav.Item icon={<UserChangeIcon/>} onClick={handleSignOut}>Sign out</Nav.Item>
                 </Nav.Menu>
 
             </Nav>
@@ -55,19 +57,30 @@ const NavToggle = ({ expand, onChange }) => {
 };
 
 const BaseBody = ({ children }) => {
-    const [expand, setExpand] = React.useState(true);
+    const [expand, setExpand] = useState(true);
     const currentPath = getCurrentPath();
     const activeKey = (path) => {
         return currentPath.includes(path);
     };
+    const navigate = useNavigate();
+
+    const handleSignOut = () => {
+        signOut();
+        navigate('/login');
+    }
+
+    const handleNavigate = (path) => {
+        navigate(path);
+    };
 
     return (
-        <div className="show-fake-browser sidebar-page">
-            <Container>
+        <div className="show-fake-browser sidebar-page w-full min-h-screen">
+            <Container className='w-full'>
                 <Sidebar
                     style={{ display: 'flex', flexDirection: 'column' }}
                     width={expand ? 210 : 60}
                     collapsible
+                    className='min-h-screen'
                 >
                     <Sidenav.Header>
                         <div className='flex flex-row'>
@@ -77,37 +90,37 @@ const BaseBody = ({ children }) => {
                     <Sidenav expanded={expand} defaultOpenKeys={['3']} appearance="subtle">
                         <Sidenav.Body>
                             <Nav>
-                                <Nav.Item eventKey="/dashboard" href='/dashboard' active={activeKey('/dashboard')} icon={<DashboardIcon />}>
+                                <Nav.Item eventKey="/dashboard" onClick={() => handleNavigate('/dashboard')} active={activeKey('/dashboard')} icon={<DashboardIcon />}>
                                     Dashboard
                                 </Nav.Item>
-                                <Nav.Item eventKey="/users" href='/users' active={activeKey('/users')} icon={<GroupIcon />}>
+                                <Nav.Item eventKey="/users" onClick={() => handleNavigate('/users')} active={activeKey('/users')} icon={<GroupIcon />}>
                                     Users
                                 </Nav.Item>
                                 <Nav.Menu
                                     eventKey="3"
                                     trigger="hover"
                                     title="Advanced"
-                                    icon={<MagicIcon />}
+                                    icon={<AppSelectIcon />}
                                     placement="rightStart"
                                 >
-                                    <Nav.Item eventKey="3-1">Geo</Nav.Item>
-                                    <Nav.Item eventKey="3-2">Devices</Nav.Item>
-                                    <Nav.Item eventKey="3-3">Brand</Nav.Item>
-                                    <Nav.Item eventKey="3-4">Loyalty</Nav.Item>
-                                    <Nav.Item eventKey="3-5">Visit Depth</Nav.Item>
+                                    <Nav.Item eventKey="3-1" onClick={() => handleNavigate('/')}>Home</Nav.Item>
+                                    <Nav.Item eventKey="3-2" onClick={() => handleNavigate('/about')} >About</Nav.Item>
+                                    <Nav.Item eventKey="3-3" onClick={() => handleNavigate('/contact')}>Contact</Nav.Item>
                                 </Nav.Menu>
                             </Nav>
                         </Sidenav.Body>
                     </Sidenav>
-                    <NavToggle expand={expand} onChange={() => setExpand(!expand)} />
+                    <NavToggle expand={expand} onChange={() => setExpand(!expand)} handleSignOut={() => handleSignOut()}/>
                 </Sidebar>
 
-                <Container>
+                <Container className='w-full'>
                     <Content className='p-8'>{children}</Content>
                 </Container>
             </Container>
         </div>
     );
 };
+
+
 
 export default BaseBody
