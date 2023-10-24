@@ -1,13 +1,22 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
 
-import { MainLayout } from "@/layouts";
-import { Home } from "@pages/home";
-import { Login } from "@pages/authentication";
+import { MainLayout, PublicLayout } from "@/layouts";
+import ProtectedRoutes from './ProtectedRoutes'
+import PublicRoutes from './PublicRoutes'
+import { getCurrentPath } from "@/helpers/pathHelper";
+import { NotFound } from "@/pages/errors";
+import { getAuthentication } from "@/helpers/authenHelpers";
 
-const isAuthenticated = true; //handle check authen later
+const isAuthenticated = getAuthentication();
+
+const isUnauthenPath = () => {
+  const unauthenPath = ['/login', '/signup']
+  return unauthenPath.includes(getCurrentPath());
+};
+
 const publicLoader = () => {
-  if (isAuthenticated) {
-    return redirect("/");
+  if (isAuthenticated && isUnauthenPath()) {
+    return redirect("/dashboard");
   }
   return null;
 };
@@ -21,25 +30,21 @@ const protectedLoader = () => {
 
 const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <Login />,
+    path: "/",
+    element: <PublicLayout />,
+    errorElement: <NotFound/>,
     loader: publicLoader,
-  },
-  {
-    path: "/register",
-    element: <Login />,
-    loader: publicLoader,
+    children: [
+        ...PublicRoutes
+    ],
   },
   {
     path: "/",
     element: <MainLayout />,
-    errorElement: <div>Not found</div>,
+    errorElement: <NotFound />,
     loader: protectedLoader,
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
+        ...ProtectedRoutes
     ],
   },
 ]);

@@ -1,6 +1,6 @@
-
-// import BaseRouter from '@/routes/index.jsx'
 import { RouterProvider } from "react-router-dom";
+import 'rsuite/dist/rsuite-no-reset.min.css';
+
 import router from "@/routes";
 import '@/App.css'
 

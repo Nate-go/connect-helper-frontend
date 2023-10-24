@@ -1,52 +1,102 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-    MDBBtn,
-    MDBContainer,
-    MDBRow,
-    MDBCol,
-    MDBIcon,
-    MDBInput
-}
-    from 'mdb-react-ui-kit';
+    Container,
+    Form,
+    ButtonToolbar,
+    Button,
+    Panel,
+    FlexboxGrid,
+    Message
+} from 'rsuite';
 
-import { logo_image, vertical_bg } from '@/assets/images'
+import { vertical_bg } from '@/assets/images'
+import { authenticationEndpoints } from "@/apis";
+import { useFetch } from "@/hooks";
+import { useNavigate } from 'react-router-dom';
+import { setAuthentication } from '@/helpers/authenHelpers';
 
-function Login() {
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+
+    const { data, loading, error, fetchData: handleLogin } = useFetch(
+        authenticationEndpoints.login,
+        {
+            'method': 'POST',
+            'data': {
+                'email': email,
+                'password': password
+            },
+        },
+    );
+
+    const handleSetAuthen = async () => {
+        handleLogin();
+        if (loading || !data) return <h1>Loading</h1>;
+        
+        if(data) {
+            setAuthentication(data);
+            navigate('/dashboard');
+        }
+    };
+
+    const handleError = (error) => {
+        switch (error.status) {
+            case 401:
+                return "Your login information is not true";
+            case 422:
+                return error.data.password ? error.data.password : error.data.email
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        if (e && e.preventDefault) {
+            e.preventDefault();
+        }
+        await handleSetAuthen();
+    };
+
     return (
-        <MDBContainer fluid>
-            <div className='grid-cols-2 grid'>
-
-                <div className='col-span-1'>
-
-                    <div className='flex items-center'>
-                        <img src={logo_image}
-                            alt="Login image" className="w-50"/>
-                    </div>
-
-                    <div className='flex items-center'>
-
-                        <h3 className="fw-normal mb-3 pb-3" style={{ letterSpacing: '1px' }}>Log in</h3>
-
-                        <MDBInput wrapperClass='mb-4 w-100' label='Email address' id='formControlLg' type='email' size="lg" />
-                        <MDBInput wrapperClass='mb-4 w-100' label='Password' id='formControlLg' type='password' size="lg" />
-
-                        <MDBBtn className="mb-4 px-5 w-100" color='info' size='lg'>Login</MDBBtn>
-                        <p className="small mb-5 pb-lg-3 "><a class="text-muted" href="#!">Forgot password?</a></p>
-                        <p className=''>Don't have an account? <a href="#!" class="link-info">Register here</a></p>
-
-                    </div>
+        <div className="show-fake-browser login-page max-h-screen">
+            <div className='grid md:grid-cols-7 col-span-4'>
+                <div className='col-span-4 flex items-center'>
+                    <Container>
+                        <FlexboxGrid justify="center">
+                            <FlexboxGrid.Item colspan={12}>
+                                <Panel header={<h3>Login</h3>} bordered>
+                                    <Form fluid onSubmit={handleSubmit}>
+                                        <Form.Group>
+                                            <Form.ControlLabel>Email address</Form.ControlLabel>
+                                            <Form.Control name="email" type="email" autoComplete="on" value={email} placeholder="Email" onChange={setEmail} />
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <Form.ControlLabel>Password</Form.ControlLabel>
+                                            <Form.Control name="password" type="password" autoComplete="off" value={password} placeholder="Password" onChange={setPassword} />
+                                        </Form.Group>
+                                        {error && (<Message type="error" className='mb-5' closable>{handleError(error)}</Message>)}
+                                        <Form.Group>
+                                            <ButtonToolbar>
+                                                <Button appearance="primary" type='submit'>Sign in</Button>
+                                                <Button appearance="link">Forgot password?</Button>
+                                            </ButtonToolbar>
+                                        </Form.Group>
+                                    </Form>
+                                </Panel>
+                            </FlexboxGrid.Item>
+                        </FlexboxGrid>
+                    </Container>
 
                 </div>
 
-                <div className='d-none d-sm-block px-0 col-span-1'>
-                    <img src={vertical_bg}
-                        alt="Login image" className="w-100 h-50" style={{ objectFit: 'cover', objectPosition: 'left' }} />
+                <div className='col-span-3 md:block hidden'>
+                    <img src={vertical_bg} alt="" />
                 </div>
-
             </div>
 
-        </MDBContainer>
+        </div>
     );
-}
 
-export default Login;
+};
+
+export default Login

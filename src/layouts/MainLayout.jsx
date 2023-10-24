@@ -1,13 +1,16 @@
 
 import { Outlet } from "react-router-dom";
+import { BaseComponent } from "@/fregments";
 
-function MainLayout() {
+
+const MainLayout = () => {
     return (
-        <div>
-            Main Layout here
-            <Outlet></Outlet>
+        <div className="flex flex-row w-full">
+            <BaseComponent>
+                <Outlet></Outlet>
+            </BaseComponent>            
         </div>
-    )
+    );
 }
 
 export default MainLayout
