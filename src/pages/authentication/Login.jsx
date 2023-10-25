@@ -27,7 +27,6 @@ const Login = () => {
             setAuthentication(data);
         }
         navigate('/dashboard');
-        console.log('haha');
     }, [data]);
 
     const onLogin = async () => {

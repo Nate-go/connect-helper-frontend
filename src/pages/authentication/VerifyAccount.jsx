@@ -33,14 +33,14 @@ const VerifyAccount = () => {
     const [verifyCode, setVerifyCode] = useState('');
 
     const navigate = useNavigate();
-    const { data: verifyData, loading: verifyLoading, error: verifyError, callApi: handleActiveAccount } = useApi();
+    const { data: activeAccountData, loading: activeAccountLoading, error: activeAccountError, callApi: handleActiveAccount } = useApi();
     const { data: sendVerifyData, loading: sendVerifyLoading, error: sendVerifyError, callApi: handleSendVerify } = useApi();
 
     useEffect(() => {
-        if(verifyData) {
+        if(activeAccountData) {
             navigate('/login');
         }
-    }, [verifyData]);
+    }, [activeAccountData]);
 
     const onAcctiveAccount = async () => {
         await handleActiveAccount(
@@ -87,11 +87,11 @@ const VerifyAccount = () => {
                                                 <Form.ControlLabel>Verify code</Form.ControlLabel>
                                                 <Form.Control name="verifyCode" type="text" autoComplete="off" value={verifyCode} placeholder="Verify code" onChange={setVerifyCode} />
                                             </Form.Group>
-                                                {verifyError && (<Message type="error" className='mb-5' showIcon header>{verifyError.data.message}</Message>)}
+                                                {activeAccountError && (<Message type="error" className='mb-5' showIcon header>{activeAccountError.data.message}</Message>)}
                                             <Form.Group>
                                                 <ButtonToolbar>
-                                                    {!verifyLoading && <Button appearance="primary" type='submit' className='bg-blue-500'>Active</Button>}
-                                                    {verifyLoading && <Loader content="Loading..." />}
+                                                    {!activeAccountLoading && <Button appearance="primary" type='submit' className='bg-blue-500'>Active</Button>}
+                                                    {activeAccountLoading && <Loader content="Loading..." />}
                                                 </ButtonToolbar>
                                             </Form.Group>
                                         </> : 
