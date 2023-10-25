@@ -14,6 +14,8 @@ import { CgLogIn } from 'react-icons/cg';
 import InfoRoundIcon from '@rsuite/icons/InfoRound';
 import SpinnerIcon from '@rsuite/icons/legacy/Spinner';
 import AppSelectIcon from '@rsuite/icons/AppSelect';
+import { MdOutlineError } from 'react-icons/md' 
+import { BsPersonFillCheck } from 'react-icons/bs'
 
 export {
     CogIcon,
@@ -33,5 +35,7 @@ export {
     CgLogIn,
     InfoRoundIcon,
     SpinnerIcon,
-    AppSelectIcon
+    AppSelectIcon,
+    MdOutlineError,
+    BsPersonFillCheck
 };

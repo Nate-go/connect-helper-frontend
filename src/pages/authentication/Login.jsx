@@ -40,15 +40,6 @@ const Login = () => {
             });
     }
 
-    const handleError = (error) => {
-        switch (error.status) {
-            case 401:
-                return "Your login information is not true";
-            case 422:
-                return error.data.password ? error.data.password : error.data.email
-        }
-    };
-
     return (
         <div className="show-fake-browser login-page max-h-screen">
             <div className='grid md:grid-cols-7 col-span-4'>
@@ -66,7 +57,7 @@ const Login = () => {
                                             <Form.ControlLabel>Password</Form.ControlLabel>
                                             <Form.Control name="password" type="password" autoComplete="off" value={password} placeholder="Password" onChange={setPassword} />
                                         </Form.Group>
-                                        {error && (<Message type="error" className='mb-5'>{handleError(error)}</Message>)}
+                                        {error && (<Message type="error" className='mb-5' showIcon header>{error.data.message}</Message>)}
                                         <Form.Group>
                                             <ButtonToolbar>
                                                 {!loading && <Button appearance="primary" type='submit' className='bg-blue-500'>Sign in</Button>}

@@ -13,7 +13,8 @@ import {
     IoMdPersonAdd,
     IoIosHome,
     CgLogIn,
-    InfoRoundIcon
+    InfoRoundIcon,
+    BsPersonFillCheck
 } from '@/components/icons.js';
 
 const CustomNavbar = ({ onSelect, activeKey, ...props }) => {
@@ -35,6 +36,7 @@ const CustomNavbar = ({ onSelect, activeKey, ...props }) => {
                     <>
                         <Nav.Item eventKey="/login" onClick={() => navigate('/login')}  icon={<CgLogIn/>}>Login</Nav.Item>
                         <Nav.Item eventKey="/signup" onClick={() => navigate('/signup')} icon={<IoMdPersonAdd/>}>Sign Up</Nav.Item>
+                        <Nav.Item eventKey="/verify-account" onClick={() => navigate('/verify-account')} icon={<BsPersonFillCheck />}>Verify Account</Nav.Item>
                     </>
                 )}
                 {auth && (
