@@ -9,38 +9,35 @@ import {
     Message
 } from 'rsuite';
 
-import { vertical_bg } from '@/assets/images'
+import { register_gif } from '@/assets/images'
 import { authenticationEndpoints } from "@/apis";
-import { useFetch } from "@/hooks";
+import { useApi } from "@/hooks";
 import { useNavigate } from 'react-router-dom';
 import { setAuthentication } from '@/helpers/authenHelpers';
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
+    const { data, loading, error, callApi: handleSignUp } = useApi();
 
-    const { data, loading, error, fetchData: handleLogin } = useFetch(
-        authenticationEndpoints.login,
-        {
-            'method': 'POST',
-            'data': {
-                'email': email,
-                'password': password
-            },
-        },
-    );
-
-    const handleSetAuthen = async () => {
-        handleLogin();
-        if (loading || !data) return <h1>Loading</h1>;
-
+    useEffect(() => {
         if (data) {
             setAuthentication(data);
-            navigate('/dashboard');
         }
-    };
+        navigate('/dashboard');
+    }, [data]);
+
+    const onLogin = async () => {
+        await handleLogin(authenticationEndpoints.login,
+            {
+                'method': 'POST',
+                'data': {
+                    'email': email,
+                    'password': password
+                },
+            });
+    }
 
     const handleError = (error) => {
         switch (error.status) {
@@ -51,16 +48,13 @@ const SignUp = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
-        if (e && e.preventDefault) {
-            e.preventDefault();
-        }
-        await handleSetAuthen();
-    };
-
     return (
         <div className="show-fake-browser login-page max-h-screen">
             <div className='grid md:grid-cols-7 col-span-4'>
+                <div className='col-span-3 md:block hidden'>
+                    <img src={register_gif} alt="" />
+                </div>
+
                 <div className='col-span-4 flex items-center'>
                     <Container>
                         <FlexboxGrid justify="center">
@@ -91,10 +85,6 @@ const SignUp = () => {
                         </FlexboxGrid>
                     </Container>
 
-                </div>
-
-                <div className='col-span-3 md:block hidden'>
-                    <img src={vertical_bg} alt="" />
                 </div>
             </div>
 

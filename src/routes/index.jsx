@@ -7,22 +7,20 @@ import { getCurrentPath } from "@/helpers/pathHelper";
 import { NotFound } from "@/pages/errors";
 import { getAuthentication } from "@/helpers/authenHelpers";
 
-const isAuthenticated = getAuthentication();
-
 const isUnauthenPath = () => {
   const unauthenPath = ['/login', '/signup']
   return unauthenPath.includes(getCurrentPath());
 };
 
 const publicLoader = () => {
-  if (isAuthenticated && isUnauthenPath()) {
+  if (getAuthentication() && isUnauthenPath()) {
     return redirect("/dashboard");
   }
   return null;
 };
 
 const protectedLoader = () => {
-  if (!isAuthenticated) {
+  if (!getAuthentication()) {
     return redirect("/login");
   }
   return null;

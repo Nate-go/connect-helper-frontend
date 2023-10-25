@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Container,
     Form,
@@ -12,40 +12,34 @@ import {
 
 import { vertical_bg } from '@/assets/images'
 import { authenticationEndpoints } from "@/apis";
-import { useFetch } from "@/hooks";
-import { useNavigate, redirect } from 'react-router-dom';
-import { setAuthentication, getAuthentication } from '@/helpers/authenHelpers';
-import { BaseLoader } from '@/components';
+import { useApi } from "@/hooks";
+import { useNavigate } from 'react-router-dom';
+import { setAuthentication } from '@/helpers/authenHelpers';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    const isAuth = getAuthentication();
-    console.log(isAuth)
-    const { data, loading, error, fetchData: handleLogin } = useFetch(
-        authenticationEndpoints.login,
-        {
-            'method': 'POST',
-            'data': {
-                'email': email,
-                'password': password
-            },
-        },
-    );
+    const { data, loading, error, callApi: handleLogin } = useApi();
 
-    if (data) {
-        setAuthentication(data);
-        // window.location.replace('/dashboard');
-    }
+    useEffect(() => {
+        if (data) {
+            setAuthentication(data);
+        }
+        navigate('/dashboard');
+    }, [data]);
 
-    if(isAuth) {
-        navigate('/dashboard')
-    }
     const onLogin = async () => {
-        await handleLogin();
-        console.log('set Auth');
+        await handleLogin(authenticationEndpoints.login,
+            {
+                'method': 'POST',
+                'data': {
+                    'email': email,
+                    'password': password
+                },
+            });
     }
+
     const handleError = (error) => {
         switch (error.status) {
             case 401:

@@ -1,6 +1,6 @@
 import { Navbar, Nav } from 'rsuite';
 import React from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import { getAuthentication } from '@/helpers/authenHelpers';
 import { getCurrentPath } from '@/helpers/pathHelper';
 
@@ -18,6 +18,7 @@ import {
 
 const CustomNavbar = ({ onSelect, activeKey, ...props }) => {
     const auth = getAuthentication();
+    const navigate = useNavigate();
 
     return (
         <Navbar {...props}>
@@ -25,27 +26,27 @@ const CustomNavbar = ({ onSelect, activeKey, ...props }) => {
                 <img src={logo_image} alt="" className='w-28 -mt-5 h-14 -ml-3' />
             </Navbar.Brand>
             <Nav onSelect={onSelect} activeKey={activeKey}>
-                <Nav.Item eventKey="/" icon={<IoIosHome />} href='/'>
+                <Nav.Item eventKey="/" icon={<IoIosHome />} onClick={() => navigate('/')}>
                     Home
                 </Nav.Item>
-                <Nav.Item eventKey="/about" href='/about' icon={<InfoRoundIcon/>}>About</Nav.Item>
-                <Nav.Item eventKey="/contact" href='/contact' icon={<IoMdContacts/>}>Contact</Nav.Item>
+                <Nav.Item eventKey="/about" onClick={() => navigate('/about')} icon={<InfoRoundIcon/>}>About</Nav.Item>
+                <Nav.Item eventKey="/contact" onClick={() => navigate('/contact')} icon={<IoMdContacts/>}>Contact</Nav.Item>
                 {!auth && (
                     <>
-                        <Nav.Item eventKey="/login" href='/login' icon={<CgLogIn/>}>Login</Nav.Item>
-                        <Nav.Item eventKey="/signup" href='/signup' icon={<IoMdPersonAdd/>}>Sign Up</Nav.Item>
+                        <Nav.Item eventKey="/login" onClick={() => navigate('/login')}  icon={<CgLogIn/>}>Login</Nav.Item>
+                        <Nav.Item eventKey="/signup" onClick={() => navigate('/signup')} icon={<IoMdPersonAdd/>}>Sign Up</Nav.Item>
                     </>
                 )}
                 {auth && (
                     <>
-                        <Nav.Item eventKey="/dashboard" href='/dashboard' icon={<DashboardIcon />}>Dashboard</Nav.Item>
+                        <Nav.Item eventKey="/dashboard" onClick={() => navigate('/dashboard')} icon={<DashboardIcon />}>Dashboard</Nav.Item>
                     </>
                 )}
                 
             </Nav>
             <Nav pullRight>
                 <Nav.Menu title="Setting" icon={<CogIcon />}>
-                    <Nav.Item eventKey="/help" href='/help' icon={<HelpOutlineIcon/>}>Help</Nav.Item>
+                    <Nav.Item eventKey="/help" onClick={() => navigate('/help')} icon={<HelpOutlineIcon/>}>Help</Nav.Item>
                 </Nav.Menu>
             </Nav>
         </Navbar>
