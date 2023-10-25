@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Container,
     Form,
@@ -18,17 +18,13 @@ import { setAuthentication } from '@/helpers/authenHelpers';
 const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [name, setName] = useState('');
+
     const navigate = useNavigate();
     const { data, loading, error, callApi: handleSignUp } = useApi();
 
-    useEffect(() => {
-        if (data) {
-            setAuthentication(data);
-        }
-        navigate('/dashboard');
-    }, [data]);
-
-    const onLogin = async () => {
+    const onSignUp = async () => {
         await handleLogin(authenticationEndpoints.login,
             {
                 'method': 'POST',
@@ -60,7 +56,11 @@ const SignUp = () => {
                         <FlexboxGrid justify="center">
                             <FlexboxGrid.Item colspan={12}>
                                 <Panel header={<h3>Sign up</h3>} bordered>
-                                    <Form fluid onSubmit={handleSubmit}>
+                                    <Form fluid onSubmit={onSignUp}>
+                                        <Form.Group>
+                                            <Form.ControlLabel>Name</Form.ControlLabel>
+                                            <Form.Control name="name" type="text" autoComplete="off" value={name} placeholder="Name" onChange={setName} />
+                                        </Form.Group>
                                         <Form.Group>
                                             <Form.ControlLabel>Email address</Form.ControlLabel>
                                             <Form.Control name="email" type="email" autoComplete="on" value={email} placeholder="Email" onChange={setEmail} />
@@ -76,7 +76,8 @@ const SignUp = () => {
                                         {error && (<Message type="error" className='mb-5' closable>{handleError(error)}</Message>)}
                                         <Form.Group>
                                             <ButtonToolbar>
-                                                <Button appearance="primary" className='bg-blue-500' type='submit'>Sign up</Button>
+                                                {!loading && <Button appearance="primary" type='submit' className='bg-blue-500'>Sign up</Button>}
+                                                {loading && <Loader content="Loading..." />}
                                             </ButtonToolbar>
                                         </Form.Group>
                                     </Form>
