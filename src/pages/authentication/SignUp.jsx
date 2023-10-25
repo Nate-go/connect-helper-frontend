@@ -6,7 +6,8 @@ import {
     Button,
     Panel,
     FlexboxGrid,
-    Message
+    Message,
+    Loader
 } from 'rsuite';
 
 import { register_gif } from '@/assets/images'
@@ -25,24 +26,25 @@ const SignUp = () => {
     const { data, loading, error, callApi: handleSignUp } = useApi();
 
     const onSignUp = async () => {
-        await handleLogin(authenticationEndpoints.login,
+        await handleSignUp(
+            authenticationEndpoints.signup,
             {
                 'method': 'POST',
                 'data': {
+                    'name': name,
                     'email': email,
-                    'password': password
+                    'password': password,
+                    'password_confirmation': confirmPassword
                 },
-            });
+            }
+        );
     }
 
-    const handleError = (error) => {
-        switch (error.status) {
-            case 401:
-                return "Your login information is not true";
-            case 422:
-                return error.data.password ? error.data.password : error.data.email
+    useEffect(() => {
+        if(data) {
+            navigate('/verify-account');
         }
-    };
+    }, [data]);
 
     return (
         <div className="show-fake-browser login-page max-h-screen">
@@ -73,7 +75,7 @@ const SignUp = () => {
                                             <Form.ControlLabel>Confirm Password</Form.ControlLabel>
                                             <Form.Control name="confirm password" type="password" autoComplete="off" value={confirmPassword} placeholder="Confirm Password" onChange={setConfirmPassword} />
                                         </Form.Group>
-                                        {error && (<Message type="error" className='mb-5' closable>{handleError(error)}</Message>)}
+                                        {error && (<Message type="error" className='mb-5' showIcon header>{error.data.message}</Message>)}
                                         <Form.Group>
                                             <ButtonToolbar>
                                                 {!loading && <Button appearance="primary" type='submit' className='bg-blue-500'>Sign up</Button>}
