@@ -5,12 +5,12 @@ import router from "@/routes";
 import '@/App.css'
 
 
-function App() {
+const App = () => {
   return (
     <>
        <RouterProvider router={ router} />
     </>
-  )
+  );
 }
 
 export default App

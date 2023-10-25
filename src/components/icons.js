@@ -12,7 +12,8 @@ import UserChangeIcon from '@rsuite/icons/UserChange';
 import { IoMdContacts, IoMdPersonAdd, IoIosHome } from "react-icons/io";
 import { CgLogIn } from 'react-icons/cg'; 
 import InfoRoundIcon from '@rsuite/icons/InfoRound';
-
+import SpinnerIcon from '@rsuite/icons/legacy/Spinner';
+import AppSelectIcon from '@rsuite/icons/AppSelect';
 
 export {
     CogIcon,
@@ -30,5 +31,7 @@ export {
     IoMdPersonAdd, 
     IoIosHome,
     CgLogIn,
-    InfoRoundIcon
+    InfoRoundIcon,
+    SpinnerIcon,
+    AppSelectIcon
 };

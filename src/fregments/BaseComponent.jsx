@@ -4,17 +4,13 @@ import BaseBody from './BaseBody';
 
 const BaseComponent = ({ children }) => {
     return (
-        <div className="show-container">
-            <Container>
-                <Container>
-                    <Sidebar>
-                        <BaseBody>
-                            {children}
-                        </BaseBody>
-                        <Footer>Footer</Footer>
-                    </Sidebar>
-                </Container>
-            </Container>
+        <div className="show-container w-full">
+            <Sidebar width={'w-full'} className='min-h-screen'>
+                <BaseBody>
+                    {children}
+                </BaseBody>
+                <Footer>Footer</Footer>
+            </Sidebar>
         </div>
     );
 };

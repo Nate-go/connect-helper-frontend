@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Container,
     Form,
@@ -6,12 +6,13 @@ import {
     Button,
     Panel,
     FlexboxGrid,
-    Message
+    Message,
+    Loader
 } from 'rsuite';
 
 import { vertical_bg } from '@/assets/images'
 import { authenticationEndpoints } from "@/apis";
-import { useFetch } from "@/hooks";
+import { useApi } from "@/hooks";
 import { useNavigate } from 'react-router-dom';
 import { setAuthentication } from '@/helpers/authenHelpers';
 
@@ -19,27 +20,25 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const { data, loading, error, callApi: handleLogin } = useApi();
 
-    const { data, loading, error, fetchData: handleLogin } = useFetch(
-        authenticationEndpoints.login,
-        {
-            'method': 'POST',
-            'data': {
-                'email': email,
-                'password': password
-            },
-        },
-    );
-
-    const handleSetAuthen = async () => {
-        handleLogin();
-        if (loading || !data) return <h1>Loading</h1>;
-        
-        if(data) {
+    useEffect(() => {
+        if (data) {
             setAuthentication(data);
-            navigate('/dashboard');
         }
-    };
+        navigate('/dashboard');
+    }, [data]);
+
+    const onLogin = async () => {
+        await handleLogin(authenticationEndpoints.login,
+            {
+                'method': 'POST',
+                'data': {
+                    'email': email,
+                    'password': password
+                },
+            });
+    }
 
     const handleError = (error) => {
         switch (error.status) {
@@ -50,13 +49,6 @@ const Login = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
-        if (e && e.preventDefault) {
-            e.preventDefault();
-        }
-        await handleSetAuthen();
-    };
-
     return (
         <div className="show-fake-browser login-page max-h-screen">
             <div className='grid md:grid-cols-7 col-span-4'>
@@ -65,7 +57,7 @@ const Login = () => {
                         <FlexboxGrid justify="center">
                             <FlexboxGrid.Item colspan={12}>
                                 <Panel header={<h3>Login</h3>} bordered>
-                                    <Form fluid onSubmit={handleSubmit}>
+                                    <Form fluid onSubmit={onLogin}>
                                         <Form.Group>
                                             <Form.ControlLabel>Email address</Form.ControlLabel>
                                             <Form.Control name="email" type="email" autoComplete="on" value={email} placeholder="Email" onChange={setEmail} />
@@ -74,10 +66,11 @@ const Login = () => {
                                             <Form.ControlLabel>Password</Form.ControlLabel>
                                             <Form.Control name="password" type="password" autoComplete="off" value={password} placeholder="Password" onChange={setPassword} />
                                         </Form.Group>
-                                        {error && (<Message type="error" className='mb-5' closable>{handleError(error)}</Message>)}
+                                        {error && (<Message type="error" className='mb-5'>{handleError(error)}</Message>)}
                                         <Form.Group>
                                             <ButtonToolbar>
-                                                <Button appearance="primary" type='submit'>Sign in</Button>
+                                                {!loading && <Button appearance="primary" type='submit' className='bg-blue-500'>Sign in</Button>}
+                                                {loading && <Loader content="Loading..." />}
                                                 <Button appearance="link">Forgot password?</Button>
                                             </ButtonToolbar>
                                         </Form.Group>

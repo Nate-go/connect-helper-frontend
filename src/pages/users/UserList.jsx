@@ -1,13 +1,19 @@
 import { userEndpoints } from "@/apis";
+import { useEffect } from "react";
 
-import { useFetch } from "@/hooks";
+import { useApi } from "@/hooks";
+import { BaseLoader } from "@/components";
 
 const UserList = () => {
-  const { data: users, loading: userLoading } = useFetch(
-    userEndpoints.getAll,
-    {}
-  );
-  if (userLoading || !users) return <h1>Loading</h1>;
+  const { data: users, loading: userLoading, error: userError, callApi: handldeUser } = useApi();
+  if (userLoading || !users) return <BaseLoader/>;
+
+  useEffect(() => {
+    handldeUser(
+      userEndpoints.getAll,
+      {}
+    );
+  }, [])
 
   return (
     <div>

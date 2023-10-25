@@ -1,5 +1,5 @@
 import { UserDetail, UserList} from '@/pages/users'
-import { Dashboard } from '@/pages/authenticated'
+import { Dashboard } from '@/pages/dashboards'
 
 const ProtectedRoutes = [
     {
