@@ -47,7 +47,7 @@ const SignUp = () => {
                 'method': 'POST',
                 'data': {
                     'name': name,
-                    'email': email,
+                    'email_token': email,
                     'password': password,
                     'password_confirmation': confirmPassword,
                     'enterprise': enterprise,
