@@ -17,9 +17,6 @@ import { useApi } from "@/hooks";
 import { useNavigate } from 'react-router-dom';
 import { ToastMessage } from '@/components';
 
-const CLIENT_ID = "359676249009-34tqpm71tj75n1t21ibcl7u2nr1kmsn3.apps.googleusercontent.com";
-const SCOPES = "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile";
-
 const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -72,14 +69,14 @@ const SignUp = () => {
         const google = window.google;
 
         google.accounts.id.initialize({
-            client_id: CLIENT_ID,
+            client_id: import.meta.env.VITE_CLIENT_ID,
         });
 
         setEmailToken(
             google.accounts.oauth2.initTokenClient({
-                client_id: CLIENT_ID,
+                client_id: import.meta.env.VITE_CLIENT_ID,
                 callback: responseGoogle,
-                scope: SCOPES
+                scope: import.meta.env.VITE_SCOPES
             })
         );
 
