@@ -38,6 +38,7 @@ const SignUp = () => {
             toaster.push(ToastMessage('error', 'You have not selected email yet'), 'topEnd');
             return;
         }
+
         await handleSignUp(
             authenticationEndpoints.signup,
             {
@@ -55,7 +56,7 @@ const SignUp = () => {
 
     useEffect(() => {
         if(data) {
-            console.log(data);
+
             navigate('/dashboard');
         }
     }, [data]);
