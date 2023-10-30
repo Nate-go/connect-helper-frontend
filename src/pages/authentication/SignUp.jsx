@@ -7,25 +7,40 @@ import {
     Panel,
     FlexboxGrid,
     Message,
-    Loader
+    Loader,
+    useToaster
 } from 'rsuite';
 
 import { register_gif } from '@/assets/images'
 import { authenticationEndpoints } from "@/apis";
 import { useApi } from "@/hooks";
 import { useNavigate } from 'react-router-dom';
-import { setAuthentication } from '@/helpers/authenHelpers';
+import { ToastMessage } from '@/components';
+
+const CLIENT_ID = "359676249009-34tqpm71tj75n1t21ibcl7u2nr1kmsn3.apps.googleusercontent.com";
+const SCOPES = "https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile";
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [name, setName] = useState('');
+    const [emailToken, setEmailToken] = useState({});
+    const [enterprise, setEnterprise] = useState('');
+    const toaster = useToaster();
 
     const navigate = useNavigate();
     const { data, loading, error, callApi: handleSignUp } = useApi();
 
+    const selectEmail = () => {
+        emailToken.requestAccessToken();
+    }
+
     const onSignUp = async () => {
+        if(! email ) {
+            toaster.push(ToastMessage('error', 'You have not selected email yet'), 'topEnd');
+            return;
+        }
         await handleSignUp(
             authenticationEndpoints.signup,
             {
@@ -34,7 +49,8 @@ const SignUp = () => {
                     'name': name,
                     'email': email,
                     'password': password,
-                    'password_confirmation': confirmPassword
+                    'password_confirmation': confirmPassword,
+                    'enterprise': enterprise,
                 },
             }
         );
@@ -42,9 +58,32 @@ const SignUp = () => {
 
     useEffect(() => {
         if(data) {
-            navigate('/verify-account');
+            console.log(data);
+            navigate('/dashboard');
         }
     }, [data]);
+
+    const responseGoogle = (response) => {
+        setEmail(response);
+        console.log(email);
+    }
+
+    useEffect(() => {
+        const google = window.google;
+
+        google.accounts.id.initialize({
+            client_id: CLIENT_ID,
+        });
+
+        setEmailToken(
+            google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                callback: responseGoogle,
+                scope: SCOPES
+            })
+        );
+
+    }, []);
 
     return (
         <div className="show-fake-browser login-page max-h-screen">
@@ -58,14 +97,22 @@ const SignUp = () => {
                         <FlexboxGrid justify="center">
                             <FlexboxGrid.Item colspan={12}>
                                 <Panel header={<h3>Sign up</h3>} bordered>
+                                    <Form.Group className='flex flex-col pb-5'>
+                                        <Form.ControlLabel>Email address</Form.ControlLabel>
+                                        {email?.access_token ? 
+                                            <input type="submit" onClick={selectEmail} className='bg-green-500 rs-btn rs-btn-primary' value="Selected" />
+                                            :
+                                            <input type="submit" onClick={selectEmail} className='bg-blue-500 rs-btn rs-btn-primary' value="Select email" />
+                                        }
+                                    </Form.Group>
                                     <Form fluid onSubmit={onSignUp}>
                                         <Form.Group>
                                             <Form.ControlLabel>Name</Form.ControlLabel>
                                             <Form.Control name="name" type="text" autoComplete="off" value={name} placeholder="Name" onChange={setName} />
                                         </Form.Group>
                                         <Form.Group>
-                                            <Form.ControlLabel>Email address</Form.ControlLabel>
-                                            <Form.Control name="email" type="email" autoComplete="on" value={email} placeholder="Email" onChange={setEmail} />
+                                            <Form.ControlLabel>Enterprise</Form.ControlLabel>
+                                            <Form.Control name="name" type="text" autoComplete="off" value={enterprise} placeholder="Enterprise" onChange={setEnterprise} />
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.ControlLabel>Password</Form.ControlLabel>
@@ -83,6 +130,7 @@ const SignUp = () => {
                                             </ButtonToolbar>
                                         </Form.Group>
                                     </Form>
+                                    
                                 </Panel>
                             </FlexboxGrid.Item>
                         </FlexboxGrid>
