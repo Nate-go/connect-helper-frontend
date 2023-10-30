@@ -56,7 +56,6 @@ const SignUp = () => {
 
     useEffect(() => {
         if(data) {
-
             navigate('/dashboard');
         }
     }, [data]);
