@@ -16,6 +16,7 @@ import SpinnerIcon from '@rsuite/icons/legacy/Spinner';
 import AppSelectIcon from '@rsuite/icons/AppSelect';
 import { MdOutlineError } from 'react-icons/md' 
 import { BsPersonFillCheck } from 'react-icons/bs'
+import PeopleBranchIcon from '@rsuite/icons/PeopleBranch'
 
 export {
     CogIcon,
@@ -37,5 +38,6 @@ export {
     SpinnerIcon,
     AppSelectIcon,
     MdOutlineError,
-    BsPersonFillCheck
+    BsPersonFillCheck,
+    PeopleBranchIcon
 };

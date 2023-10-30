@@ -45,7 +45,7 @@ const SignUp = () => {
                 'method': 'POST',
                 'data': {
                     'name': name,
-                    'email_token': email,
+                    'gmail_token': email,
                     'password': password,
                     'password_confirmation': confirmPassword,
                     'enterprise': enterprise,
@@ -62,7 +62,7 @@ const SignUp = () => {
 
     const responseGoogle = (response) => {
         setEmail(response);
-        console.log(email);
+        console.log(response);
     }
 
     useEffect(() => {
@@ -76,7 +76,9 @@ const SignUp = () => {
             google.accounts.oauth2.initTokenClient({
                 client_id: import.meta.env.VITE_CLIENT_ID,
                 callback: responseGoogle,
-                scope: import.meta.env.VITE_SCOPES
+                scope: import.meta.env.VITE_SCOPES,
+                access_type: 'offline',
+                prompt:'consent'
             })
         );
 

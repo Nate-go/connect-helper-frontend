@@ -1,5 +1,6 @@
 import { UserDetail, UserList} from '@/pages/users'
 import { Dashboard } from '@/pages/dashboards'
+import { Connection } from '@/pages/connections'
 
 const ProtectedRoutes = [
     {
@@ -13,6 +14,10 @@ const ProtectedRoutes = [
     {
         path: "/users",
         element: <UserList />,
+    },
+    {
+        path: "/connections",
+        element: <Connection />,
     }
 ]
 
