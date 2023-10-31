@@ -62,7 +62,6 @@ const SignUp = () => {
 
     const responseGoogle = (response) => {
         setEmail(response);
-        console.log(response);
     }
 
     useEffect(() => {
