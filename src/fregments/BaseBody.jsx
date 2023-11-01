@@ -13,6 +13,7 @@ import {
     NoticeIcon,
     MemberIcon,
     UserChangeIcon,
+    PeopleBranchIcon
 } from '@/components/icons.js';
 
 import { logo_image } from '@/assets/images'
@@ -95,6 +96,9 @@ const BaseBody = ({ children }) => {
                                 </Nav.Item>
                                 <Nav.Item eventKey="/users" onClick={() => handleNavigate('/users')} active={activeKey('/users')} icon={<GroupIcon />}>
                                     Users
+                                </Nav.Item>
+                                <Nav.Item eventKey="/connections" onClick={() => handleNavigate('/connections')} active={activeKey('/connections')} icon={<PeopleBranchIcon />}>
+                                    Connection
                                 </Nav.Item>
                                 <Nav.Menu
                                     eventKey="3"

@@ -17,38 +17,42 @@ import {
     BsPersonFillCheck
 } from '@/components/icons.js';
 
-const CustomNavbar = ({ onSelect, activeKey, ...props }) => {
+const CustomNavbar = ({ onSelect, ...props }) => {
     const auth = getAuthentication();
     const navigate = useNavigate();
+    const currentPath = getCurrentPath();
+    const activeKey = (path) => {
+        return currentPath.includes(path);
+    };
 
     return (
         <Navbar {...props}>
             <Navbar.Brand href="/">
                 <img src={logo_image} alt="" className='w-28 -mt-5 h-14 -ml-3' />
             </Navbar.Brand>
-            <Nav onSelect={onSelect} activeKey={activeKey}>
-                <Nav.Item eventKey="/" icon={<IoIosHome />} onClick={() => navigate('/')}>
+            <Nav onSelect={onSelect} >
+                <Nav.Item eventKey="/" active={activeKey('/')} icon={<IoIosHome />} onClick={() => navigate('/')}>
                     Home
                 </Nav.Item>
-                <Nav.Item eventKey="/about" onClick={() => navigate('/about')} icon={<InfoRoundIcon/>}>About</Nav.Item>
-                <Nav.Item eventKey="/contact" onClick={() => navigate('/contact')} icon={<IoMdContacts/>}>Contact</Nav.Item>
+                <Nav.Item eventKey="/about" active={activeKey('/about')}  onClick={() => navigate('/about')} icon={<InfoRoundIcon/>}>About</Nav.Item>
+                <Nav.Item eventKey="/contact" active={activeKey('/contact')}  onClick={() => navigate('/contact')} icon={<IoMdContacts/>}>Contact</Nav.Item>
                 {!auth && (
                     <>
-                        <Nav.Item eventKey="/login" onClick={() => navigate('/login')}  icon={<CgLogIn/>}>Login</Nav.Item>
-                        <Nav.Item eventKey="/signup" onClick={() => navigate('/signup')} icon={<IoMdPersonAdd/>}>Sign Up</Nav.Item>
-                        <Nav.Item eventKey="/verify-account" onClick={() => navigate('/verify-account')} icon={<BsPersonFillCheck />}>Verify Account</Nav.Item>
+                        <Nav.Item eventKey="/login" active={activeKey('/login')}  onClick={() => navigate('/login')}  icon={<CgLogIn/>}>Login</Nav.Item>
+                        <Nav.Item eventKey="/signup" active={activeKey('/signup')}  onClick={() => navigate('/signup')} icon={<IoMdPersonAdd/>}>Sign Up</Nav.Item>
+                        <Nav.Item eventKey="/verify-account" active={activeKey('/verify-account')}  onClick={() => navigate('/verify-account')} icon={<BsPersonFillCheck />}>Verify Account</Nav.Item>
                     </>
                 )}
                 {auth && (
                     <>
-                        <Nav.Item eventKey="/dashboard" onClick={() => navigate('/dashboard')} icon={<DashboardIcon />}>Dashboard</Nav.Item>
+                        <Nav.Item eventKey="/dashboard" active={activeKey('/dashboard')}  onClick={() => navigate('/dashboard')} icon={<DashboardIcon />}>Dashboard</Nav.Item>
                     </>
                 )}
                 
             </Nav>
             <Nav pullRight>
                 <Nav.Menu title="Setting" icon={<CogIcon />}>
-                    <Nav.Item eventKey="/help" onClick={() => navigate('/help')} icon={<HelpOutlineIcon/>}>Help</Nav.Item>
+                    <Nav.Item eventKey="/help" active={activeKey('/help')}  onClick={() => navigate('/help')} icon={<HelpOutlineIcon/>}>Help</Nav.Item>
                 </Nav.Menu>
             </Nav>
         </Navbar>
@@ -56,11 +60,9 @@ const CustomNavbar = ({ onSelect, activeKey, ...props }) => {
 };
 
 const BaseHeader = () => {
-    const currentPath = getCurrentPath();
-    const [activeKey, setActiveKey] = React.useState(currentPath);
 
     return (
-        <CustomNavbar appearance="subtle" activeKey={activeKey} onSelect={setActiveKey} />
+        <CustomNavbar appearance="subtle"/>
     );
 };
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "@/apis/axiosConfig";
+import { signOut } from "@/helpers/authenHelpers";
 
 const useApi = () => {
 
@@ -15,6 +16,9 @@ const useApi = () => {
     } catch (error) {
       setLoading(false);
       setError(error.response);
+      if(error.response?.status == 401) {
+          signOut();
+      }
     }
   };
 

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { errorHandler, successHandler } from "./axiosHandler";
+import { getAuthentication } from "@/helpers/authenHelpers";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -10,7 +11,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = "getAuthToken()";
+    const token = getAuthentication()?.access_token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
