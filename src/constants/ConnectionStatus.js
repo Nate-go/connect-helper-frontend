@@ -1,6 +1,6 @@
-const UserRole = {
+const ConnectionStatus = {
     Private: 0,
     Public: 1
 }
 
-export default UserRole
+export default ConnectionStatus

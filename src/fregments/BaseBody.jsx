@@ -1,4 +1,4 @@
-import { Container, Header, Sidebar, Sidenav, Content, Navbar, Nav } from 'rsuite';
+import { Container, Header, Sidebar, Sidenav, Content, Navbar, Nav, Row, Col, Panel } from 'rsuite';
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
@@ -83,7 +83,7 @@ const BaseBody = ({ children }) => {
                     collapsible
                     className='min-h-screen'
                 >
-                    <Sidenav.Header>
+                    <Sidenav.Header onClick={() => navigate('/')} className='cursor-pointer'>
                         <div className='flex flex-row'>
                             <img src={logo_image} alt="" />
                         </div>
@@ -118,7 +118,16 @@ const BaseBody = ({ children }) => {
                 </Sidebar>
 
                 <Container className='w-full'>
-                    <Content className='p-8'>{children}</Content>
+                    <Row className="show-grid">
+                        <Col sm={24} md={24} lg={24}>
+                            <div className='w-full h-full bg-black'>
+                                haha
+                            </div>
+                        </Col>
+                    </Row>
+                    <Content className='p-4'>
+                        {children}
+                    </Content>
                 </Container>
             </Container>
         </div>
