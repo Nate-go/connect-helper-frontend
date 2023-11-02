@@ -16,7 +16,7 @@ const useApi = () => {
     } catch (error) {
       setLoading(false);
       setError(error.response);
-      if(error.response?.status == 401) {
+      if (error.response?.status == 401) {
           signOut();
       }
     }
