@@ -1,5 +1,5 @@
 import { Grid, Row, Col, Panel } from 'rsuite';
-import { ConnectionTable, ConnectionTags, ConnectionStatuses } from '@/components/connections';
+import { ConnectionTags, ConnectionStatuses } from '@/components/connections';
 import { useState, useEffect } from 'react';
 
 import { BaseTable } from '@components/table';
@@ -19,7 +19,7 @@ const Connection = () => {
         column: PaginationDefault.COLUMN
     });
     const [statuses, setStatuses] = useState([]);
-    const [load, setLoad] = useState(true);
+    const [fetch, setFetch] = useState(true);
     const { data: connectionData, loading: connectionLoading, error, callApi: handleGetConnections } = useApi();
 
     useEffect(() => {
@@ -31,18 +31,18 @@ const Connection = () => {
                 statuses
             }
         })
-    }, [load]);
+    }, [fetch]);
 
     const handleTags = (newTags) => {
         setTags(newTags);
         setPagination(1, pagination.limit);
-        setLoad(!load);
+        setFetch(!fetch);
     }
 
     const handleStatuses = (newStatuses) => {
         setStatuses(newStatuses);
         setPagination(1, pagination.limit);
-        setLoad(!load);
+        setFetch(!fetch);
     }
 
     const handlePagination = (page, limit) => {
@@ -50,7 +50,7 @@ const Connection = () => {
             page,
             limit,
         })
-        setLoad(!load);
+        setFetch(!fetch);
     };
 
     const handleSort = (column, order) => {
@@ -58,13 +58,13 @@ const Connection = () => {
             order,
             column
         })
-        setLoad(!load);
+        setFetch(!fetch);
     };
 
     return (
         <Grid fluid>
             <Row className="show-grid">
-                <Col xs={24} sm={6} md={5}>
+                <Col xs={24} sm={5} md={5}>
                     <Panel header='Filter' shaded className='w-full h-full'>
                         <div className='flex flex-col w-full h-full gap-4'>
                             <ConnectionTags setTags={handleTags} />
@@ -73,7 +73,7 @@ const Connection = () => {
                         </div>
                     </Panel>
                 </Col>
-                <Col xs={24} sm={18} md={19}>
+                <Col xs={24} sm={19} md={19}>
                     <div className='w-full h-full'>
                         <Panel header='Connections' shaded className='w-full h-full'>
                             {connectionData?.data ?     

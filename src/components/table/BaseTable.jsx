@@ -20,6 +20,9 @@ const BaseTable = ({ items, dataLoading, handleSort }) => {
     const [sortColumn, setSortColumn] = React.useState();
     const [sortType, setSortType] = React.useState();
     const [loading, setLoading] = React.useState(false);
+    const [checkedKeys, setCheckedKeys] = React.useState([]);
+    let checked = false;
+    let indeterminate = false;
 
     const handleSortColumn = (sortColumn, sortType) => {
         handleSort(sortColumn, sortType);
@@ -30,10 +33,6 @@ const BaseTable = ({ items, dataLoading, handleSort }) => {
             setSortType(sortType);
         }, 500);
     };
-
-    const [checkedKeys, setCheckedKeys] = React.useState([]);
-    let checked = false;
-    let indeterminate = false;
 
     if (checkedKeys.length === items.length) {
         checked = true;
@@ -47,7 +46,7 @@ const BaseTable = ({ items, dataLoading, handleSort }) => {
         const keys = checked ? items.map(item => item.id) : [];
         setCheckedKeys(keys);
     };
-    
+
     const handleCheck = (value, checked) => {
         const keys = checked ? [...checkedKeys, value] : checkedKeys.filter(item => item !== value);
         setCheckedKeys(keys);
@@ -63,7 +62,7 @@ const BaseTable = ({ items, dataLoading, handleSort }) => {
             sortType={sortType}
             onSortColumn={handleSortColumn}
         >
-            <Column width={50} align="center">
+            <Column width={40} align="center" fixed>
                 <HeaderCell style={{ padding: 0 }}>
                     <div style={{ lineHeight: '40px' }}>
                         <Checkbox
@@ -76,17 +75,12 @@ const BaseTable = ({ items, dataLoading, handleSort }) => {
                 </HeaderCell>
                 <CheckCell dataKey="id" checkedKeys={checkedKeys} onChange={handleCheck} />
             </Column>
-            <Column width={60} align="center" fixed sortable>
-                <HeaderCell>Id</HeaderCell>
-                <BaseCell dataKey="id" />
-            </Column>
-
-            <Column width={280} fullText sortable>
+            <Column width={270} fullText sortable fixed>
                 <HeaderCell>Name</HeaderCell>
                 <NameCell dataKey='name' dataKeyNote='note' />
             </Column>
 
-            <Column width={280} sortable>
+            <Column width={240} sortable>
                 <HeaderCell>Tags</HeaderCell>
                 <TagCell dataKey="tags" />
             </Column>
@@ -98,11 +92,7 @@ const BaseTable = ({ items, dataLoading, handleSort }) => {
                 <HeaderCell>Owner</HeaderCell>
                 <BaseCell dataKey="owner" />
             </Column>
-            <Column width={170} sortable>
-                <HeaderCell>Created</HeaderCell>
-                <DateTimeCell dataKey="created_at" />
-            </Column>
-            <Column width={250}>
+            <Column width={220}>
                 <HeaderCell>Users</HeaderCell>
                 <UsersCell dataKey="users" />
             </Column>
