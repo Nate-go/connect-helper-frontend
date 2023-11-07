@@ -1,7 +1,9 @@
 import { Modal, Button, ButtonToolbar, Placeholder } from 'rsuite';
 import { AiOutlineQuestionCircle } from '@/components/icons';
+import { useEffect } from 'react';
 
 const ConfirmAction = ({confirmAction, message, open, setOpen}) => {
+
     const handleClose = () => {
         setOpen(false);
     };

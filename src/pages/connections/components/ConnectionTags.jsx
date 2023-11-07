@@ -5,12 +5,13 @@ import { PlusIcon, EditIcon, TrashIcon } from '@/components/icons';
 import tagEndpoints from '@/apis/enpoints/tag';
 import connectionEndpoints from '@/apis/enpoints/connection';
 import { AutoLoader } from '@/components';
-import { useApi } from '@/hooks';
+import { useApi, usePopup } from '@/hooks';
 import { getIds } from '@/helpers/dataHelpers';
 import { ConfirmAction, ConfirmActionSelect } from '@/components/confirms';
 
 const ConnectionTags = ({ tagData, setTags }) => {
     const data = tagData;
+    const [confirmData, setConfirmData] = useState(null);
     const [groupValue, setGroupValue] = useState([]);
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
@@ -18,6 +19,8 @@ const ConnectionTags = ({ tagData, setTags }) => {
     const [openConfirm, setOpenConfirm] = useState(false);
     const [confirmMessage, setConfirmMessage] = useState('');
     const [confirmAction, setConfirmAction] = useState(null);
+
+    const  { onConfirm, setConfirm } = usePopup();
 
     const [tagName, setTagName] = useState('');
     const { data: createTagData, loading: createTagLoading, error: createTagError, callApi: handleCreateTag } = useApi();
@@ -113,6 +116,7 @@ const ConnectionTags = ({ tagData, setTags }) => {
 
     }, [createTagData])
 
+   
     const onEdit = async (item) => {
         setOpenEdit(true);
         await handleTagDetail(tagEndpoints.get + '/' + item.id, {});
@@ -120,22 +124,34 @@ const ConnectionTags = ({ tagData, setTags }) => {
     }
 
     const confirmDeleteConnectionTag = (connectionId, tagId) => {
-        setConfirmAction(() => {onDeleteConnectionTag([connectionId], [tagId])});
-        setConfirmMessage('Are you sure to remove ' + checkedKeys.length + ' connections?');
+        setConfirmData({
+            'connectionIds': [connectionId],
+            'tagIds': [tagId]
+        })
+        // setConfirmAction(() => onDeleteConnectionTag('aloooo'));
+        // setConfirmMessage('Are you sure to remove connection tag?');
         setOpenConfirm(true);
+        
     }
 
-    const onDeleteConnectionTag = (connectionIds, tagIds) => {
-        // deleteConnectionTag(connectionIds, tagIds)
+    const onDeleteConnectionTag = (mess) => {
+        console.log(mess);
+        // deleteConnectionTag(confirmData.connectionIds, confirmData.tagIds);
     }
 
     const confirmDeleteTag = (id) => {
 
     }
-
+    if(openConfirm) {
+        return <ConfirmAction
+            confirmAction={() => onDeleteConnectionTag('aloooo')}
+            message='Are you sure to remove connection tag?'
+            open={true} setOpen={setOpenConfirm}
+        />
+    }
     return (
         <Panel header={'Tags (' + data.length + ')'} bodyFill className='-mt-6'>
-            <ConfirmAction confirmAction={confirmAction} message={confirmMessage} open={openConfirm} setOpen={setOpenConfirm} />
+
             <ButtonToolbar className='pb-4'>
                 <Button color="blue" className='bg-blue-600' appearance="primary" startIcon={<PlusIcon />} onClick={() => setOpenCreate(true)}>
                     New tag
@@ -150,9 +166,6 @@ const ConnectionTags = ({ tagData, setTags }) => {
             </Checkbox> : <p>Empty data</p>}
             <CheckboxGroup name="checkboxList" value={groupValue} onChange={handleChange}>
                 {data.map(item => (
-                    // <Checkbox key={item.id} value={item.id}>
-                    //         {item.name}
-                    // </Checkbox>
                     <div key={item.id} className='flex justify-between' value={item}>
                         <Checkbox key={item.id} value={item.id}>
                             {item.name}
@@ -200,7 +213,7 @@ const ConnectionTags = ({ tagData, setTags }) => {
                                             {tagDetailData?.connections?.map((item, index) => (
                                                 <List.Item key={index} index={index} className='flex justify-between w-full'>
                                                     <p>{item.name}</p>
-                                                    <Button appearance="link" onClick={() => onDeleteConnectionTag(item.id, tagDetailData?.tag?.id)} startIcon={<TrashIcon />} className='hover:text-red-600'>
+                                                    <Button appearance="link" onClick={() => confirmDeleteConnectionTag(item.id, tagDetailData?.tag?.id)} startIcon={<TrashIcon />} className='hover:text-red-600'>
                                                     </Button>
                                                 </List.Item>
                                             ))}
