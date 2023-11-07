@@ -9,6 +9,7 @@ import React from 'react';
 
 import { getDataTimeFormat } from '@/helpers/dateTimeHelpers';
 import { getConstantTitle } from '@/helpers/constantHelpers';
+import { TrashIcon, EditIcon } from '@/components/icons';
 
 const { Cell } = Table;
 
@@ -29,6 +30,17 @@ export const BaseCell = ({ rowData, dataKey, data = null, ...props }) => {
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
                 <p>{data ?? rowData[dataKey]}</p>
+            </div>
+        </Cell>
+
+    );
+}
+
+export const TagCell = ({ rowData, dataKey, data = null, ...props }) => {
+    return (
+        <Cell {...props}>
+            <div className='flex flex-col justify-center w-full h-full'>
+                <Tag key={rowData['id']} size="md">{rowData[dataKey]}</Tag>
             </div>
         </Cell>
 
@@ -64,11 +76,13 @@ export const UsersCell = ({ rowData, dataKey, ...props }) => {
     );
 }
 
-export const ConstantCell = ({ rowData, dataKey, constant, ...props }) => {
+export const ConstantCell = ({ rowData, dataKey, constant, colors, ...props }) => {
     return (
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
-                <p>{getConstantTitle(constant, rowData[dataKey])}</p>
+                <TagGroup>
+                    <Tag color={colors[rowData[dataKey]]} key={rowData['id']} size="md">{getConstantTitle(constant, rowData[dataKey])}</Tag>
+                </TagGroup>
             </div>
         </Cell>
 
@@ -86,12 +100,13 @@ export const DateTimeCell = ({ rowData, dataKey, ...props }) => {
     );
 }
 
-export const ActionCell = ({ rowData, dataKey, ...props }) => {
+export const ActionCell = ({ rowData, dataKey, onEdit, onDelete, ...props }) => {
     return (
         <Cell {...props}>
-            <div className='flex flex-col justify-center w-full h-full'>
-                <Button appearance="link" onClick={() => alert(`id:${rowData.id}`)}>
-                    Edit
+            <div className='flex flex-row justify-center w-full h-full'>
+                <Button appearance="link" onClick={() => onEdit(rowData)} startIcon={<EditIcon/>} className='hover:text-lg'>
+                </Button>
+                <Button appearance="link" onClick={() => onDelete(rowData)} startIcon={<TrashIcon />} className='hover:text-lg'>
                 </Button>
             </div>
         </Cell>
@@ -103,18 +118,17 @@ export const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props })
     <Cell {...props} style={{ padding: 0 }}>
         <div style={{ lineHeight: '46px' }}>
             <Checkbox
-                value={rowData[dataKey]}
+                value={rowData}
                 inline
                 onChange={onChange}
-                checked={checkedKeys.some(item => item === rowData[dataKey])}
+                checked={checkedKeys.some(item => item.id === rowData[dataKey])}
             />
         </div>
     </Cell>
 );
 
-export const TagCell = ({ rowData, dataKey, ...props }) => {
+export const TagGroupCell = ({ rowData, dataKey, ...props }) => {
     const tags = rowData[dataKey];
-
     if (!tags) {
         return (
             <Cell {...props}>
@@ -125,18 +139,20 @@ export const TagCell = ({ rowData, dataKey, ...props }) => {
         );
     }
 
-    const Tags = tags.map((tag) => (
-        <Tag key={tag.id} size="md">{tag.name}</Tag>
-    ));
 
     return (
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
                 <TagGroup>
-                    {Tags}
+                    {
+                        tags.map((item) => (
+                            <Tag key={item.id} size="md">{item.name}</Tag>
+                        ))
+                    }
                 </TagGroup>
             </div>
         </Cell>
 
     );
 }
+

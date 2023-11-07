@@ -17,6 +17,15 @@ import AppSelectIcon from '@rsuite/icons/AppSelect';
 import { MdOutlineError } from 'react-icons/md' 
 import { BsPersonFillCheck } from 'react-icons/bs'
 import PeopleBranchIcon from '@rsuite/icons/PeopleBranch'
+import CloseIcon from '@rsuite/icons/Close';
+import PlusIcon from '@rsuite/icons/Plus';
+import CheckIcon from '@rsuite/icons/Check';
+import TrashIcon from '@rsuite/icons/Trash';
+import CombinationIcon from '@rsuite/icons/Combination';
+import { BiLockAlt, BiLockOpenAlt } from "react-icons/bi"
+import { AiOutlineQuestionCircle, AiOutlineTags } from "react-icons/ai"
+import { TbStatusChange } from "react-icons/tb"
+import EditIcon from '@rsuite/icons/Edit';
 
 export {
     CogIcon,
@@ -39,5 +48,16 @@ export {
     AppSelectIcon,
     MdOutlineError,
     BsPersonFillCheck,
-    PeopleBranchIcon
+    PeopleBranchIcon,
+    CloseIcon,
+    PlusIcon,
+    CheckIcon,
+    TrashIcon,
+    CombinationIcon,
+    BiLockAlt,
+    BiLockOpenAlt,
+    AiOutlineQuestionCircle,
+    TbStatusChange,
+    EditIcon,
+    AiOutlineTags
 };

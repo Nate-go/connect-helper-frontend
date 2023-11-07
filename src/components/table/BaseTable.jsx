@@ -7,20 +7,18 @@ import {
     TagCell,
     ConstantCell,
     NameCell,
-    DateTimeCell,
     ActionCell,
     UsersCell,
-    CheckCell
+    CheckCell,
+    TagGroupCell
 } from './TableCell';
-import {BasePagination} from '@components';
 
 const { Column, HeaderCell, Cell } = Table;
 
-const BaseTable = ({ items, dataLoading, handleSort }) => {
-    const [sortColumn, setSortColumn] = React.useState();
-    const [sortType, setSortType] = React.useState();
-    const [loading, setLoading] = React.useState(false);
-    const [checkedKeys, setCheckedKeys] = React.useState([]);
+const BaseTable = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete }) => {
+    const [sortColumn, setSortColumn] = useState();
+    const [sortType, setSortType] = useState();
+    const [loading, setLoading] = useState(false);
     let checked = false;
     let indeterminate = false;
 
@@ -43,7 +41,7 @@ const BaseTable = ({ items, dataLoading, handleSort }) => {
     }
 
     const handleCheckAll = (value, checked) => {
-        const keys = checked ? items.map(item => item.id) : [];
+        const keys = checked ? items.map(item => item) : [];
         setCheckedKeys(keys);
     };
 
@@ -51,6 +49,14 @@ const BaseTable = ({ items, dataLoading, handleSort }) => {
         const keys = checked ? [...checkedKeys, value] : checkedKeys.filter(item => item !== value);
         setCheckedKeys(keys);
     };
+
+    const rowClick = (rowData) => {
+        if(checkedKeys.length == 1 && checkedKeys.includes(rowData)) {
+            setCheckedKeys([]);
+            return;
+        }
+        setCheckedKeys([rowData]);
+    }
 
     return (
         <Table height={500}
@@ -61,6 +67,7 @@ const BaseTable = ({ items, dataLoading, handleSort }) => {
             sortColumn={sortColumn}
             sortType={sortType}
             onSortColumn={handleSortColumn}
+            onRowClick={rowClick}
         >
             <Column width={40} align="center" fixed>
                 <HeaderCell style={{ padding: 0 }}>
@@ -80,13 +87,13 @@ const BaseTable = ({ items, dataLoading, handleSort }) => {
                 <NameCell dataKey='name' dataKeyNote='note' />
             </Column>
 
-            <Column width={240} sortable>
+            <Column width={240}>
                 <HeaderCell>Tags</HeaderCell>
-                <TagCell dataKey="tags" />
+                <TagGroupCell dataKey="tags" />
             </Column>
             <Column width={100}>
                 <HeaderCell>Status</HeaderCell>
-                <ConstantCell dataKey="status" constant={ConnectionStatus} />
+                <ConstantCell dataKey="status" constant={ConnectionStatus} colors={['red', 'green']}/>
             </Column>
             <Column width={150} sortable>
                 <HeaderCell>Owner</HeaderCell>
@@ -96,9 +103,9 @@ const BaseTable = ({ items, dataLoading, handleSort }) => {
                 <HeaderCell>Users</HeaderCell>
                 <UsersCell dataKey="users" />
             </Column>
-            <Column width={60} fixed="right">
+            <Column width={90} fixed="right">
                 <HeaderCell>Action</HeaderCell>
-                <ActionCell />
+                <ActionCell onEdit={onEdit} onDelete={onDelete}/>
             </Column>
         </Table>            
     );

@@ -15,7 +15,6 @@ import { register_gif } from '@/assets/images'
 import { authenticationEndpoints } from "@/apis";
 import { useApi } from "@/hooks";
 import { useNavigate } from 'react-router-dom';
-import { ToastMessage } from '@/components';
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -35,7 +34,6 @@ const SignUp = () => {
 
     const onSignUp = async () => {
         if(! email ) {
-            toaster.push(ToastMessage('error', 'You have not selected email yet'), 'topEnd');
             return;
         }
 

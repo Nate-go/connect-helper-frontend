@@ -98,7 +98,7 @@ const BaseBody = ({ children }) => {
                                     Users
                                 </Nav.Item>
                                 <Nav.Item eventKey="/connections" onClick={() => handleNavigate('/connections')} active={activeKey('/connections')} icon={<PeopleBranchIcon />}>
-                                    Connection
+                                    Connections
                                 </Nav.Item>
                                 <Nav.Menu
                                     eventKey="3"
