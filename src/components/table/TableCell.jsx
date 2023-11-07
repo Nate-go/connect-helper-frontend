@@ -76,11 +76,13 @@ export const UsersCell = ({ rowData, dataKey, ...props }) => {
     );
 }
 
-export const ConstantCell = ({ rowData, dataKey, constant, ...props }) => {
+export const ConstantCell = ({ rowData, dataKey, constant, colors, ...props }) => {
     return (
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
-                <Tag key={rowData['id']} size="lg">{getConstantTitle(constant, rowData[dataKey])}</Tag>
+                <TagGroup>
+                    <Tag color={colors[rowData[dataKey]]} key={rowData['id']} size="md">{getConstantTitle(constant, rowData[dataKey])}</Tag>
+                </TagGroup>
             </div>
         </Cell>
 
@@ -127,7 +129,6 @@ export const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props })
 
 export const TagGroupCell = ({ rowData, dataKey, ...props }) => {
     const tags = rowData[dataKey];
-
     if (!tags) {
         return (
             <Cell {...props}>
@@ -138,15 +139,16 @@ export const TagGroupCell = ({ rowData, dataKey, ...props }) => {
         );
     }
 
-    const Tags = tags.map((tag) => (
-        <Tag key={tag.id} size="md">{tag.name}</Tag>
-    ));
 
     return (
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
                 <TagGroup>
-                    {Tags}
+                    {
+                        tags.map((item) => (
+                            <Tag key={item.id} size="md">{item.name}</Tag>
+                        ))
+                    }
                 </TagGroup>
             </div>
         </Cell>

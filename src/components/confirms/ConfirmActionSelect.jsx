@@ -1,4 +1,4 @@
-import { Modal, Button, InputPicker } from 'rsuite';
+import { Modal, Button, InputPicker, CheckPicker } from 'rsuite';
 import { AiOutlineQuestionCircle } from '@/components/icons';
 import ModalBody from 'rsuite/esm/Modal/ModalBody';
 import { useState } from 'react';
@@ -14,6 +14,10 @@ const ConfirmActionSelect = ({confirmAction, message, open, setOpen, data, setVa
         confirmAction(true);
     };
 
+    const multiSelect = () => {
+        return message.includes('multi');
+    }
+
     return (
         <>
             <Modal open={open} onClose={handleClose}>
@@ -21,7 +25,12 @@ const ConfirmActionSelect = ({confirmAction, message, open, setOpen, data, setVa
                     <Modal.Title className='flex flex-row items-center gap-2'><AiOutlineQuestionCircle/> {message}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className='flex justify-center'>
-                    <InputPicker data={data} className='w-full' onChange={(value) => setValue(value)}/>
+                    {
+                        multiSelect() ? 
+                            <CheckPicker label="Tags" data={data} className='w-full' onChange={(value) => setValue(value)} />
+                        :
+                            <InputPicker data={data} className='w-full' onChange={(value) => setValue(value)} />
+                    }
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={() => handleAccept()} appearance="primary" className='bg-blue-500'>

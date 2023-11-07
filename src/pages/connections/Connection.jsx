@@ -1,21 +1,20 @@
 import { Grid, Row, Col, Panel, Button, ButtonToolbar, useToaster } from 'rsuite';
 import { ConnectionTags, ConnectionStatuses } from './components';
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 import { BaseTable } from '@components/table';
 import useApi from '@/hooks/useApi';
 import {connectionEndpoints, tagEndpoints} from '@/apis'
 import PaginationDefault from '@/constants/PaginationDefault';
 import { BasePagination, AutoLoader } from '@/components';
-import { TrashIcon, CombinationIcon, TbStatusChange } from '@/components/icons';
+import { TrashIcon, CombinationIcon, TbStatusChange, PlusIcon, AiOutlineTags } from '@/components/icons';
 import ConnectionStatus from '@/constants/ConnectionStatus';
 import {ConfirmAction, ConfirmActionSelect} from '@/components/confirms';
-import { PlusIcon } from '@/components/icons';
 import { getIds } from '@/helpers/dataHelpers';
 
 const Connection = () => {
     const [tags, setTags] = useState([]);
-    const toaster = useToaster();
 
     const [confirmPopup, setConfirmPopup] = useState({
         open: false,
@@ -35,6 +34,7 @@ const Connection = () => {
     const [selectValue, setSelectValue] = useState(null);
     const [callUpdate, setCallUpdate] = useState(false);
     const [callMerge, setCallMerge] = useState(false);
+    const [callAddTags, setCallAddTags] = useState(false);
 
     const [pagination, setPagination] = useState({
         page: PaginationDefault.PAGE,
@@ -51,9 +51,10 @@ const Connection = () => {
 
     const { data: connectionData, callApi: handleGetConnections, loading: connectionLoading } = useApi();
     const { callApi: handleDeleteConnections, loading: deleteConnectionLoading } = useApi();
-    const { callApi: handleMergeConnections, loading: mergeConnectionLoading } = useApi();
-    const { callApi: handleUpdateConnections } = useApi();
+    const { data: mergeConnectionData, callApi: handleMergeConnections, loading: mergeConnectionLoading } = useApi();
+    const { data: updateConnectionData, callApi: handleUpdateConnections } = useApi();
     const { data: tagData, callApi: handleGetTags } = useApi();
+    const { data: addTagToConnectionData, callApi: handleAddTagToConnections, loading: addTagToConnectionsLoading } = useApi();
 
     useEffect(() => {
         if(!fetchConnection) return;
@@ -90,6 +91,12 @@ const Connection = () => {
         getMergeValue();
         setCallMerge(false);
     }, [callMerge]);
+
+    useEffect(() => {
+        if (!callAddTags) return;
+        addTagToConnections(selectValue);
+        setCallAddTags(false);
+    }, [callAddTags]);
 
     const handleTags = (newTags) => {
         setTags(newTags);
@@ -160,6 +167,21 @@ const Connection = () => {
         setFetchConnection(true);
     }
 
+    const addTagToConnections = async (tagIds) => {
+        await handleAddTagToConnections(
+            connectionEndpoints.addTags,
+            {
+                method: "POST",
+                data: {
+                    connectionIds: getIds(checkedKeys),
+                    tagIds
+                }
+            }
+        );
+
+        setFetchConnection(true);
+    }
+
     const confirmDelete = () => {
         setConfirmAction(() => deleteConnection);
         setConfirmMessage('Are you sure to delete ' + checkedKeys.length + ' connections?');
@@ -202,6 +224,37 @@ const Connection = () => {
         });
     }
 
+    const addTag = () => {
+        setSelectAction(() => setCallAddTags);
+        setSelectData(tagData?.map(item => ({
+            label: item.name,
+            value: item.id
+        })));
+        setSelectMessage('Select multi tags to finish action add tag to connection');
+        setOpenSelect(true);
+    }
+
+    useEffect(() => {
+        if(!mergeConnectionData) return;
+
+        toast.success(mergeConnectionData.message);
+
+    }, [mergeConnectionData])
+
+    useEffect(() => {
+        if (!updateConnectionData) return;
+
+        toast.success(updateConnectionData.message);
+
+    }, [updateConnectionData])
+
+    useEffect(() => {
+        if (!addTagToConnectionData) return;
+
+        toast.success(addTagToConnectionData.message);
+
+    }, [addTagToConnectionData]);
+
     return (
         <Grid fluid>
             <ConfirmAction confirmAction={confirmAction} message={confirmMessage} open={openConfirm} setOpen={setOpenConfirm}/>
@@ -211,6 +264,7 @@ const Connection = () => {
                     <Panel header='Actions' shaded className='w-full h-full'>
                         <div className='flex flex-col w-full h-full gap-4'>
                             <ConnectionStatuses setStatuses={handleStatuses} />
+                            <hr />
                             <AutoLoader 
                                 display={tagData} 
                                 component={
@@ -224,7 +278,7 @@ const Connection = () => {
                     <div className='w-full h-full'>
                         <Panel header='Connections' shaded className='w-full h-full'>
                             <ButtonToolbar className='pb-4'>
-                                <Button color="green" className='bg-green-600' appearance="primary" startIcon={<PlusIcon />} onClick={console.log('haha')}>
+                                <Button color="green" className='bg-green-600' appearance="primary" startIcon={<PlusIcon />} onClick={() => {}}>
                                     New connection
                                 </Button>
                                 <Button disabled={!checkedKeys.length} color="red" className='bg-red-600' appearance="primary" startIcon={<TrashIcon />} onClick={() => setCallDelete(true)}>
@@ -236,12 +290,15 @@ const Connection = () => {
                                 <Button disabled={!checkedKeys.length} color="cyan" className='bg-cyan-500' appearance="primary" startIcon={<TbStatusChange />} onClick={changeStatus}>
                                     Change status
                                 </Button>
+                                <Button disabled={!checkedKeys.length} color='violet' className='bg-violet-700' appearance="primary" startIcon={<AiOutlineTags />} onClick={addTag}>
+                                    Add tag
+                                </Button>
                             </ButtonToolbar>
                             <AutoLoader
                                 display={connectionData?.data}
                                 component={
                                     <>
-                                        <BaseTable items={connectionData?.data?.items} dataLoading={(connectionLoading || deleteConnectionLoading || mergeConnectionLoading)} handleSort={handleSort} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={singleDelete} onEdit={onEdit}/>
+                                        <BaseTable items={connectionData?.data?.items} dataLoading={(connectionLoading || deleteConnectionLoading || mergeConnectionLoading || addTagToConnectionsLoading)} handleSort={handleSort} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={singleDelete} onEdit={onEdit}/>
                                         <BasePagination pagination={connectionData?.data?.pagination} handlePagination={handlePagination} />
                                     </>
                                 }

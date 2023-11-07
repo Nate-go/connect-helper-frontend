@@ -10,7 +10,10 @@ const App = () => {
   return (
     <>
       <RouterProvider router={ router} />
-      <ToastContainer/>
+      <ToastContainer 
+        autoClose={5000}
+        pauseOnFocusLoss={false}
+      />
     </>
   );
 }

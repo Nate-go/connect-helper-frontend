@@ -51,6 +51,10 @@ const BaseTable = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys
     };
 
     const rowClick = (rowData) => {
+        if(checkedKeys.length == 1 && checkedKeys.includes(rowData)) {
+            setCheckedKeys([]);
+            return;
+        }
         setCheckedKeys([rowData]);
     }
 
@@ -83,13 +87,13 @@ const BaseTable = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys
                 <NameCell dataKey='name' dataKeyNote='note' />
             </Column>
 
-            <Column width={240} sortable>
+            <Column width={240}>
                 <HeaderCell>Tags</HeaderCell>
                 <TagGroupCell dataKey="tags" />
             </Column>
             <Column width={100}>
                 <HeaderCell>Status</HeaderCell>
-                <ConstantCell dataKey="status" constant={ConnectionStatus} />
+                <ConstantCell dataKey="status" constant={ConnectionStatus} colors={['red', 'green']}/>
             </Column>
             <Column width={150} sortable>
                 <HeaderCell>Owner</HeaderCell>

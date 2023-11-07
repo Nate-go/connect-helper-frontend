@@ -23,7 +23,7 @@ import CheckIcon from '@rsuite/icons/Check';
 import TrashIcon from '@rsuite/icons/Trash';
 import CombinationIcon from '@rsuite/icons/Combination';
 import { BiLockAlt, BiLockOpenAlt } from "react-icons/bi"
-import { AiOutlineQuestionCircle } from "react-icons/ai"
+import { AiOutlineQuestionCircle, AiOutlineTags } from "react-icons/ai"
 import { TbStatusChange } from "react-icons/tb"
 import EditIcon from '@rsuite/icons/Edit';
 
@@ -58,5 +58,6 @@ export {
     BiLockOpenAlt,
     AiOutlineQuestionCircle,
     TbStatusChange,
-    EditIcon
+    EditIcon,
+    AiOutlineTags
 };
