@@ -59,5 +59,5 @@ export {
     AiOutlineQuestionCircle,
     TbStatusChange,
     EditIcon,
-    AiOutlineTags
+    AiOutlineTags,
 };

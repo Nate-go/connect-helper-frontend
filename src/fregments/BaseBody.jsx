@@ -19,6 +19,7 @@ import {
 import { logo_image } from '@/assets/images'
 import { getCurrentPath } from '@/helpers/pathHelper';
 import { signOut } from '@/helpers/authenHelpers';
+import UserHeader from './UserHeader';
 
 const NavToggle = ({ expand, onChange, handleSignOut }) => {
     return (
@@ -120,9 +121,7 @@ const BaseBody = ({ children }) => {
                 <Container className='w-full'>
                     <Row className="show-grid">
                         <Col sm={24} md={24} lg={24}>
-                            <div className='w-full h-full bg-black'>
-                                haha
-                            </div>
+                            <UserHeader />
                         </Col>
                     </Row>
                     <Content className='p-4'>

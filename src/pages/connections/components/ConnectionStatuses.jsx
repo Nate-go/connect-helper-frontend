@@ -6,7 +6,7 @@ const ConnectionStatuses = ({setStatuses}) => {
 
     return (
         <div>
-            <CheckPicker label={'Statuses (' + data.length + ')'} data={data} style={{ width: 250 }} onSelect={(items) => setStatuses(items)}/>
+            <CheckPicker label={'Statuses (' + data.length + ')'} data={data} style={{ width: 250 }} onSelect={(items) => setStatuses(items)} onClean={() => setStatuses([])}/>
         </div>
         
     );

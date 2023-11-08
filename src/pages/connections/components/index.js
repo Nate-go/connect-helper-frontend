@@ -1,2 +1,6 @@
-export {default as ConnectionTags } from './ConnectionTags'
+export { default as ConnectionTags } from './ConnectionTags'
 export { default as ConnectionStatuses } from './ConnectionStatuses'
+export { default as ConnectionToolbar } from './ConnectionToolbar'
+export { default as ModalCreateTag } from './ModalCreateTag'
+export { default as ModalTagDetail } from './ModalTagDetail'
+export { default as DrawerCreateTag } from './DrawerCreateConnection'

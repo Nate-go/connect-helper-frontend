@@ -1,45 +1,36 @@
 import { Grid, Row, Col, Panel, Button, ButtonToolbar, useToaster } from 'rsuite';
-import { ConnectionTags, ConnectionStatuses } from './components';
+import { ConnectionTags, ConnectionStatuses, ConnectionToolbar } from './components';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import { BaseTable } from '@components/table';
-import useApi from '@/hooks/useApi';
 import {connectionEndpoints, tagEndpoints} from '@/apis'
 import PaginationDefault from '@/constants/PaginationDefault';
 import { BasePagination, AutoLoader } from '@/components';
-import { TrashIcon, CombinationIcon, TbStatusChange, PlusIcon, AiOutlineTags } from '@/components/icons';
-import ConnectionStatus from '@/constants/ConnectionStatus';
-import {ConfirmAction, ConfirmActionSelect} from '@/components/confirms';
 import { getIds } from '@/helpers/dataHelpers';
+import { useConfirmation, useApi } from '@/hooks';
+import { PopupConfirm } from '@/components/popups';
+import { ConfirmType, ConnectionStatus } from '@/constants';
 
 const Connection = () => {
     const [tags, setTags] = useState([]);
-
-    const [confirmPopup, setConfirmPopup] = useState({
-        open: false,
-        onConfirm: () => {},
-        message: ''
-    })
-    
-    const [openConfirm, setOpenConfirm] = useState(false);
-    const [confirmMessage, setConfirmMessage] = useState('');
-    const [confirmAction, setConfirmAction] = useState(null);
-    const [callDelete, setCallDelete] = useState(false);
-
-    const [openSelect, setOpenSelect] = useState(false);
-    const [selectMessage, setSelectMessage] = useState('');
-    const [selectAction, setSelectAction] = useState(null);
-    const [selectData, setSelectData] = useState([]);
-    const [selectValue, setSelectValue] = useState(null);
-    const [callUpdate, setCallUpdate] = useState(false);
-    const [callMerge, setCallMerge] = useState(false);
-    const [callAddTags, setCallAddTags] = useState(false);
+    const {
+        isConfirmationOpen,
+        openConfirmation,
+        handleConfirm,
+        handleCancel,
+        confirmType,
+        confirmData,
+        confirmValue,
+        setConfirmValue,
+        message
+    } = useConfirmation();
 
     const [pagination, setPagination] = useState({
         page: PaginationDefault.PAGE,
         limit: PaginationDefault.LIMIT,
     });
+
     const [sort, setSort] = useState({
         order: PaginationDefault.ORDER,
         column: PaginationDefault.COLUMN
@@ -51,10 +42,10 @@ const Connection = () => {
 
     const { data: connectionData, callApi: handleGetConnections, loading: connectionLoading } = useApi();
     const { callApi: handleDeleteConnections, loading: deleteConnectionLoading } = useApi();
-    const { data: mergeConnectionData, callApi: handleMergeConnections, loading: mergeConnectionLoading } = useApi();
-    const { data: updateConnectionData, callApi: handleUpdateConnections } = useApi();
+    const { callApi: handleMergeConnections, loading: mergeConnectionLoading } = useApi();
+    const { callApi: handleUpdateConnections } = useApi();
     const { data: tagData, callApi: handleGetTags } = useApi();
-    const { data: addTagToConnectionData, callApi: handleAddTagToConnections, loading: addTagToConnectionsLoading } = useApi();
+    const { callApi: handleAddTagToConnections, loading: addTagToConnectionsLoading } = useApi();
 
     useEffect(() => {
         if(!fetchConnection) return;
@@ -71,32 +62,10 @@ const Connection = () => {
     }, [fetchConnection]);
 
     useEffect(() => {
+        if(!fetchTag) return;
         handleGetTags(tagEndpoints.get, {});
+        setFetchTag(false);
     }, [fetchTag]);
-
-    useEffect(() => {
-        if(!callDelete) return;
-        confirmDelete();
-        setCallDelete(false);
-    }, [callDelete]);
-
-    useEffect(() => {
-        if (!callUpdate) return;
-        updateStatusData();
-        setCallUpdate(false);
-    }, [callUpdate]);
-
-    useEffect(() => {
-        if (!callMerge) return;
-        getMergeValue();
-        setCallMerge(false);
-    }, [callMerge]);
-
-    useEffect(() => {
-        if (!callAddTags) return;
-        addTagToConnections(selectValue);
-        setCallAddTags(false);
-    }, [callAddTags]);
 
     const handleTags = (newTags) => {
         setTags(newTags);
@@ -126,25 +95,25 @@ const Connection = () => {
         setFetchConnection(true);
     };
 
-    const deleteConnection = async () => {
+    const deleteConnections = async (ids) => {
         await handleDeleteConnections(
             connectionEndpoints.delete,
             {
                 method: 'DELETE',
-                data: { ids: getIds(checkedKeys) } 
+                data: { ids } 
             }
         );
 
         setFetchConnection(true);
     };
 
-    const mergeConnection = async (mainConnection) => {
+    const mergeConnections = async (main, ids) => {
         await handleMergeConnections(
             connectionEndpoints.merge,
             {
                 params: {
-                    ids: getIds(checkedKeys),
-                    main: mainConnection
+                    ids,
+                    main
                 }
             }
         );
@@ -152,14 +121,14 @@ const Connection = () => {
         setFetchConnection(true);
     };
 
-    const updateConnection = async (updateData) => {
+    const updateConnection = async (updateData, ids) => {
         await handleUpdateConnections(
             connectionEndpoints.update,
             {
                 "method":"PUT",
                 data: { 
-                    ids: getIds(checkedKeys),
-                    data: updateData 
+                    ids,
+                    data: updateData
                 }
             }
         );
@@ -167,13 +136,13 @@ const Connection = () => {
         setFetchConnection(true);
     }
 
-    const addTagToConnections = async (tagIds) => {
+    const addTagToConnections = async (tagIds, connectionIds) => {
         await handleAddTagToConnections(
             connectionEndpoints.addTags,
             {
                 method: "POST",
                 data: {
-                    connectionIds: getIds(checkedKeys),
+                    connectionIds,
                     tagIds
                 }
             }
@@ -182,83 +151,66 @@ const Connection = () => {
         setFetchConnection(true);
     }
 
-    const confirmDelete = () => {
-        setConfirmAction(() => deleteConnection);
-        setConfirmMessage('Are you sure to delete ' + checkedKeys.length + ' connections?');
-        setOpenConfirm(true);
-    }
-
-    const getMergeValue = () => {
-        mergeConnection(selectValue);
-    }
-
-    const singleDelete = (rowData) => {
-        setCheckedKeys([rowData]);
-        setCallDelete(true);
+    const confirmDeleteConnection = (rowData) => {
+        openConfirmation(deleteConnections, [[rowData.id]], 'Are you sure to delete this connection ?');
     }
 
     const onEdit = (rowData) => {
         alert(rowData['id']);
     }
 
-    const changeStatus = () => {
-        setSelectAction(() => setCallUpdate);
-        setSelectData(Object.entries(ConnectionStatus).map(([label, value]) => ({ label, value })));
-        setSelectMessage('Select status to finish action change status');
-        setOpenSelect(true);
+    const confirmChangeStatus = () => {
+        openConfirmation(
+            updateConnection,
+            [{ 'status': confirmValue }, getIds(checkedKeys)],
+            'Select status to finish action change status',
+            Object.entries(ConnectionStatus).map(([label, value]) => ({ label, value })),
+            ConfirmType.ONE_SELECTION
+        );
     }
 
-    const selectMergeConnection = () => {
-        setSelectAction(() => setCallMerge);
-        setSelectData(checkedKeys.map(item => ({
-            label: item.name,
-            value: item.id
-        })));
-        setSelectMessage('Select main connection to finish action merge');
-        setOpenSelect(true);
+    const confirmMergeConnections = () => {
+        openConfirmation(
+            mergeConnections,
+            [confirmValue, getIds(checkedKeys)],
+            'Select main connection to finish action merge',
+            checkedKeys.map(item => ({
+                label: item.name,
+                value: item.id
+            })),
+            ConfirmType.ONE_SELECTION
+        );
     }
 
-    const updateStatusData = () => {
-        updateConnection({
-            'status': selectValue
-        });
+    const confirmDeleteConnections = () => {
+        openConfirmation(deleteConnections, [getIds(checkedKeys)], 'Are you sure to delete ' + checkedKeys.length + ' selected connection ?');
     }
 
-    const addTag = () => {
-        setSelectAction(() => setCallAddTags);
-        setSelectData(tagData?.map(item => ({
-            label: item.name,
-            value: item.id
-        })));
-        setSelectMessage('Select multi tags to finish action add tag to connection');
-        setOpenSelect(true);
+    const confirmAddTags = () => {
+        openConfirmation(
+            addTagToConnections,
+            [confirmValue, getIds(checkedKeys)],
+            'Select multi tags to finish action add tag',
+            tagData?.map(item => ({
+                label: item.name,
+                value: item.id
+            })),
+            ConfirmType.MULTI_SELECTION
+        );
     }
-
-    useEffect(() => {
-        if(!mergeConnectionData) return;
-
-        toast.success(mergeConnectionData.message);
-
-    }, [mergeConnectionData])
-
-    useEffect(() => {
-        if (!updateConnectionData) return;
-
-        toast.success(updateConnectionData.message);
-
-    }, [updateConnectionData])
-
-    useEffect(() => {
-        if (!addTagToConnectionData) return;
-
-        toast.success(addTagToConnectionData.message);
-
-    }, [addTagToConnectionData]);
 
     return (
         <Grid fluid>
-            <ConfirmAction confirmAction={confirmAction} message={confirmMessage} open={openConfirm} setOpen={setOpenConfirm}/>
-            <ConfirmActionSelect confirmAction={selectAction} message={selectMessage} open={openSelect} setOpen={setOpenSelect} data={selectData} setValue={setSelectValue}/>
+            <PopupConfirm
+                handleConfirm={handleConfirm}
+                handleCancel={handleCancel}
+                type={confirmType}
+                data={confirmData}
+                message={() => message()}
+                setValue={setConfirmValue}
+                open={isConfirmationOpen}
+            />
+
             <Row className="show-grid">
                 <Col xs={24} sm={24} md={5} className='sm:mb-4'>
                     <Panel header='Actions' shaded className='w-full h-full'>
@@ -268,37 +220,29 @@ const Connection = () => {
                             <AutoLoader 
                                 display={tagData} 
                                 component={
-                                    <ConnectionTags tagData={tagData} setTags={handleTags} />
+                                    <ConnectionTags tagData={tagData} setTags={handleTags} openConfirmation={openConfirmation} setFetchTag={setFetchTag} />
                                 }
                             />
                         </div>
                     </Panel>
                 </Col>
+
                 <Col xs={24} sm={24} md={19}>
                     <div className='w-full h-full'>
                         <Panel header='Connections' shaded className='w-full h-full'>
-                            <ButtonToolbar className='pb-4'>
-                                <Button color="green" className='bg-green-600' appearance="primary" startIcon={<PlusIcon />} onClick={() => {}}>
-                                    New connection
-                                </Button>
-                                <Button disabled={!checkedKeys.length} color="red" className='bg-red-600' appearance="primary" startIcon={<TrashIcon />} onClick={() => setCallDelete(true)}>
-                                    Delete
-                                </Button>
-                                <Button disabled={checkedKeys.length < 2} color="yellow" className='bg-yellow-500' appearance="primary" startIcon={<CombinationIcon />} onClick={selectMergeConnection}>
-                                    Merge
-                                </Button>
-                                <Button disabled={!checkedKeys.length} color="cyan" className='bg-cyan-500' appearance="primary" startIcon={<TbStatusChange />} onClick={changeStatus}>
-                                    Change status
-                                </Button>
-                                <Button disabled={!checkedKeys.length} color='violet' className='bg-violet-700' appearance="primary" startIcon={<AiOutlineTags />} onClick={addTag}>
-                                    Add tag
-                                </Button>
-                            </ButtonToolbar>
+                            <ConnectionToolbar 
+                                checkedKeys={checkedKeys} 
+                                deleteConnections={confirmDeleteConnections}
+                                changeStatus={confirmChangeStatus}
+                                mergeConnections={confirmMergeConnections}
+                                addTags={confirmAddTags}
+                                openConfirmation={openConfirmation}
+                            />
                             <AutoLoader
                                 display={connectionData?.data}
                                 component={
                                     <>
-                                        <BaseTable items={connectionData?.data?.items} dataLoading={(connectionLoading || deleteConnectionLoading || mergeConnectionLoading || addTagToConnectionsLoading)} handleSort={handleSort} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={singleDelete} onEdit={onEdit}/>
+                                        <BaseTable items={connectionData?.data?.items} dataLoading={(connectionLoading || deleteConnectionLoading || mergeConnectionLoading || addTagToConnectionsLoading)} handleSort={handleSort} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteConnection} onEdit={onEdit}/>
                                         <BasePagination pagination={connectionData?.data?.pagination} handlePagination={handlePagination} />
                                     </>
                                 }
