@@ -11,7 +11,7 @@ const App = () => {
     <>
       <RouterProvider router={ router} />
       <ToastContainer 
-        autoClose={5000}
+        autoClose={2000}
         pauseOnFocusLoss={false}
       />
     </>

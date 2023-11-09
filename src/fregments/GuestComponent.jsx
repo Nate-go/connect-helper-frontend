@@ -12,7 +12,9 @@ const GuestComponent = ({ children }) => {
                 <Content>
                     { children }
                 </Content>
-                <Footer>Footer</Footer>
+                <Footer>
+                    <div className='w-full bg-black h-full'>haha</div>
+                </Footer>
             </Container>
         </div>
     );

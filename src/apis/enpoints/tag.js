@@ -4,7 +4,8 @@ const tagEndpoints = {
     get: baseEndpoint,
     update: baseEndpoint + '/',
     delete: baseEndpoint,
-    create: baseEndpoint
+    create: baseEndpoint,
+    detail: baseEndpoint + '/',
 };
 
 export default tagEndpoints;
