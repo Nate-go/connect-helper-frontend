@@ -26,6 +26,9 @@ import { BiLockAlt, BiLockOpenAlt } from "react-icons/bi"
 import { AiOutlineQuestionCircle, AiOutlineTags } from "react-icons/ai"
 import { TbStatusChange } from "react-icons/tb"
 import EditIcon from '@rsuite/icons/Edit';
+import ArrowDownIcon from '@rsuite/icons/ArrowDown';
+import SortUpIcon from '@rsuite/icons/SortUp';
+import {LuMail} from "react-icons/lu";
 
 export {
     CogIcon,
@@ -60,4 +63,7 @@ export {
     TbStatusChange,
     EditIcon,
     AiOutlineTags,
+    ArrowDownIcon,
+    SortUpIcon,
+    LuMail
 };

@@ -1,7 +1,8 @@
-const baseEndpoint = "/cartoons/cartoons2D";
+const baseEndpoint = "/users";
 
 const userEndpoints = {
-  getAll: baseEndpoint,
+    getAll: baseEndpoint,
+    getUserInformation: baseEndpoint + '/'
 };
 
 export default userEndpoints;

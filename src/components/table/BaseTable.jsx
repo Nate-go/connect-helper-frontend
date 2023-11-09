@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { ConnectionStatus } from '@/constants';
 import {
     BaseCell,
-    TagCell,
     ConstantCell,
     NameCell,
     ActionCell,
@@ -13,7 +12,7 @@ import {
     TagGroupCell
 } from './TableCell';
 
-const { Column, HeaderCell, Cell } = Table;
+const { Column, HeaderCell} = Table;
 
 const BaseTable = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete }) => {
     const [sortColumn, setSortColumn] = useState();

@@ -1,6 +1,6 @@
-import { Container, Header, Sidebar, Sidenav, Content, Navbar, Nav, Row, Col, Panel } from 'rsuite';
+import { Container, Sidebar, Sidenav, Content, Navbar, Nav, Row, Col, Panel, Affix } from 'rsuite';
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
     CogIcon,
     AngleLeftIcon,
@@ -8,18 +8,14 @@ import {
     DashboardIcon,
     GroupIcon,
     AppSelectIcon,
-    UserInfoIcon,
     HelpOutlineIcon,
-    NoticeIcon,
-    MemberIcon,
-    UserChangeIcon,
     PeopleBranchIcon
 } from '@/components/icons.js';
 
 import { logo_image } from '@/assets/images'
 import { getCurrentPath } from '@/helpers/pathHelper';
-import { signOut } from '@/helpers/authenHelpers';
 import UserHeader from './UserHeader';
+import QuickAccess from './QuickAccess';
 
 const NavToggle = ({ expand, onChange, handleSignOut }) => {
     return (
@@ -35,20 +31,6 @@ const NavToggle = ({ expand, onChange, handleSignOut }) => {
                 </Nav.Menu>
                 
             </Nav>
-            <Nav>
-                <Nav.Menu
-                    noCaret
-                    placement="topStart"
-                    trigger="click"
-                    title={<UserInfoIcon style={{ width: 24, height: 20 }} size="sm" />}
-                >
-                    <Nav.Item icon={<MemberIcon/>}>Profile</Nav.Item>
-                    <Nav.Item icon={<NoticeIcon/>}>Notification</Nav.Item>
-                    <Nav.Item icon={<UserChangeIcon/>} onClick={handleSignOut}>Sign out</Nav.Item>
-                </Nav.Menu>
-
-            </Nav>
-
             <Nav pullRight>
                 <Nav.Item onClick={onChange} style={{ width: 40, textAlign: 'center' }}>
                     {expand ? <AngleLeftIcon /> : <AngleRightIcon />}
@@ -65,11 +47,6 @@ const BaseBody = ({ children }) => {
         return currentPath.includes(path);
     };
     const navigate = useNavigate();
-
-    const handleSignOut = () => {
-        signOut();
-        navigate('/login');
-    }
 
     const handleNavigate = (path) => {
         navigate(path);
@@ -91,7 +68,7 @@ const BaseBody = ({ children }) => {
                     </Sidenav.Header>
                     <Sidenav expanded={expand} defaultOpenKeys={['3']} appearance="subtle">
                         <Sidenav.Body>
-                            <Nav>
+                            <Nav appearance="subtle">
                                 <Nav.Item eventKey="/dashboard" onClick={() => handleNavigate('/dashboard')} active={activeKey('/dashboard')} icon={<DashboardIcon />}>
                                     Dashboard
                                 </Nav.Item>
@@ -115,18 +92,23 @@ const BaseBody = ({ children }) => {
                             </Nav>
                         </Sidenav.Body>
                     </Sidenav>
-                    <NavToggle expand={expand} onChange={() => setExpand(!expand)} handleSignOut={() => handleSignOut()}/>
+                    <NavToggle expand={expand} onChange={() => setExpand(!expand)} handleSignOut={() => handleSignOut()} />
                 </Sidebar>
-
+                
                 <Container className='w-full'>
                     <Row className="show-grid">
-                        <Col sm={24} md={24} lg={24}>
-                            <UserHeader />
+                        <Col sm={24} md={24} lg={24} className='relative'>
+                            <Affix top={0} className='bg-white'>
+                                <UserHeader />
+                            </Affix>
+                            <Content className='p-4'>
+                                {children}
+                            </Content>
+                            <div className='fixed top-[85vh] right-[5vh]'>
+                                <QuickAccess/>
+                            </div>
                         </Col>
                     </Row>
-                    <Content className='p-4'>
-                        {children}
-                    </Content>
                 </Container>
             </Container>
         </div>
