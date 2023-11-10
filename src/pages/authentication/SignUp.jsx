@@ -15,6 +15,7 @@ import { register_gif } from '@/assets/images'
 import { authenticationEndpoints } from "@/apis";
 import { useApi } from "@/hooks";
 import { useNavigate } from 'react-router-dom';
+import {InputPassword} from '@/components/inputs';
 
 const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -112,11 +113,11 @@ const SignUp = () => {
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.ControlLabel>Password</Form.ControlLabel>
-                                            <Form.Control name="password" type="password" autoComplete="off" value={password} placeholder="Password" onChange={setPassword} />
+                                            <InputPassword value={password} onChange={setPassword} placeholder='Password'/>
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.ControlLabel>Confirm Password</Form.ControlLabel>
-                                            <Form.Control name="confirm password" type="password" autoComplete="off" value={confirmPassword} placeholder="Confirm Password" onChange={setConfirmPassword} />
+                                            <InputPassword value={confirmPassword} onChange={setConfirmPassword} placeholder='Confirm password'/>
                                         </Form.Group>
                                         {error && (<Message type="error" className='mb-5' showIcon header>{error.data.message}</Message>)}
                                         <Form.Group>

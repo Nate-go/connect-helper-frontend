@@ -3,6 +3,8 @@ import api from "@/apis/axiosConfig";
 import { signOut } from "@/helpers/authenHelpers";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { setAuthentication, getAuthentication } from "@/helpers/authenHelpers";
+import authenticationEndpoints from "@/apis/enpoints/authentication";
 
 const useApi = () => {
 
@@ -25,13 +27,7 @@ const useApi = () => {
       setLoading(false);
       setError(error.response);
 
-      if (error.response?.status == 401) {
-          signOut();
-          navigate('/login');
-          return;
-      }
-
-      if(error.response.data.message) {
+      if(error.response?.data?.message) {
         toast.error(error.response.data.message);
       }
     }
