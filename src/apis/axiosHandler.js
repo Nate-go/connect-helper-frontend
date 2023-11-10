@@ -1,37 +1,57 @@
-import { refreshToken, getAuthentication, setAuthentication, signOut } from "@/helpers/authenHelpers";
+import { getAuthentication, setAuthentication, signOut } from "@/helpers/authenHelpers";
+import api from "./axiosConfig";
+import authenticationEndpoints from "./enpoints/authentication";
+
+let isRefreshing = false;
+let refreshQueue = [];
 
 const recallApi = async (rememberToken) => {
   try {
-    const newAuth = await refreshToken(rememberToken);
+    const newAuth = await api.post(authenticationEndpoints.refresh, { remember_token: rememberToken });
 
     if (!newAuth.original?.error) {
       await setAuthentication(newAuth.original);
     }
 
-    return api.request(error.config); // Use api here, not axios
-  } catch (error) {
-    // Handle any errors that may occur during the refresh process
-    return Promise.reject(error);
+    refreshQueue.forEach((request) => request());
+    
+    refreshQueue = [];
+
+    return api.request(error.config); 
+  } catch (refreshError) {
+    return Promise.reject(refreshError);
+  } finally {
+    isRefreshing = false;
   }
+};
+
+const queueRequestPush = (error) => {
+  return new Promise((resolve, reject) => {
+    refreshQueue.push(() => {
+      try {
+        resolve(api.request(error.config));
+      } catch (queueError) {
+        reject(queueError);
+      }
+    });
+  });
 }
 
 const errorHandler = async (error) => {
-  if (error.response?.status == 401) {
-    console.log(1);
+  if (error.response?.status === 401) {
     const rememberToken = getAuthentication().remember_token;
-    console.log(2);
+
     if (rememberToken) {
-      console.log(3);
-      try {
-        return await recallApi(rememberToken);
-      } catch (refreshError) {
-        // Handle errors that occur during the refresh process
-        return Promise.reject(refreshError);
+      if (!isRefreshing) {
+        isRefreshing = true;
+        recallApi(rememberToken);
+        return queueRequestPush(error);
+      } else {
+        return queueRequestPush(error);
       }
     }
-    // signOut();
-    return Promise.reject(error);
   }
+
   return Promise.reject(error);
 };
 
