@@ -1,5 +1,20 @@
 import { refreshToken, getAuthentication, setAuthentication, signOut } from "@/helpers/authenHelpers";
 
+const recallApi = async (rememberToken) => {
+  try {
+    const newAuth = await refreshToken(rememberToken);
+
+    if (!newAuth.original?.error) {
+      await setAuthentication(newAuth.original);
+    }
+
+    return api.request(error.config); // Use api here, not axios
+  } catch (error) {
+    // Handle any errors that may occur during the refresh process
+    return Promise.reject(error);
+  }
+}
+
 const errorHandler = async (error) => {
   if (error.response?.status == 401) {
     console.log(1);
@@ -7,18 +22,12 @@ const errorHandler = async (error) => {
     console.log(2);
     if (rememberToken) {
       console.log(3);
-      const newAuth = refreshToken(rememberToken);
-      console.log(4);
-
-      if (!newAuth.original?.error) {
-        console.log(5);
-
-        await setAuthentication(newAuth.original);
+      try {
+        return await recallApi(rememberToken);
+      } catch (refreshError) {
+        // Handle errors that occur during the refresh process
+        return Promise.reject(refreshError);
       }
-      console.log(6);
-
-      console.log(getAuthentication());
-      return axios.request(error.config);
     }
     // signOut();
     return Promise.reject(error);

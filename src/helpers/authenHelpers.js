@@ -17,7 +17,6 @@ export const getAuthentication = () => {
         return JSON.parse(auth);
     }
 
-    console.log('haaaaaaaaaa');
     return null;
 };
 
@@ -29,7 +28,8 @@ export const signOut = () => {
     Cookies.remove("auth");
 }
 
-export const refreshToken = async (rememberToken) => {
+export const refreshToken = (rememberToken) => {
+    console.log('insiiiii');
     return api.post(authenticationEndpoints.refresh, {
         'remember_token': rememberToken
     });
