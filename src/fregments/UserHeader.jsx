@@ -54,7 +54,7 @@ const notificationMenu = ({ onClose, left, top, className }, ref) => {
 };
 
 const UserHeader = () => {
-    const user = getAuthentication().user;
+    const user = getAuthentication()?.user ?? null;
 
     return (
         <div className="flex w-full h-full justify-end gap-5 pb-2 pt-4 pr-5">
@@ -63,11 +63,11 @@ const UserHeader = () => {
                     <Avatar
                         size="md"
                         circle
-                        src={user.image_url}
+                        src={user?.image_url}
                     />
                     <div className='flex flex-col justify-center'>
-                        <p className='text-base'>{user.name}</p>
-                        <p className='text-xs text-gray-400'>{user.enterprise.name}</p>
+                        <p className='text-base'>{user?.name}</p>
+                        <p className='text-xs text-gray-400'>{user?.enterprise.name}</p>
                     </div>
                 </div>
                 <Whisper placement="bottomEnd" trigger="click" speaker={userMenu}>

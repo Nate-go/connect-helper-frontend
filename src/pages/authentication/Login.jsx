@@ -7,7 +7,8 @@ import {
     Panel,
     FlexboxGrid,
     Message,
-    Loader
+    Loader,
+    Checkbox
 } from 'rsuite';
 
 import { vertical_bg } from '@/assets/images'
@@ -15,10 +16,12 @@ import { authenticationEndpoints } from "@/apis";
 import { useApi } from "@/hooks";
 import { useNavigate } from 'react-router-dom';
 import { setAuthentication } from '@/helpers/authenHelpers';
+import { InputPassword } from '@/components/inputs';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [remember, setRemember] = useState(false);
     const navigate = useNavigate();
     const { data, loading, error, callApi: handleLogin } = useApi();
 
@@ -30,13 +33,19 @@ const Login = () => {
     }, [data]);
 
     const onLogin = async () => {
+        const data = {
+            email: email,
+            password: password,
+        };
+
+        if (remember) {
+            data.remember = true;
+        }
+
         await handleLogin(authenticationEndpoints.login,
             {
-                'method': 'POST',
-                'data': {
-                    'email': email,
-                    'password': password
-                },
+                method: 'POST',
+                data: data,
             });
     }
 
@@ -48,14 +57,17 @@ const Login = () => {
                         <FlexboxGrid justify="center">
                             <FlexboxGrid.Item colspan={12}>
                                 <Panel header={<h3>Login</h3>} bordered>
-                                    <Form fluid onSubmit={onLogin}>
+                                    <Form fluid onSubmit={onLogin} >
                                         <Form.Group>
                                             <Form.ControlLabel>Email address</Form.ControlLabel>
                                             <Form.Control name="email" type="email" autoComplete="on" value={email} placeholder="Email" onChange={setEmail} />
                                         </Form.Group>
                                         <Form.Group>
                                             <Form.ControlLabel>Password</Form.ControlLabel>
-                                            <Form.Control name="password" type="password" autoComplete="off" value={password} placeholder="Password" onChange={setPassword} />
+                                            <InputPassword value={password} onChange={setPassword} placeholder='Password' />
+                                        </Form.Group>
+                                        <Form.Group>
+                                            <Checkbox value={remember} onChange={() => setRemember(!remember)}> Remember</Checkbox>
                                         </Form.Group>
                                         {error && (<Message type="error" className='mb-5' showIcon header>{error.data.message}</Message>)}
                                         <Form.Group>
