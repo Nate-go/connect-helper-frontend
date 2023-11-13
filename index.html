@@ -9,6 +9,29 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet" />
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <!-- <script>
+      function start() {
+        // 2. Initialize the JavaScript client library.
+        gapi.client.init({
+          'apiKey': 'AIzaSyDxc52lBm1pMYJZZqz5eQbASz_ehmC3IcE',
+          // clientId and scope are optional if auth is not required.
+          'clientId': '359676249009-34tqpm71tj75n1t21ibcl7u2nr1kmsn3.apps.googleusercontent.com',
+          'scope': 'profile',
+        }).then(function () {
+          // 3. Initialize and make the API request.
+          return gapi.client.request({
+            'path': 'https://people.googleapis.com/v1/people/me?requestMask.includeField=person.names',
+          })
+        }).then(function (response) {
+          console.log(response.result);
+        }, function (reason) {
+          console.log('Error: ' + reason.result.error.message);
+        });
+      };
+      // 1. Load the JavaScript client library.
+      gapi.load('client', start);
+    </script> -->
     <title>ConnectionHelper</title>
   </head>
   <body>

@@ -1,3 +1,5 @@
+import * as jwt_decode from 'jwt-decode';
+
 export const getIds = (data) => {
     const ids = data.map(element => element.id);
     return ids;
@@ -15,15 +17,24 @@ export const fillNullValues = (data, fillValue) => {
     }
 };
 
-const updateData = (newData, oldData, setData) => {
+export const updateData = (newData, oldData, setData) => {
     const result = { ...oldData };
 
     for (const key in newData) {
-        if (oldObject.hasOwnProperty(key)) {
-            result[key] = newObject[key];
+        if (oldData.hasOwnProperty(key)) {
+            result[key] = newData[key];
         }
     }
     setData(result);
 
     return result;
+};
+
+export const decodeToken = (jwtCode) => {
+    try {
+        const decodedToken = jwt_decode.jwtDecode(jwtCode);
+        return decodedToken;
+    } catch (error) {
+        return null;
+    }
 };

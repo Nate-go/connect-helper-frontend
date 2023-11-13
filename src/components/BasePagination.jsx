@@ -5,11 +5,11 @@ const BasePagination = ({ pagination, handlePagination }) => {
     const { currentPage, totalRow, perPage,  lastPage} = pagination;
 
     const handleLimit = (newLimit) => {
-        handlePagination(1, newLimit);
+        handlePagination({page:1, limit:newLimit});
     }
 
     const handlePage = (newPage) => {
-        handlePagination(newPage, perPage);
+        handlePagination({page:newPage, limit:perPage});
     }
 
     return (

@@ -1,7 +1,6 @@
 import { Grid, Row, Col, Panel, Button, ButtonToolbar, useToaster } from 'rsuite';
 import { ConnectionTags, ConnectionStatuses, ConnectionToolbar } from './components';
 import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
 
 import { BaseTable } from '@components/table';
 import {connectionEndpoints, tagEndpoints} from '@/apis'
@@ -11,6 +10,7 @@ import { getIds } from '@/helpers/dataHelpers';
 import { useConfirmation, useApi } from '@/hooks';
 import { PopupConfirm } from '@/components/popups';
 import { ConfirmType, ConnectionStatus } from '@/constants';
+import { updateData } from '@/helpers/dataHelpers';
 
 const Connection = () => {
     const [tags, setTags] = useState([]);
@@ -29,12 +29,10 @@ const Connection = () => {
     const [pagination, setPagination] = useState({
         page: PaginationDefault.PAGE,
         limit: PaginationDefault.LIMIT,
-    });
-
-    const [sort, setSort] = useState({
         order: PaginationDefault.ORDER,
         column: PaginationDefault.COLUMN
     });
+
     const [statuses, setStatuses] = useState([]);
     const [fetchConnection, setFetchConnection] = useState(true);
     const [fetchTag, setFetchTag] = useState(true);
@@ -52,7 +50,6 @@ const Connection = () => {
         handleGetConnections(connectionEndpoints.get, {
             params: {
                 ...pagination,
-                ...sort,
                 tags,
                 statuses
             }
@@ -69,31 +66,20 @@ const Connection = () => {
 
     const handleTags = (newTags) => {
         setTags(newTags);
-        setPagination(1, pagination.limit);
-        setFetchConnection(true);
+        handlePagination({ page: 1 });
     }
 
     const handleStatuses = (newStatuses) => {
         setStatuses(newStatuses);
-        setPagination(1, pagination.limit);
-        setFetchConnection(true);
+        handlePagination({ page: 1 });
     }
 
-    const handlePagination = (page, limit) => {
-        setPagination({
-            page,
-            limit,
-        })
+    const handlePagination = (data) => {
+
+        updateData(data, pagination, setPagination);
         setFetchConnection(true);
     };
 
-    const handleSort = (column, order) => {
-        setSort({
-            order,
-            column
-        })
-        setFetchConnection(true);
-    };
 
     const deleteConnections = async (ids) => {
         await handleDeleteConnections(
@@ -242,7 +228,7 @@ const Connection = () => {
                                 display={connectionData?.data}
                                 component={
                                     <>
-                                        <BaseTable items={connectionData?.data?.items} dataLoading={(connectionLoading || deleteConnectionLoading || mergeConnectionLoading || addTagToConnectionsLoading)} handleSort={handleSort} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteConnection} onEdit={onEdit}/>
+                                        <BaseTable items={connectionData?.data?.items} dataLoading={(connectionLoading || deleteConnectionLoading || mergeConnectionLoading || addTagToConnectionsLoading)} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteConnection} onEdit={onEdit}/>
                                         <BasePagination pagination={connectionData?.data?.pagination} handlePagination={handlePagination} />
                                     </>
                                 }

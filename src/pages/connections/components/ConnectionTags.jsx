@@ -38,8 +38,6 @@ const ConnectionTags = ({ tagData, setTags, openConfirmation, setFetchTag}) => {
         setEditItem(item);
     }
 
-    if (!data || data.length <= 0) return ( <p> Empty data</p>)
-
     return (
         <Panel header={'Tags (' + data.length + ')'} bodyFill className='-mt-6'>
             <ButtonToolbar className='pb-4'>
@@ -48,35 +46,37 @@ const ConnectionTags = ({ tagData, setTags, openConfirmation, setFetchTag}) => {
                 </Button>
             </ButtonToolbar>
 
-            <Checkbox
-                indeterminate={groupValue.length > 0 && groupValue.length < data.length}
-                checked={groupValue.length === data.length}
-                onChange={handleCheckAll}
-            >
-                Check all
-            </Checkbox> 
-            <CheckboxGroup name="checkboxList" value={groupValue} onChange={handleChange}>
-                {data.map(item => (
-                    <div key={item.id} className='flex justify-between' value={item}>
-                        <Checkbox key={item.id} value={item.id}>
-                            {item.name}
-                        </Checkbox>
-                        <Button appearance="link" onClick={() => onEdit(item)} startIcon={<EditIcon />} className='hover:text-lg'>
-                        </Button>
-                    </div>
-                ))}
-            </CheckboxGroup>
+            {(!data || data.length <= 0) ? <p> Empty data</p>: <>
+                <Checkbox
+                    indeterminate={groupValue.length > 0 && groupValue.length < data.length}
+                    checked={groupValue.length === data.length}
+                    onChange={handleCheckAll}
+                >
+                    Check all
+                </Checkbox>
+                <CheckboxGroup name="checkboxList" value={groupValue} onChange={handleChange}>
+                    {data.map(item => (
+                        <div key={item.id} className='flex justify-between' value={item}>
+                            <Checkbox key={item.id} value={item.id}>
+                                {item.name}
+                            </Checkbox>
+                            <Button appearance="link" onClick={() => onEdit(item)} startIcon={<EditIcon />} className='hover:text-lg'>
+                            </Button>
+                        </div>
+                    ))}
+                </CheckboxGroup>
+
+                <ModalTagDetail
+                    open={openEdit}
+                    handleClose={handleCloseEdit}
+                    item={editItem}
+                    openConfirmation={openConfirmation}
+                />
+            </>}
 
             <ModalCreateTag
                 open={openCreate}
                 handleClose={handleCloseCreate}
-            />
-
-            <ModalTagDetail
-                open={openEdit}
-                handleClose={handleCloseEdit}
-                item={editItem}
-                openConfirmation={openConfirmation}
             />
 
             
