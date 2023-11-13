@@ -223,6 +223,8 @@ const Connection = () => {
                                 mergeConnections={confirmMergeConnections}
                                 addTags={confirmAddTags}
                                 openConfirmation={openConfirmation}
+                                tagData={tagData}
+                                setFetchTag={setFetchTag}
                             />
                             <AutoLoader
                                 display={connectionData?.data}
