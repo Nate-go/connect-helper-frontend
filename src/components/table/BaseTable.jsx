@@ -22,7 +22,7 @@ const BaseTable = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys
     let indeterminate = false;
 
     const handleSortColumn = (sortColumn, sortType) => {
-        handleSort(sortColumn, sortType);
+        handleSort({column:sortColumn, order:sortType});
         setLoading(true);
         setTimeout(() => {
             setLoading(false);

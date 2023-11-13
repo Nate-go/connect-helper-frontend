@@ -39,7 +39,7 @@ const queueRequestPush = (error) => {
 
 const errorHandler = async (error) => {
   if (error.response?.status === 401) {
-    const rememberToken = getAuthentication().remember_token;
+    const rememberToken = getAuthentication()?.remember_token;
 
     if (rememberToken) {
       if (!isRefreshing) {

@@ -1,5 +1,17 @@
+import { useEffect } from "react";
+import { redirect, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (searchParams.has('code')) {
+            navigate('/signup?code=' + searchParams.get('code'));
+        }
+    }, [])
+
     return (
         <div>
             <h1>Home</h1><br />
@@ -16,6 +28,7 @@ const Home = () => {
 
         </div>
     )
+
 }
 
 export default Home
