@@ -10,7 +10,7 @@ import { getIds } from '@/helpers/dataHelpers';
 import { useConfirmation, useApi } from '@/hooks';
 import { PopupConfirm } from '@/components/popups';
 import { ConfirmType, ConnectionStatus } from '@/constants';
-import { updateData } from '@/helpers/dataHelpers';
+import DrawerEditConnection from './components/DrawerEditConnection';
 
 const Connection = () => {
     const [tags, setTags] = useState([]);
@@ -37,6 +37,10 @@ const Connection = () => {
     const [fetchConnection, setFetchConnection] = useState(true);
     const [fetchTag, setFetchTag] = useState(true);
     const [checkedKeys, setCheckedKeys] = useState([]);
+    const [editConnection, setEditConnection] = useState({
+        open: false,
+        id: null,
+    })
 
     const { data: connectionData, callApi: handleGetConnections, loading: connectionLoading } = useApi();
     const { callApi: handleDeleteConnections, loading: deleteConnectionLoading } = useApi();
@@ -75,11 +79,12 @@ const Connection = () => {
     }
 
     const handlePagination = (data) => {
-
-        updateData(data, pagination, setPagination);
+        setPagination({
+            ...pagination,
+            ...data
+        })
         setFetchConnection(true);
     };
-
 
     const deleteConnections = async (ids) => {
         await handleDeleteConnections(
@@ -142,7 +147,10 @@ const Connection = () => {
     }
 
     const onEdit = (rowData) => {
-        alert(rowData['id']);
+        setEditConnection({
+            open: true,
+            id: rowData['id']
+        })
     }
 
     const confirmChangeStatus = () => {
@@ -196,6 +204,17 @@ const Connection = () => {
                 setValue={setConfirmValue}
                 open={isConfirmationOpen}
             />
+            {editConnection.id && 
+                <DrawerEditConnection
+                    open={editConnection.open}
+                    handleClose={() => { setEditConnection({open:false, id:null}) }}
+                    openConfirmation={openConfirmation}
+                    tagData={tagData}
+                    setFetchTag={setFetchTag}
+                    connectionId={editConnection.id}
+                />
+            }
+            
 
             <Row className="show-grid">
                 <Col xs={24} sm={24} md={5} className='sm:mb-4'>

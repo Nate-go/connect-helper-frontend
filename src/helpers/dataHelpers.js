@@ -38,3 +38,11 @@ export const decodeToken = (jwtCode) => {
         return null;
     }
 };
+
+export const checkObjectEmpty = (obj) => {
+    return Object.keys(obj).length === 0
+}
+
+export const jsonToObject = (data) => {
+    return JSON.parse(JSON.stringify(data));
+}

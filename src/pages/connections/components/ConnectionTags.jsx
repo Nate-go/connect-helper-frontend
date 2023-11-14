@@ -4,9 +4,9 @@ import { PlusIcon, EditIcon, TrashIcon } from '@/components/icons';
 import { getIds } from '@/helpers/dataHelpers';
 import { ModalCreateTag, ModalTagDetail } from '.';
 
-const ConnectionTags = ({ tagData, setTags, openConfirmation, setFetchTag}) => {
+const ConnectionTags = ({ tagData, setTags, openConfirmation, setFetchTag, defaultValue=[]}) => {
     const data = tagData;
-    const [groupValue, setGroupValue] = useState([]);
+    const [groupValue, setGroupValue] = useState(defaultValue);
     const [openCreate, setOpenCreate] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [editItem, setEditItem] = useState(null);
@@ -46,7 +46,7 @@ const ConnectionTags = ({ tagData, setTags, openConfirmation, setFetchTag}) => {
                 </Button>
             </ButtonToolbar>
 
-            {(!data || data.length <= 0) ? <p> Empty data</p>: <>
+            {(!data || data.length <= 0) ? <p> Empty data</p> : <div className='max-h-96 overflow-auto'>
                 <Checkbox
                     indeterminate={groupValue.length > 0 && groupValue.length < data.length}
                     checked={groupValue.length === data.length}
@@ -56,11 +56,11 @@ const ConnectionTags = ({ tagData, setTags, openConfirmation, setFetchTag}) => {
                 </Checkbox>
                 <CheckboxGroup name="checkboxList" value={groupValue} onChange={handleChange}>
                     {data.map(item => (
-                        <div key={item.id} className='flex justify-between' value={item}>
-                            <Checkbox key={item.id} value={item.id}>
-                                {item.name}
+                        <div key={item.id} className='grid grid-cols-6' value={item}>
+                            <Checkbox key={item.id} value={item.id} className='col-span-5'>
+                                <p className='overflow-hidden hover:overflow-x-auto'>{item.name}</p>
                             </Checkbox>
-                            <Button appearance="link" onClick={() => onEdit(item)} startIcon={<EditIcon />} className='hover:text-lg'>
+                            <Button appearance="link" onClick={() => onEdit(item)} startIcon={<EditIcon />} className='hover:text-lg col-span-1'>
                             </Button>
                         </div>
                     ))}
@@ -72,7 +72,7 @@ const ConnectionTags = ({ tagData, setTags, openConfirmation, setFetchTag}) => {
                     item={editItem}
                     openConfirmation={openConfirmation}
                 />
-            </>}
+            </div>}
 
             <ModalCreateTag
                 open={openCreate}
