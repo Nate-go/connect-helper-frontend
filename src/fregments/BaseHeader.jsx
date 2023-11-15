@@ -22,7 +22,8 @@ const CustomNavbar = ({ onSelect, ...props }) => {
     const navigate = useNavigate();
     const currentPath = getCurrentPath();
     const activeKey = (path) => {
-        return currentPath.includes(path);
+        if(path !== '/') return currentPath.includes(path);
+        return currentPath === path;
     };
 
     return (

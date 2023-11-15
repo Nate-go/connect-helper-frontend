@@ -29,6 +29,9 @@ import EditIcon from '@rsuite/icons/Edit';
 import ArrowDownIcon from '@rsuite/icons/ArrowDown';
 import SortUpIcon from '@rsuite/icons/SortUp';
 import {LuMail} from "react-icons/lu";
+import { FaCrown } from "react-icons/fa";
+import SendIcon from '@rsuite/icons/Send';
+import { RiUserReceivedLine } from "react-icons/ri";
 
 export {
     CogIcon,
@@ -65,5 +68,8 @@ export {
     AiOutlineTags,
     ArrowDownIcon,
     SortUpIcon,
-    LuMail
+    LuMail,
+    FaCrown,
+    SendIcon,
+    RiUserReceivedLine
 };

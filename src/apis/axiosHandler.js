@@ -1,6 +1,7 @@
 import { getAuthentication, setAuthentication, signOut } from "@/helpers/authenHelpers";
 import api from "./axiosConfig";
 import authenticationEndpoints from "./enpoints/authentication";
+import { ResponseCode } from "@/constants";
 
 let isRefreshing = false;
 let refreshQueue = [];
@@ -38,7 +39,7 @@ const queueRequestPush = (error) => {
 }
 
 const errorHandler = async (error) => {
-  if (error.response?.status === 401) {
+  if (error.response?.status === ResponseCode.UNAUTHEN) {
     const rememberToken = getAuthentication()?.remember_token;
 
     if (rememberToken) {
@@ -50,6 +51,7 @@ const errorHandler = async (error) => {
         return queueRequestPush(error);
       }
     }
+    signOut();
   }
 
   return Promise.reject(error);

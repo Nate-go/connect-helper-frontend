@@ -10,7 +10,7 @@ import { getIds } from '@/helpers/dataHelpers';
 import { useConfirmation, useApi } from '@/hooks';
 import { PopupConfirm } from '@/components/popups';
 import { ConfirmType, ConnectionStatus } from '@/constants';
-import DrawerEditConnection from './components/DrawerEditConnection';
+import { DrawerEditConnection } from './components';
 
 const Connection = () => {
     const [tags, setTags] = useState([]);

@@ -8,7 +8,7 @@ import {
     Col,
     InputPicker,
     Nav,
-    Divider
+    Avatar
 } from "rsuite";
 import { useApi } from "@/hooks";
 import { useEffect, useState } from "react";
@@ -19,6 +19,8 @@ import { ConnectionStatus } from "@/constants";
 import { getIds, checkObjectEmpty } from "@/helpers/dataHelpers";
 import BaseLoader from "@/components/BaseLoader";
 import { Contacts } from "@/pages/contacts";
+import UserConnection from "./UserConnection";
+import { HistoriesContact } from "@/pages/contacts/components";
 
 const tabConstant = {
     CONTACTS : 0,
@@ -41,6 +43,8 @@ const DrawerEditConnection = ({
     }));
     const [connection, setConnection] = useState({});
     const [tab, setTab] = useState(tabConstant.CONTACTS);
+    const [fetchContacts, setFetchContacts] = useState(true);
+    const [fetchConnections, setFetchConnections] = useState(true);
 
     const {
         data: connectionData,
@@ -86,10 +90,16 @@ const DrawerEditConnection = ({
     }
 
     useEffect(() => {
-        if (connectionId == null) return;
+        if (connectionId == null || !fetchConnections) return;
         handleGetConnection(connectionEndpoints.show + connectionId, {});
-        handleGetContact(connectionEndpoints.getContacts + connectionId + '/contacts')
-    }, []);
+        setFetchConnections(false);
+    }, [fetchConnections]);
+
+    useEffect(() => {
+        if (connectionId == null || !fetchContacts) return;
+        handleGetContact(connectionEndpoints.getContacts + connectionId + '/contacts');
+        setFetchContacts(false);
+    }, [fetchContacts]);
 
     useEffect(() => {
         if (!connectionData) return;
@@ -99,12 +109,20 @@ const DrawerEditConnection = ({
 
     const tabs = () => {
         if(tab == tabConstant.CONTACTS) return (
-            <Contacts contacts={contactData.contacts}/>
+            <Contacts contacts={contactData?.contacts ?? []} setFetchContacts={setFetchContacts} openConfirmation={openConfirmation} contactLoading={contactLoading} connectionId={connectionId}/>
+        );
+
+        if (tab == tabConstant.USERS) return (
+            <UserConnection users={connection.users} owner={connection.owner}/>
+        );
+
+        if (tab == tabConstant.HISTORIES) return (
+            <HistoriesContact histories={contactData?.histories ?? []} />
         );
     }
 
     const body = () => {
-        if (checkObjectEmpty(connection) || connectionLoading || connectionEditLoading || contactLoading) return (<BaseLoader/>);
+        if (checkObjectEmpty(connection) || connectionLoading || connectionEditLoading) return (<BaseLoader/>);
         return (
             <Grid fluid>
                 <Row className="show-grid">
@@ -170,11 +188,31 @@ const DrawerEditConnection = ({
         );
     }
 
+    const owner = () => {
+        if (checkObjectEmpty(connection) || connectionLoading || connectionEditLoading) return (<BaseLoader />);
+
+        return (
+            <div className="flex flex-row items-center gap-3">
+                <Avatar
+                    size="md"
+                    circle
+                    src={connection.owner.image_url}
+                />
+                <div className="flex flex-col items-start">
+                    <div className="text-lg font-sans">{connection.owner.name}</div>
+                    <div className="text-xs text-slate-400">{connection.owner.email}</div>
+                </div>
+            </div>
+        );
+    }
+
 
     return (
         <Drawer size="full" placement="right" open={open} onClose={handleClose}>
             <Drawer.Header>
                 <Drawer.Title>Edit Connection</Drawer.Title>
+                <Drawer.Title>{owner()}</Drawer.Title>
+                
                 <Drawer.Actions>
                     <Button onClick={handleClose} className="bg-gray-200">Cancel</Button>
                     <AutoLoader

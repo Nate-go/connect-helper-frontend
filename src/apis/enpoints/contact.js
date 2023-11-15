@@ -2,7 +2,8 @@ const baseEndpoint = '/contacts'
 
 const contactEndpoints = {
     delete: baseEndpoint + '/',
-    edit: baseEndpoint + '/'
+    edit: baseEndpoint + '/',
+    create: baseEndpoint
 };
 
 export default contactEndpoints;
