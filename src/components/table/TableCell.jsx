@@ -17,7 +17,7 @@ export const NameCell = ({ rowData, dataKey, dataKeyNote, ...props }) => {
     return (
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
-                <p className='text-base'>{rowData[dataKey]}</p>
+                <p className='text-base -mb-2 -mt-1'>{rowData[dataKey]}</p>
                 <p className='text-xs text-gray-400'>{rowData[dataKeyNote]}</p>
             </div>
         </Cell>

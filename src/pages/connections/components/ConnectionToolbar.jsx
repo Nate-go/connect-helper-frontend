@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { TrashIcon, CombinationIcon, TbStatusChange, PlusIcon, AiOutlineTags } from '@/components/icons';
 import DrawerCreateConnection from './DrawerCreateConnection';
 
-const ConnectionToolbar = ({checkedKeys, createConnection, deleteConnections, mergeConnections, changeStatus, addTags, openConfirmation}) => {
+const ConnectionToolbar = ({checkedKeys, tagData, setFetchTag, deleteConnections, mergeConnections, changeStatus, addTags, openConfirmation}) => {
     const [openCreateConnection, setOpenCreateConnection] = useState(false);
 
     return (
@@ -13,6 +13,8 @@ const ConnectionToolbar = ({checkedKeys, createConnection, deleteConnections, me
                 open={openCreateConnection}
                 handleClose={() => {setOpenCreateConnection(false)}}
                 openConfirmation={openConfirmation}
+                tagData={tagData}
+                setFetchTag={setFetchTag}
             />
 
             <ButtonToolbar className='pb-4'>
