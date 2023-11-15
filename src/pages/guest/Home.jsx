@@ -8,6 +8,7 @@ const Home = () => {
 
     useEffect(() => {
         if (searchParams.has('code')) {
+            console.log(searchParams.get('state'));
             navigate('/signup?code=' + searchParams.get('code'));
         }
     }, [])

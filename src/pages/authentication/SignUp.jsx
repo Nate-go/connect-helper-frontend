@@ -35,12 +35,16 @@ const SignUp = () => {
             const clientId = import.meta.env.VITE_CLIENT_ID;
             const redirectUri = import.meta.env.VITE_APP_URL;
             const scopes = import.meta.env.VITE_SCOPES;
+            const stateParam = 'abc';
 
             const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${encodeURIComponent(
                 scopes
-            )}&response_type=code&prompt=select_account&access_type=offline`;
-
-            window.location.href = authUrl;
+            )}&response_type=code&prompt=select_account&access_type=offline&state=${encodeURIComponent(
+                stateParam
+            )}`;
+            alert(authUrl);
+            console.log(authUrl);
+            // window.location.href = authUrl;
         } catch (error) {
             console.error('Error initiating authorization flow:', error);
         }
