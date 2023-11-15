@@ -24,19 +24,23 @@ const renderTimeLine = (history) => {
     );
 
     return (
-        <Timeline.Item dot={<RiUserReceivedLine />} className="rounded-full text-blue-500 bg-white -ml-4 px-2 border-2 border-blue-500" time={<p className="pr-5" > { history.contacted_at }</p>} >
-            <div className="flex flex-row items-center gap-3">
-                <Avatar
-                    size="xs"
-                    circle
-                    src={history.user.image_url}
-                />
-                <div className="flex flex-col items-start">
-                    <div className="text-lg font-sans">{history.user.name}</div>
+        <Timeline.Item dot={<RiUserReceivedLine style={{ fontSize: '3em' }} className="rounded-full text-blue-500 bg-white -ml-4 px-2 border-2 border-blue-500" />} time={<p className="pr-5" > { history.contacted_at }</p>} >
+            <div className="pl-5">
+                <div className="flex flex-row items-center gap-3">
+                    <Avatar
+                        size="xs"
+                        circle
+                        src={history.user.image_url}
+                    />
+                    <div className="flex flex-col items-start">
+                        <div className="text-lg font-sans">{history.user.name}</div>
+                    </div>
                 </div>
+                <p className="pt-1 -mb-1">[Receive mail from]</p>
+                <p>{'<' + history.contact.content + '>'}</p>
+
             </div>
-            <p className="pt-1 -mb-1">[Receive mail from]</p>
-            <p>{'<' + history.contact.content + '>'}</p>
+            
         </Timeline.Item>
     );
 
@@ -73,10 +77,12 @@ const HistoriesContact = ({ histories }) => {
     }, []);
 
     return (
-        <Panel header="Time line" className="flex flex-col items-start" bordered >
-            <Timeline align="left">
-                {timelineItems}
-            </Timeline>
+        <Panel header="Time line" bordered >
+            <div className="w-full flex items-center max-h-96 overflow-y-auto">
+                <Timeline align="left" className="w-full">
+                    {timelineItems}
+                </Timeline>
+            </div>
         </Panel>
     );
 };
