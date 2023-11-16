@@ -1,35 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
 import { Avatar, Whisper, Popover, Dropdown, IconButton, ButtonGroup, Badge } from "rsuite";
-import { NoticeIcon, ArrowDownIcon, MemberIcon, UserChangeIcon } from "@/components/icons";
+import { NoticeIcon, ArrowDownIcon, MemberIcon, UserChangeIcon, SentToUserIcon } from "@/components/icons";
 import { signOut } from '@/helpers/authenHelpers';
-import { useApi } from '@/hooks'
-import {AutoLoader} from '@/components'
-import { useEffect } from "react";
-import userEndpoints from "@/apis/enpoints/user";
 import { getAuthentication } from "@/helpers/authenHelpers";
-
-const userMenu = ({ onClose, left, top, className }, ref) => {
-    const handleSelect = eventKey => {
-        onClose();
-    };
-
-    const navigate = useNavigate();
-
-    const handleSignOut = () => {
-        signOut();
-        navigate('/login');
-    }
-
-    return (
-        <Popover ref={ref} className={className} style={{ left, top }} full>
-            <Dropdown.Menu onSelect={handleSelect}>
-                <Dropdown.Item icon={<MemberIcon />}  eventKey={3}>Profile</Dropdown.Item>
-                <Dropdown.Item icon={<UserChangeIcon />} onClick={handleSignOut} eventKey={4}>Sign out</Dropdown.Item>
-            </Dropdown.Menu>
-        </Popover>
-    );
-};
+import { UserRole } from "@/constants";
+import { InviteEmployee } from "@/components/selects";
+import { useState } from "react";
 
 const notificationMenu = ({ onClose, left, top, className }, ref) => {
     const handleSelect = eventKey => {
@@ -55,9 +32,43 @@ const notificationMenu = ({ onClose, left, top, className }, ref) => {
 
 const UserHeader = () => {
     const user = getAuthentication()?.user ?? null;
+    const [open, setOpen] = useState(false);
+
+    const userMenu = ({ onClose, left, top, className }, ref) => {
+        const handleSelect = eventKey => {
+            onClose();
+        };
+
+        const navigate = useNavigate();
+
+        const handleSignOut = () => {
+            onClose();
+            signOut();
+            navigate('/login');
+        }
+
+        const handldeInvite = () => {
+            onClose();
+            setOpen(true);
+        }
+
+        return (
+            <Popover ref={ref} className={className} style={{ left, top }} full>
+                <Dropdown.Menu onSelect={handleSelect}>
+                    <Dropdown.Item icon={<MemberIcon />} eventKey={3}>Profile</Dropdown.Item>
+                    <Dropdown.Item icon={<UserChangeIcon />} onClick={handleSignOut} eventKey={4}>Sign out</Dropdown.Item>
+                    {
+                        user.role === UserRole.OWNER && 
+                        <Dropdown.Item icon={<SentToUserIcon />} onClick={handldeInvite} eventKey={5}>Invite employee</Dropdown.Item>
+                    }
+                </Dropdown.Menu>
+            </Popover>
+        );
+    };
 
     return (
         <div className="flex w-full h-full justify-end gap-5 pb-2 pt-4 pr-5">
+            <InviteEmployee open={open} handleClose={() => setOpen(false)}/>
             <ButtonGroup className="flex flex-row gap-4">
                 <div className="flex flex-row items-center gap-3">
                     <Avatar

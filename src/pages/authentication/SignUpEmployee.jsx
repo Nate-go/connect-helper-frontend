@@ -17,7 +17,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import {InputPassword} from '@/components/inputs';
 import { decodeToken } from '@/helpers/dataHelpers';
 
-const SignUp = () => {
+const SignUpEmployee = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,22 +28,7 @@ const SignUp = () => {
     const navigate = useNavigate();
     const { data, loading, error, callApi: handleSignUp } = useApi();
     const { data: tokenData, callApi: handleGetToken } = useApi();
-
-
-    const selectEmail = () => {
-        try {
-            const clientId = import.meta.env.VITE_CLIENT_ID;
-            const redirectUri = import.meta.env.VITE_APP_URL;
-            const scopes = import.meta.env.VITE_SCOPES;
-
-            const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${encodeURIComponent(
-                scopes
-            )}&response_type=code&prompt=select_account&access_type=offline`;
-            window.location.href = authUrl;
-        } catch (error) {
-            console.error('Error initiating authorization flow:', error);
-        }
-    }
+    const { data: checkTokenData, callApi: handleCheckToken } = useApi();
 
     const onSignUp = async () => {
         if(! email ) {
@@ -51,7 +36,7 @@ const SignUp = () => {
         }
 
         await handleSignUp(
-            authenticationEndpoints.signup,
+            authenticationEndpoints.signupEmployee,
             {
                 'method': 'POST',
                 'data': {
@@ -59,7 +44,7 @@ const SignUp = () => {
                     'gmail_token': email,
                     'password': password,
                     'password_confirmation': confirmPassword,
-                    'enterprise': enterprise,
+                    'token': checkTokenData.token
                 },
             }
         );
@@ -78,6 +63,14 @@ const SignUp = () => {
 
     }, [tokenData]);
 
+    useEffect(() => {
+        if (!checkTokenData) return;
+
+        setEnterprise(checkTokenData.enterprise.name);
+
+    }, [checkTokenData]);
+
+
     const getEmail = () => {
         const data = decodeToken(email?.id_token);
 
@@ -86,22 +79,33 @@ const SignUp = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (searchParams.has('code')) {
-                const code = searchParams.get('code');
-                await handleGetToken(
-                    'https://oauth2.googleapis.com/token',
-                    {
-                        method: 'POST',
-                        data: {
-                            client_id: import.meta.env.VITE_CLIENT_ID,
-                            client_secret: import.meta.env.VITE_CLIENT_SECRET,
-                            code: code,
-                            grant_type: 'authorization_code',
-                            redirect_uri: import.meta.env.VITE_APP_URL,
-                        },
+            if (!searchParams.has('code') || !searchParams.has('state')) {
+                navigate('/');
+            }
+            const code = searchParams.get('code');
+            handleGetToken(
+                'https://oauth2.googleapis.com/token',
+                {
+                    method: 'POST',
+                    data: {
+                        client_id: import.meta.env.VITE_CLIENT_ID,
+                        client_secret: import.meta.env.VITE_CLIENT_SECRET,
+                        code: code,
+                        grant_type: 'authorization_code',
+                        redirect_uri: import.meta.env.VITE_APP_URL,
+                    },
+                }
+            );
+
+            handleCheckToken(
+                authenticationEndpoints.checkToken,
+                {
+                    method:"POST",
+                    data:{
+                        token: searchParams.get('state')
                     }
-                );
-            } 
+                }
+            )
         };
 
         fetchData();
@@ -118,13 +122,8 @@ const SignUp = () => {
                     <Container>
                         <FlexboxGrid justify="center">
                             <FlexboxGrid.Item colspan={12}>
-                                <Panel header={<h3>Sign up</h3>} bordered>
-                                    {!email && <Form.Group className='flex flex-col pb-5'>
-                                        <Form.ControlLabel>Select email to continute</Form.ControlLabel>
-                                        <input type="submit" onClick={selectEmail} className='bg-blue-500 rs-btn rs-btn-primary' value="Select email to continue" />
-
-                                    </Form.Group>}
-                                    
+                                <Panel header={<h3>Sign up for employee</h3>} bordered>
+                
                                     {email && 
                                         <Form fluid onSubmit={onSignUp}>
                                             <Form.Group>
@@ -137,7 +136,7 @@ const SignUp = () => {
                                             </Form.Group>
                                             <Form.Group>
                                                 <Form.ControlLabel>Enterprise</Form.ControlLabel>
-                                                <Form.Control name="name" type="text" autoComplete="off" value={enterprise} placeholder="Enterprise" onChange={setEnterprise} />
+                                                <Form.Control name="name" type="text" value={enterprise} readOnly/>
                                             </Form.Group>
                                             <Form.Group>
                                                 <Form.ControlLabel>Password</Form.ControlLabel>
@@ -171,4 +170,4 @@ const SignUp = () => {
 
 };
 
-export default SignUp
+export default SignUpEmployee
