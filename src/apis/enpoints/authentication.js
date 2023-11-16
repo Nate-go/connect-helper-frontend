@@ -4,7 +4,9 @@ const authenticationEndpoints = {
     signup: '/signup',
     activeAccount: '/active-account',
     sendVerify: '/send-verify',
-    refresh: '/refresh'
+    refresh: '/refresh',
+    checkToken: 'check-invite-token',
+    signupEmployee: 'signup-employee'
 };
 
 export default authenticationEndpoints;

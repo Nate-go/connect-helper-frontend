@@ -1,8 +1,8 @@
 
 const UserRole = {
     ADMIN: 0,
-    Owner: 1,
-    Employee: 2
+    OWNER: 1,
+    EMPLOYEE: 2
 }
 
 export default UserRole

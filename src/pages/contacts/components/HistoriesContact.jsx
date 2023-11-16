@@ -1,7 +1,7 @@
-import { Panel, Timeline, Avatar } from "rsuite";
+import { Panel, Timeline, Avatar, Button } from "rsuite";
 import { differenceInDays, parse } from 'date-fns';
 import { ConnectionHistoryType } from "@/constants";
-import { SendIcon, RiUserReceivedLine } from "@/components/icons";
+import { SendIcon, RiUserReceivedLine, UpdateRoundIcon } from "@/components/icons";
 
 const renderTimeLine = (history) => {
     if (history.type == ConnectionHistoryType.SEND) return (
@@ -33,7 +33,7 @@ const renderTimeLine = (history) => {
                         src={history.user.image_url}
                     />
                     <div className="flex flex-col items-start">
-                        <div className="text-lg font-sans">{history.user.name}</div>
+                        <div className="text-sm font-sans">{history.user.name}</div>
                     </div>
                 </div>
                 <p className="pt-1 -mb-1">[Receive mail from]</p>
@@ -47,7 +47,7 @@ const renderTimeLine = (history) => {
 }
 
 const renderDot = (first, second) => {
-    if (!second) return null;
+    if (!second) return [];
 
     const firstDate = parse(first, 'yyyy-MM-dd HH:mm:ss', new Date());
     const secondDate = parse(second, 'yyyy-MM-dd HH:mm:ss', new Date());
@@ -55,10 +55,21 @@ const renderDot = (first, second) => {
     const numberOfDays = differenceInDays(secondDate, firstDate);
 
     const timelineItems = [];
+
+    if(numberOfDays > 2) {
+        timelineItems.push(
+            <Timeline.Item  time={numberOfDays + " days"}>
+                <p className="h-12"></p>
+            </Timeline.Item>
+        );
+
+        return timelineItems;
+    }
+
     for (let i = 0; i <= numberOfDays; i++) {
         timelineItems.push(
             <Timeline.Item key={i}>
-                <p className="h-10"></p>
+                <p className="h-5"></p>
             </Timeline.Item>
         );
     }
@@ -68,21 +79,23 @@ const renderDot = (first, second) => {
 
 const HistoriesContact = ({ histories }) => {
     const timelineItems = histories.reduce((accumulator, history, index) => {
-        const dots = renderDot(index === 0 ? null : histories[index - 1].contacted_at, history.contacted_at);
+        const dots = renderDot(history.contacted_at, index === 0 ? null : histories[index - 1].contacted_at);
         return [
             ...accumulator,
             ...dots,
-            renderTimeLine(history)
+            renderTimeLine(history),
+            
         ];
     }, []);
 
     return (
         <Panel header="Time line" bordered >
-            <div className="w-full flex items-center max-h-96 overflow-y-auto">
-                <Timeline align="left" className="w-full">
-                    {timelineItems}
-                </Timeline>
-            </div>
+            <Button color="blue" className='bg-blue-600 col-span-1' appearance="primary" startIcon={<UpdateRoundIcon rotate='180' />}>
+                Update
+            </Button>
+            <Timeline align="left" className="w-full max-h-96 overflow-y-auto" endless>
+                {timelineItems}
+            </Timeline> 
         </Panel>
     );
 };

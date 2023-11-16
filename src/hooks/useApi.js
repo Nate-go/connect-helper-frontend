@@ -1,10 +1,7 @@
 import { useState } from "react";
 import api from "@/apis/axiosConfig";
-import { signOut } from "@/helpers/authenHelpers";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
-import { setAuthentication, getAuthentication } from "@/helpers/authenHelpers";
-import authenticationEndpoints from "@/apis/enpoints/authentication";
 
 const useApi = () => {
 

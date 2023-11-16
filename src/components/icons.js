@@ -32,6 +32,9 @@ import {LuMail} from "react-icons/lu";
 import { FaCrown } from "react-icons/fa";
 import SendIcon from '@rsuite/icons/Send';
 import { RiUserReceivedLine } from "react-icons/ri";
+import TimeIcon from '@rsuite/icons/Time';
+import UpdateRoundIcon from '@rsuite/icons/UpdateRound';
+import SentToUserIcon from '@rsuite/icons/SentToUser';
 
 export {
     CogIcon,
@@ -71,5 +74,8 @@ export {
     LuMail,
     FaCrown,
     SendIcon,
-    RiUserReceivedLine
+    RiUserReceivedLine,
+    TimeIcon,
+    UpdateRoundIcon,
+    SentToUserIcon
 };
