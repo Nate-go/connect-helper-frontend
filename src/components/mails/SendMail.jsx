@@ -1,4 +1,4 @@
-import { Panel, Drawer, InputGroup, Input, SelectPicker, Button, Whisper, Tooltip } from "rsuite";
+import { Panel, Drawer, InputGroup, Input, SelectPicker, Button, Whisper, Tooltip, CheckPicker } from "rsuite";
 import SunEditor from 'suneditor-react';
 import React from 'react';
 import ListConnection from "./ListConnection";
@@ -9,6 +9,8 @@ import ListToContact from "./ListToContact";
 import { SentToUserIcon, AiOutlineQuestionCircle } from '@/components/icons';
 import { AutoLoader } from "@/components";
 import { SendMailType } from "@/constants";
+import tagEndpoints from "@/apis/enpoints/tag";
+import { getIds } from '@/helpers/dataHelpers'
 
 const buttonList = [
     [
@@ -50,7 +52,10 @@ const buttonList = [
 
 const SendMail = ({open, handleClose}) => {
     const [connections, setConnections] = useState([]);
+    const [tags, setTags] = useState([]);
     const { data, loading, callApi } = useApi();
+    const { data: tagData, loading:tagLoading, callApi: handleGetTag } = useApi();
+
     const [contacts, SetContacts] = useState([]);
     const [mailData, setMailData] = useState({
         subject: '',
@@ -65,6 +70,7 @@ const SendMail = ({open, handleClose}) => {
 
     useEffect(() => {
         callApi(connectionEndpoints.getUserConnections, {});
+        handleGetTag(tagEndpoints.get, {});
     }, []);
 
     const handleContact = (contact) => {
@@ -86,6 +92,20 @@ const SendMail = ({open, handleClose}) => {
 
     const handleChange = (content) => {
         setContent(content);
+    }
+
+    const handleTags = (items) => {
+        const deleteIds = tags.filter((item) => !items.includes(item));
+        setTags(items);
+        const connectionIds = getConnectionFromTags(items);
+        const deleteConnectionIds = getConnectionFromTags(deleteIds);
+        setConnections(Array.from(new Set([...connections, ...connectionIds])).filter((item) => !deleteConnectionIds.includes(item)));
+    }
+
+    const getConnectionFromTags = (tagIds) => {
+        const filteredTags = tagData.filter((tag) => tagIds.includes(tag.id));
+        const connectionIds = filteredTags.flatMap((tag) => tag.connections.map((connection) => connection.id));
+        return connectionIds;
     }
 
     const getToolTip = () => {
@@ -122,6 +142,10 @@ const SendMail = ({open, handleClose}) => {
                             <InputGroup.Addon>Name: </InputGroup.Addon>
                             <Input value={mailData.name} onChange={(value) => handleMailData({name: value})} />
                         </InputGroup>
+                        <CheckPicker className="w-full" label="Tag" data={tagData?.map(item => ({
+                            label: item.name,
+                            value: item.id
+                        })) ?? []} value={tags} onChange={handleTags} loading={tagLoading} />
                         <ListConnection value={connections} setValue={handleConnection} data={data} loading={loading} />
                         <ListToContact connections={getConnections()} handleContact={handleContact}/>
                         <InputGroup>

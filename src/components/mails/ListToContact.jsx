@@ -31,13 +31,13 @@ const ConnectionElement = ({connection, handleContact}) => {
 
     return (
         <div className="flex flex-col w-full">
-            <ButtonGroup className="flex flex-row gap-1 w-full border-2 rounded-lg">
+            <ButtonGroup className="flex flex-row gap-1 w-full border-2 border-blue-500 rounded-lg">
                 <div className='flex flex-col justify-center w-40 pl-1'>
                     <div className='truncate hover:text-clip text-base'>{connection.name}</div>
                     <div className='truncate text-xs text-gray-400'>{contact?.content}</div>
                 </div>
                 <Whisper placement="bottomEnd" trigger="click" speaker={renderMenu}>
-                    <IconButton icon={<ArrowDownIcon />} />
+                    <IconButton className="bg-blue-500 hover:bg-blue-600" icon={<ArrowDownIcon className="text-white" />} />
                 </Whisper>
             </ButtonGroup>
         </div>
