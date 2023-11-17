@@ -10,7 +10,9 @@ const connectionEndpoints = {
     create: baseEndpoint,
     show: baseEndpoint + '/',
     edit: baseEndpoint + '/',
-    getContacts: baseEndpoint + '/'
+    getContacts: baseEndpoint + '/',
+    addUserConnections: baseEndpoint + '/add-user-connections',
+    deleteUserConnections: baseEndpoint + '/delete-user-connections',
 };
 
 export default connectionEndpoints;

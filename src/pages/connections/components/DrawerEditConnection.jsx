@@ -45,6 +45,7 @@ const DrawerEditConnection = ({
     const [tab, setTab] = useState(tabConstant.CONTACTS);
     const [fetchContacts, setFetchContacts] = useState(true);
     const [fetchConnections, setFetchConnections] = useState(true);
+    const [ownerId, setOwnerId] = useState(null);
 
     const {
         data: connectionData,
@@ -74,11 +75,11 @@ const DrawerEditConnection = ({
                 tagIds: tags,
                 name: connection.name,
                 note: connection.note,
-                status: connection.status
+                status: connection.status,
+                ownerId: ownerId
             },
         });
-
-        handleGetConnection(connectionEndpoints.show + connectionId, {});
+        setFetchConnections(true);
     };
 
     const confirmUpdateConnection = () => {
@@ -88,6 +89,19 @@ const DrawerEditConnection = ({
             'Are you sure to update this connection ?',
         );
     }
+
+    const confirmChangeOwner = (id) => {
+        openConfirmation(
+            setOwnerId,
+            [id],
+            'Are you sure to change this connection owner ?',
+        );
+    }
+
+    useEffect(() => {
+        if (ownerId == connection.owner?.id) return;
+        updateConnection();
+    }, [ownerId]);
 
     useEffect(() => {
         if (connectionId == null || !fetchConnections) return;
@@ -104,7 +118,8 @@ const DrawerEditConnection = ({
     useEffect(() => {
         if (!connectionData) return;
         setConnection({...connectionData});
-        setTags(getIds(connectionData.tags))
+        setTags(getIds(connectionData.tags));
+        setOwnerId(connectionData.owner.id);
     }, [connectionData]);
 
     const tabs = () => {
@@ -113,7 +128,7 @@ const DrawerEditConnection = ({
         );
 
         if (tab == tabConstant.USERS) return (
-            <UserConnection users={connection.users} owner={connection.owner}/>
+            <UserConnection users={connection.users} owner={connection.owner} openConfirmation={openConfirmation} setFetchConnections={setFetchConnections} connectionId={connectionId} connectionLoading={connectionLoading} confirmChangeOwner={confirmChangeOwner}/>
         );
 
         if (tab == tabConstant.HISTORIES) return (
