@@ -13,6 +13,7 @@ const connectionEndpoints = {
     getContacts: baseEndpoint + '/',
     addUserConnections: baseEndpoint + '/add-user-connections',
     deleteUserConnections: baseEndpoint + '/delete-user-connections',
+    getUserConnections: baseEndpoint + '/user-connections/useable'
 };
 
 export default connectionEndpoints;

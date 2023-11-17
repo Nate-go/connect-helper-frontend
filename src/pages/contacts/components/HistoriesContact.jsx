@@ -89,7 +89,7 @@ const HistoriesContact = ({ histories }) => {
     }, []);
 
     return (
-        <Panel header="Time line" bordered >
+        <Panel header="Timeline" bordered >
             <Button color="blue" className='bg-blue-600 col-span-1' appearance="primary" startIcon={<UpdateRoundIcon rotate='180' />}>
                 Update
             </Button>
