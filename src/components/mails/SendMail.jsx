@@ -1,5 +1,4 @@
 import { Panel, Drawer, InputGroup, Input, SelectPicker, Button, Whisper, Tooltip, CheckPicker } from "rsuite";
-import SunEditor from 'suneditor-react';
 import React from 'react';
 import ListConnection from "./ListConnection";
 import { useState, useEffect } from "react";
@@ -10,59 +9,25 @@ import { SentToUserIcon, AiOutlineQuestionCircle } from '@/components/icons';
 import { AutoLoader } from "@/components";
 import { SendMailType } from "@/constants";
 import tagEndpoints from "@/apis/enpoints/tag";
+import MailContentEdit from "./MailContentEdit";
+import { sendMailEndpoints } from "@/apis";
 import { getIds } from '@/helpers/dataHelpers'
 
-const buttonList = [
-    [
-        'undo',
-        'redo',
-    ],
-    [
-        'font',
-        'fontSize',
-        'fontColor',
-        'hiliteColor',
-    ],
-    [
-        'align',
-        'bold',
-        'underline',
-        'italic',
-        'strike',
-    ],
-    [
-        'list',
-
-        'subscript',
-        'superscript',
-        'indent',
-        'outdent',
-        'removeFormat',
-    ],
-    [
-        'link',
-        'image',
-    ],
-    [
-        'fullScreen',
-        'codeView',
-        'preview',
-    ]
-];
-
-const SendMail = ({open, handleClose}) => {
+const SendMail = ({open, handleClose, openConfirmation}) => {
     const [connections, setConnections] = useState([]);
     const [tags, setTags] = useState([]);
     const { data, loading, callApi } = useApi();
     const { data: tagData, loading:tagLoading, callApi: handleGetTag } = useApi();
+    const { loading: sendMailLoading, callApi: handleSendMail } = useApi();
 
+    const { SunEditorComponent, saveContent, loading:saveContentLoading } = MailContentEdit();
     const [contacts, SetContacts] = useState([]);
+
     const [mailData, setMailData] = useState({
         subject: '',
         type: SendMailType.PERSONAL,
         name: ''
     });
-    const [content, setContent] = useState('')
 
     const handleMailData = (data) => {
         setMailData((prevMailData) => ({ ...prevMailData, ...data }));
@@ -90,10 +55,6 @@ const SendMail = ({open, handleClose}) => {
         })
     }
 
-    const handleChange = (content) => {
-        setContent(content);
-    }
-
     const handleTags = (items) => {
         const deleteIds = tags.filter((item) => !items.includes(item));
         setTags(items);
@@ -115,8 +76,27 @@ const SendMail = ({open, handleClose}) => {
             case SendMailType.BCC:
                 return 'The list of receiver the email is private'
             default:
-                return 'Send mail to multi people with the same template but different content\n{@name@, @note@, @title@, @content@} = {connection name, connection note, contact title, contact content}'
+                return 'Send mail to multi people with the same template but different content\n{@name@, @note@, @title@, @content@, @username@, @enterprise@} = {connection name, connection note, contact title, contact content, your name, your enterprise}'
         }
+    }
+
+    const confirmSendMail = async () => {
+        openConfirmation(sendMail, [], 'Are you sure to send this mail ?');
+    }
+
+    const sendMail = async () => {
+        const modifiedContent = await saveContent();
+
+        handleSendMail(sendMailEndpoints.sendMail,{
+            method:"POST",
+            data: {
+                name : mailData.name,
+                title: mailData.subject,
+                type: mailData.type,
+                content: modifiedContent,
+                contactIds : getIds(contacts) 
+            }
+        });
     }
 
     return (
@@ -126,9 +106,9 @@ const SendMail = ({open, handleClose}) => {
                 <Drawer.Actions>
                     <Button onClick={handleClose} className="bg-gray-200">Cancel</Button>
                     <AutoLoader
-                        display={!false}
+                        display={!(saveContentLoading || sendMailLoading)}
                         component={
-                            <Button color="blue" className='bg-blue-600' appearance="primary" startIcon={<SentToUserIcon />} onClick={() => { }}>
+                            <Button color="blue" className='bg-blue-600' appearance="primary" startIcon={<SentToUserIcon />} onClick={confirmSendMail}>
                                 Send mail
                             </Button>
                         }
@@ -164,14 +144,7 @@ const SendMail = ({open, handleClose}) => {
                             </Whisper>
                         </div>
                         
-                        <SunEditor
-                            onChange={handleChange}
-                            height="30em"
-                            placeholder="Please type here..."
-                            setOptions={{
-                                buttonList: buttonList,
-                            }}
-                        />
+                        {SunEditorComponent}
                     </div>
 
                 </Panel>

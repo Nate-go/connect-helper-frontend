@@ -8,7 +8,7 @@ import { contactEndpoints } from "@/apis";
 import { useApi } from '@/hooks';
 import { BaseLoader } from '@/components'
 
-const Contacts = ({ contacts, openConfirmation, setFetchContacts, contactLoading, connectionId }) => {
+const Contacts = ({ contacts, openConfirmation, setFetchContacts, contactLoading, connectionId, isMember }) => {
     let contactsByType = {
         [ContactType.MAIL]: [],
         [ContactType.PHONENUMBER]: [],
@@ -101,12 +101,16 @@ const Contacts = ({ contacts, openConfirmation, setFetchContacts, contactLoading
                                             <Input value={contact.title} readOnly />
                                             <InputGroup.Addon>Content</InputGroup.Addon>
                                             <Input value={contact.content} readOnly />
-                                            <InputGroup.Button className='hover:bg-blue-500 text-blue-500 bg-white hover:text-white' onClick={() => setEditContact({ ...contact })}>
-                                                <EditIcon />
-                                            </InputGroup.Button>
-                                            <InputGroup.Button className='hover:bg-red-500 text-red-500 bg-white hover:text-white' onClick={() => confirmDeleteContact(contact.id)}>
-                                                <TrashIcon />
-                                            </InputGroup.Button>
+                                            {isMember() && 
+                                                <>
+                                                    <InputGroup.Button className='hover:bg-blue-500 text-blue-500 bg-white hover:text-white' onClick={() => setEditContact({ ...contact })}>
+                                                        <EditIcon />
+                                                    </InputGroup.Button>
+                                                    <InputGroup.Button className='hover:bg-red-500 text-red-500 bg-white hover:text-white' onClick={() => confirmDeleteContact(contact.id)}>
+                                                        <TrashIcon />
+                                                    </InputGroup.Button>
+                                                </>
+                                            }
                                         </InputGroup>
                                     )
 
@@ -121,7 +125,7 @@ const Contacts = ({ contacts, openConfirmation, setFetchContacts, contactLoading
 
     return (
         <div className="flex flex-col w-full h-full gap-4">
-            <CreateContact connectionId={connectionId} setFetchContacts={setFetchContacts}/>
+            {isMember() && <CreateContact connectionId={connectionId} setFetchContacts={setFetchContacts} />}
             {body()}
         </div>
     );

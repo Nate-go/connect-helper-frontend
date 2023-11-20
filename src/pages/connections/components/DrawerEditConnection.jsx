@@ -21,6 +21,7 @@ import BaseLoader from "@/components/BaseLoader";
 import { Contacts } from "@/pages/contacts";
 import UserConnection from "./UserConnection";
 import { HistoriesContact } from "@/pages/contacts/components";
+import { getAuthentication } from '@/helpers/authenHelpers';
 
 const tabConstant = {
     CONTACTS : 0,
@@ -122,9 +123,17 @@ const DrawerEditConnection = ({
         setOwnerId(connectionData.owner.id);
     }, [connectionData]);
 
+    const isOwner = () => {
+        return getAuthentication().user.id === ownerId;
+    }
+
+    const isMember = () => {
+        return getIds(connection.users).includes(getAuthentication().user.id);
+    }
+
     const tabs = () => {
         if(tab == tabConstant.CONTACTS) return (
-            <Contacts contacts={contactData?.contacts ?? []} setFetchContacts={setFetchContacts} openConfirmation={openConfirmation} contactLoading={contactLoading} connectionId={connectionId}/>
+            <Contacts contacts={contactData?.contacts ?? []} isMember={isMember} setFetchContacts={setFetchContacts} openConfirmation={openConfirmation} contactLoading={contactLoading} connectionId={connectionId}/>
         );
 
         if (tab == tabConstant.USERS) return (
@@ -132,7 +141,7 @@ const DrawerEditConnection = ({
         );
 
         if (tab == tabConstant.HISTORIES) return (
-            <HistoriesContact histories={contactData?.histories ?? []} />
+            <HistoriesContact histories={contactData?.histories ?? []} isMember={isMember}  openConfirmation={openConfirmation} setFetchContacts={setFetchContacts} />
         );
     }
 
@@ -148,6 +157,7 @@ const DrawerEditConnection = ({
                                     <div>
                                         <label>Name</label>
                                         <Input
+                                            readOnly={!isOwner()}
                                             value={connection.name}
                                             onChange={(value) => handleConnection({ name: value })}
                                         />
@@ -155,6 +165,7 @@ const DrawerEditConnection = ({
                                     <div>
                                         <label>Note</label>
                                         <Input
+                                            readOnly={!isOwner()}
                                             value={connection.note}
                                             onChange={(value) => handleConnection({ note: value })}
                                         />
@@ -164,6 +175,7 @@ const DrawerEditConnection = ({
                             <Panel header="Status" shaded className="w-full h-full">
                                 <div className="flex flex-col w-full h-full gap-4">
                                     <InputPicker
+                                        readOnly={!isOwner()}
                                         value={connection.status}
                                         data={statusData}
                                         onChange={(value) => handleConnection({ status: value })}
@@ -230,18 +242,22 @@ const DrawerEditConnection = ({
                 
                 <Drawer.Actions>
                     <Button onClick={handleClose} className="bg-gray-200">Cancel</Button>
-                    <AutoLoader
-                        display={!false}
-                        component={
-                            <Button
-                                className="bg-blue-400"
-                                onClick={confirmUpdateConnection}
-                                appearance="primary"
-                            >
-                                Save
-                            </Button>
-                        }
-                    />
+                    {
+                        isMember() && 
+                        <AutoLoader
+                            display={!false}
+                            component={
+                                <Button
+                                    readOnly={!isOwner()}
+                                    className="bg-blue-400"
+                                    onClick={confirmUpdateConnection}
+                                    appearance="primary"
+                                >
+                                    Save
+                                </Button>
+                            }
+                        />
+                    }
                 </Drawer.Actions>
             </Drawer.Header>
             <Drawer.Body className="-mx-5">

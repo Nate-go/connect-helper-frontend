@@ -52,7 +52,7 @@ const SignUpEmployee = () => {
 
     useEffect(() => {
         if(data) {
-            navigate('/dashboard');
+            navigate('/login');
         }
     }, [data]);
 

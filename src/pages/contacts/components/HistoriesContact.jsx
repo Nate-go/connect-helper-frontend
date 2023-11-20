@@ -2,6 +2,9 @@ import { Panel, Timeline, Avatar, Button } from "rsuite";
 import { differenceInDays, parse } from 'date-fns';
 import { ConnectionHistoryType } from "@/constants";
 import { SendIcon, RiUserReceivedLine, UpdateRoundIcon } from "@/components/icons";
+import useApi from "@/hooks/useApi";
+import { connectionHistoryEndpoints } from "@/apis";
+import { AutoLoader } from '@/components';
 
 const renderTimeLine = (history) => {
     if (history.type == ConnectionHistoryType.SEND) return (
@@ -17,7 +20,11 @@ const renderTimeLine = (history) => {
                         <div className="text-sm font-sans">{history.user.name}</div>
                     </div>
                 </div>
-                <p className="pt-1 -mb-1">[Send mail to]</p>
+                <p className="pt-1 -mb-1">
+                    <a href={history.link} target="_blank">
+                        [Send mail to]
+                    </a>
+                </p>
                 <p>{'<' + history.contact.content + '>'}</p>
             </div>
         </Timeline.Item>
@@ -77,7 +84,9 @@ const renderDot = (first, second) => {
     return timelineItems;
 };
 
-const HistoriesContact = ({ histories }) => {
+const HistoriesContact = ({ histories, openConfirmation, setFetchContacts, isMember }) => {
+    const { loading, callApi } = useApi();
+
     const timelineItems = histories.reduce((accumulator, history, index) => {
         const dots = renderDot(history.contacted_at, index === 0 ? null : histories[index - 1].contacted_at);
         return [
@@ -88,11 +97,27 @@ const HistoriesContact = ({ histories }) => {
         ];
     }, []);
 
+    const confirmUpdate = () => {
+        openConfirmation(updateConnection, [], 'Are you sure to update this connection history ?');
+    }
+
+    const updateConnection = async () => {
+        await callApi(connectionHistoryEndpoints.updateConnection, { method: "PUT" });
+        setFetchContacts(true);
+    }
+
     return (
         <Panel header="Timeline" bordered >
-            <Button color="blue" className='bg-blue-600 col-span-1' appearance="primary" startIcon={<UpdateRoundIcon rotate='180' />}>
-                Update
-            </Button>
+            {isMember() && 
+                <AutoLoader
+                    display={!loading}
+                    component={
+                        <Button color="blue" className='bg-blue-600 col-span-1' appearance="primary" startIcon={<UpdateRoundIcon rotate='180' />} onClick={confirmUpdate}>
+                            Update
+                        </Button>
+                    }
+                />
+            }
             <Timeline align="left" className="w-full max-h-96 overflow-y-auto" endless>
                 {timelineItems}
             </Timeline> 
