@@ -1,4 +1,4 @@
-import { Login, SignUp, VerifyAccount, SignUpEmployee } from '@pages/authentication'
+import { Login, SignUp, SignUpEmployee } from '@pages/authentication'
 import { About, Home, Contact } from '@/pages/guest'
 
 const PublicRoutes = [
@@ -13,10 +13,6 @@ const PublicRoutes = [
     {
         path: "/signup-employee",
         element: <SignUpEmployee />,
-    },
-    {
-        path: "/verify-account",
-        element: <VerifyAccount />,
     },
     {
         path: '/About',

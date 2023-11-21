@@ -1,6 +1,5 @@
 import { useState } from "react";
 import api from "@/apis/axiosConfig";
-import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 const useApi = () => {
@@ -8,7 +7,6 @@ const useApi = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const callApi = async (endpoint, options) => {
     try {

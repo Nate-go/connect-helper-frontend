@@ -60,13 +60,12 @@ const InviteEmployee = ({ open, handleClose }) => {
                     <label>Employee's emails</label>
                     <div className="flex flex-row gap-3 items-center w-full">
                         <TagInput className="w-full"
-                            trigger={'Space'}
+                            trigger={(['Enter', 'Space'])}
                             placeholder="Input emails"
                             menuStyle={{ width: 500 }}
                             onCreate={(value, item) => {
                                 handleInputMail(value)
                             }}
-                            value={emails}
                             onClean={() => setEmails([])}
                             onTagRemove={(value, event) => removeEmail(value)}
                         />

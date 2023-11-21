@@ -2,6 +2,7 @@ import { getAuthentication, setAuthentication, signOut } from "@/helpers/authenH
 import api from "./axiosConfig";
 import authenticationEndpoints from "./enpoints/authentication";
 import { ResponseCode } from "@/constants";
+import { useNavigate } from "react-router-dom";
 
 let isRefreshing = false;
 let refreshQueue = [];
@@ -40,7 +41,14 @@ const queueRequestPush = (error) => {
 
 const errorHandler = async (error) => {
   if (error.response?.status === ResponseCode.UNAUTHEN) {
+    const authen = getAuthentication();
+    if(!authen) {
+      return Promise.reject(error);
+    }
+
     const rememberToken = getAuthentication()?.remember_token;
+    const navigate = useNavigate();
+    console.log('haha');
 
     if (rememberToken) {
       if (!isRefreshing) {
@@ -52,6 +60,7 @@ const errorHandler = async (error) => {
       }
     }
     signOut();
+    navigate('/login');
   }
 
   return Promise.reject(error);

@@ -1,6 +1,9 @@
 import { Dropdown, IconButton, Whisper, Tooltip } from "rsuite";
 import { PlusIcon, SortUpIcon, LuMail } from "@/components/icons";
 import React, { useState } from "react";
+import { SendMail } from "@/components/mails";
+import { useConfirmation } from '@/hooks';
+import { PopupConfirm } from '@/components/popups';
 
 const scrollToTop = () => {
     window.scrollTo({
@@ -11,6 +14,18 @@ const scrollToTop = () => {
 
 const QuickAccess = () => {
     const [open, setOpen] = useState(false);
+    const [openSendMail, setOpenSendMail] = useState(false);
+    const {
+        isConfirmationOpen,
+        openConfirmation,
+        handleConfirm,
+        handleCancel,
+        confirmType,
+        confirmData,
+        confirmValue,
+        setConfirmValue,
+        message
+    } = useConfirmation();
 
     const renderIconButton = () => {
 
@@ -28,14 +43,26 @@ const QuickAccess = () => {
     };
 
     return (
-        <Dropdown className="quick-access flex flex-col gap-5 items-center pt-4" renderToggle={renderIconButton} placement="topEnd" trigger={"hover"} onOpen={() => setOpen(true)} onClose={() => setOpen(false)} onClick={scrollToTop}>
-            <Whisper placement="left" trigger="hover" speaker={<Tooltip>send mail</Tooltip>}>
-                <IconButton icon={<LuMail style={{ fontSize: '10em' }} />} circle color="blue" className="bg-blue-500 h-11 w-11" appearance="primary" />
-            </Whisper>
-            <Whisper placement="left" trigger="hover" speaker={<Tooltip>scroll to top</Tooltip>}>
-                <IconButton icon={<SortUpIcon style={{ fontSize: '10em' }} />} circle color="blue" className="bg-blue-500 h-11 w-11" appearance="primary" onClick={scrollToTop} />
-            </Whisper>
-        </Dropdown>
+        <>
+            <PopupConfirm
+                handleConfirm={handleConfirm}
+                handleCancel={handleCancel}
+                type={confirmType}
+                data={confirmData}
+                message={() => message()}
+                setValue={setConfirmValue}
+                open={isConfirmationOpen}
+            />
+            <SendMail open={openSendMail} handleClose={() => setOpenSendMail(false)} openConfirmation={openConfirmation}/>
+            <Dropdown className="quick-access flex flex-col gap-5 items-center pt-4" renderToggle={renderIconButton} placement="topEnd" trigger={"hover"} onOpen={() => setOpen(true)} onClose={() => setOpen(false)} onClick={scrollToTop}>
+                <Whisper placement="left" trigger="hover" speaker={<Tooltip>send mail</Tooltip>}>
+                    <IconButton icon={<LuMail style={{ fontSize: '10em' }} />} circle color="blue" className="bg-blue-500 h-11 w-11" appearance="primary" onClick={() => setOpenSendMail(true)}/>
+                </Whisper>
+                <Whisper placement="left" trigger="hover" speaker={<Tooltip>scroll to top</Tooltip>}>
+                    <IconButton icon={<SortUpIcon style={{ fontSize: '10em' }} />} circle color="blue" className="bg-blue-500 h-11 w-11" appearance="primary" onClick={scrollToTop} />
+                </Whisper>
+            </Dropdown>
+        </>
     );
 }
 export default QuickAccess

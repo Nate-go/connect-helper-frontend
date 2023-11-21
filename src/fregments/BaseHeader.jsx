@@ -41,7 +41,7 @@ const CustomNavbar = ({ onSelect, ...props }) => {
                     <>
                         <Nav.Item eventKey="/login" active={activeKey('/login')}  onClick={() => navigate('/login')}  icon={<CgLogIn/>}>Login</Nav.Item>
                         <Nav.Item eventKey="/signup" active={activeKey('/signup')}  onClick={() => navigate('/signup')} icon={<IoMdPersonAdd/>}>Sign Up</Nav.Item>
-                        <Nav.Item eventKey="/verify-account" active={activeKey('/verify-account')}  onClick={() => navigate('/verify-account')} icon={<BsPersonFillCheck />}>Verify Account</Nav.Item>
+                        {/* <Nav.Item eventKey="/verify-account" active={activeKey('/verify-account')}  onClick={() => navigate('/verify-account')} icon={<BsPersonFillCheck />}>Verify Account</Nav.Item> */}
                     </>
                 )}
                 {auth && (
