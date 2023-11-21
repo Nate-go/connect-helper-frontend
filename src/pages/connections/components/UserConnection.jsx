@@ -12,7 +12,6 @@ const UserConnection = ({ users, owner, openConfirmation, setFetchConnections, c
     const [values, setValues] = useState(getIds(users))
     const {data: addUserData, loading:addUserLoading, callApi: handleAddUser} = useApi();
     const { data: deleteUserData, loading: deleteUserLoading, callApi: handleDeleteUser } = useApi();
-    const { data: changeOwnerData, loading: changeOwnerLoading, callApi: handleChangeOwner } = useApi();
 
     const confirmAddUser = () => {
         openConfirmation(

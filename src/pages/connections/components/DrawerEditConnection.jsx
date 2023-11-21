@@ -128,7 +128,7 @@ const DrawerEditConnection = ({
     }
 
     const isMember = () => {
-        return getIds(connection.users).includes(getAuthentication().user.id);
+        return getIds(connection?.users).includes(getAuthentication().user.id);
     }
 
     const tabs = () => {

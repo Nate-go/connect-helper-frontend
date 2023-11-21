@@ -3,7 +3,7 @@ import { ConnectionTags, ConnectionStatuses, ConnectionToolbar } from './compone
 import { useState, useEffect } from 'react';
 
 import { BaseTable } from '@components/table';
-import {connectionEndpoints, tagEndpoints} from '@/apis'
+import { connectionEndpoints, tagEndpoints } from '@/apis'
 import PaginationDefault from '@/constants/PaginationDefault';
 import { BasePagination, AutoLoader } from '@/components';
 import { getIds } from '@/helpers/dataHelpers';
@@ -12,7 +12,7 @@ import { PopupConfirm } from '@/components/popups';
 import { ConfirmType, ConnectionStatus } from '@/constants';
 import { DrawerEditConnection } from './components';
 
-const Connection = () => {
+const TemplateGroup = () => {
     const [tags, setTags] = useState([]);
     const {
         isConfirmationOpen,
@@ -51,7 +51,7 @@ const Connection = () => {
     const { callApi: handleAddTagToConnections, loading: addTagToConnectionsLoading } = useApi();
 
     useEffect(() => {
-        if(!fetchConnection) return;
+        if (!fetchConnection) return;
         handleGetConnections(connectionEndpoints.get, {
             params: {
                 ...pagination,
@@ -64,7 +64,7 @@ const Connection = () => {
     }, [fetchConnection]);
 
     useEffect(() => {
-        if(!fetchTag) return;
+        if (!fetchTag) return;
         handleGetTags(tagEndpoints.get, {});
         setFetchTag(false);
     }, [fetchTag]);
@@ -92,7 +92,7 @@ const Connection = () => {
             connectionEndpoints.delete,
             {
                 method: 'DELETE',
-                data: { ids } 
+                data: { ids }
             }
         );
 
@@ -117,8 +117,8 @@ const Connection = () => {
         await handleUpdateConnections(
             connectionEndpoints.update,
             {
-                "method":"PUT",
-                data: { 
+                "method": "PUT",
+                data: {
                     ids,
                     data: updateData
                 }
@@ -205,17 +205,17 @@ const Connection = () => {
                 setValue={setConfirmValue}
                 open={isConfirmationOpen}
             />
-            {editConnection.id && 
+            {editConnection.id &&
                 <DrawerEditConnection
                     open={editConnection.open}
-                    handleClose={() => { setEditConnection({open:false, id:null}) }}
+                    handleClose={() => { setEditConnection({ open: false, id: null }) }}
                     openConfirmation={openConfirmation}
                     tagData={tagData}
                     setFetchTag={setFetchTag}
                     connectionId={editConnection.id}
                 />
             }
-            
+
 
             <Row className="show-grid">
                 <Col xs={24} sm={24} md={5} className='sm:mb-4'>
@@ -223,8 +223,8 @@ const Connection = () => {
                         <div className='flex flex-col w-full h-full gap-4'>
                             <ConnectionStatuses setStatuses={handleStatuses} />
                             <hr />
-                            <AutoLoader 
-                                display={tagData} 
+                            <AutoLoader
+                                display={tagData}
                                 component={
                                     <ConnectionTags tagData={tagData} setTags={handleTags} openConfirmation={openConfirmation} setFetchTag={setFetchTag} />
                                 }
@@ -236,8 +236,8 @@ const Connection = () => {
                 <Col xs={24} sm={24} md={19}>
                     <div className='w-full h-full'>
                         <Panel header='Connections' shaded className='w-full h-full'>
-                            <ConnectionToolbar 
-                                checkedKeys={checkedKeys} 
+                            <ConnectionToolbar
+                                checkedKeys={checkedKeys}
                                 deleteConnections={confirmDeleteConnections}
                                 changeStatus={confirmChangeStatus}
                                 mergeConnections={confirmMergeConnections}
@@ -250,7 +250,7 @@ const Connection = () => {
                                 display={connectionData?.data}
                                 component={
                                     <>
-                                        <BaseTable items={connectionData?.data?.items} dataLoading={(connectionLoading || deleteConnectionLoading || mergeConnectionLoading || addTagToConnectionsLoading)} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteConnection} onEdit={onEdit}/>
+                                        <BaseTable items={connectionData?.data?.items} dataLoading={(connectionLoading || deleteConnectionLoading || mergeConnectionLoading || addTagToConnectionsLoading)} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteConnection} onEdit={onEdit} />
                                         <BasePagination pagination={connectionData?.data?.pagination} handlePagination={handlePagination} />
                                     </>
                                 }

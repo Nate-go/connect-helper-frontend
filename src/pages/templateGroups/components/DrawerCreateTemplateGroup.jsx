@@ -3,32 +3,23 @@ import { useApi } from "@/hooks";
 import { useEffect, useState } from "react";
 import { AutoLoader } from '@/components';
 import connectionEndpoints from "@/apis/enpoints/connection";
-import ConnectionTags from "./ConnectionTags";
 import { ConnectionStatus } from '@/constants';
 
-const DrawerCreateConnection = ({ open, handleClose, openConfirmation, tagData, setFetchTag }) => {
-    const [tags, setTags] = useState([]);
+const DrawerCreateTemplateGroup = ({open, handleClose, openConfirmation}) => {
     const statusData = Object.entries(ConnectionStatus).map(([label, value]) => ({ label, value }));
     const [connection, setConnection] = useState({
-        name:'',
-        note:'',
+        name: '',
+        note: '',
         status: ConnectionStatus.Private
     })
 
-    const {data, loading, callApi:handleCreateConnection} = useApi();
-
-    const handleConnection = (data) => {
-        setConnection({
-            ...connection,
-            ...data
-        });
-    }
+    const { data, loading, callApi: handleCreateConnection } = useApi();
 
     const createConnection = () => {
         handleCreateConnection(
             connectionEndpoints.create,
             {
-                method:"POST",
+                method: "POST",
                 data: {
                     tagIds: tags,
                     data: connection
@@ -36,9 +27,9 @@ const DrawerCreateConnection = ({ open, handleClose, openConfirmation, tagData, 
             }
         )
     }
-    
+
     useEffect(() => {
-        if(!data) return;
+        if (!data) return;
 
         setTags([]);
         setConnection({
@@ -51,13 +42,13 @@ const DrawerCreateConnection = ({ open, handleClose, openConfirmation, tagData, 
     return (
         <Drawer size='full' placement='right' open={open} onClose={handleClose}>
             <Drawer.Header>
-                <Drawer.Title>Create Connection</Drawer.Title>
+                <Drawer.Title>Create template group</Drawer.Title>
                 <Drawer.Actions>
                     <Button onClick={handleClose}>Cancel</Button>
                     <AutoLoader
                         display={!loading}
                         component={
-                            <Button className="bg-blue-400" onClick={createConnection} appearance="primary">
+                            <Button className="bg-blue-400" onClick={() => {}} appearance="primary">
                                 Create
                             </Button>
                         }
@@ -72,12 +63,6 @@ const DrawerCreateConnection = ({ open, handleClose, openConfirmation, tagData, 
                                 <div className='flex flex-col w-full h-full gap-4'>
                                     <InputPicker value={connection.status} data={statusData} onChange={(value) => handleConnection({ status: value })} />
                                     <hr />
-                                    <AutoLoader
-                                        display={tagData}
-                                        component={
-                                            <ConnectionTags tagData={tagData} setTags={setTags} openConfirmation={openConfirmation} setFetchTag={setFetchTag} defaultValue={tags}/>
-                                        }
-                                    />
                                 </div>
                             </Panel>
                         </Col>
@@ -88,7 +73,7 @@ const DrawerCreateConnection = ({ open, handleClose, openConfirmation, tagData, 
                                     <div className='flex flex-col w-full h-full gap-4'>
                                         <div>
                                             <label>Name</label>
-                                            <Input value={connection.name} onChange={(value) => handleConnection({name:value})}/>
+                                            <Input value={connection.name} onChange={(value) => handleConnection({ name: value })} />
                                         </div>
                                         <div>
                                             <label>Note</label>
@@ -104,5 +89,4 @@ const DrawerCreateConnection = ({ open, handleClose, openConfirmation, tagData, 
         </Drawer>
     );
 }
-
-export default DrawerCreateConnection
+export default DrawerCreateTemplateGroup

@@ -9,7 +9,8 @@ import {
     GroupIcon,
     AppSelectIcon,
     HelpOutlineIcon,
-    PeopleBranchIcon
+    PeopleBranchIcon,
+    TreemapIcon
 } from '@/components/icons.js';
 
 import { logo_image } from '@/assets/images'
@@ -77,6 +78,9 @@ const BaseBody = ({ children }) => {
                                 </Nav.Item>
                                 <Nav.Item eventKey="/connections" onClick={() => handleNavigate('/connections')} active={activeKey('/connections')} icon={<PeopleBranchIcon />}>
                                     Connections
+                                </Nav.Item>
+                                <Nav.Item eventKey="/mail-templates" onClick={() => handleNavigate('/mail-templates')} active={activeKey('/mail-templates')} icon={<TreemapIcon />}>
+                                    Mail templates
                                 </Nav.Item>
                                 <Nav.Menu
                                     eventKey="3"

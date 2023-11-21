@@ -35,6 +35,9 @@ import { RiUserReceivedLine } from "react-icons/ri";
 import TimeIcon from '@rsuite/icons/Time';
 import UpdateRoundIcon from '@rsuite/icons/UpdateRound';
 import SentToUserIcon from '@rsuite/icons/SentToUser';
+import { LuLayoutTemplate } from "react-icons/lu";
+import SearchIcon from '@rsuite/icons/Search';
+import TreemapIcon from '@rsuite/icons/Treemap';
 
 export {
     CogIcon,
@@ -77,5 +80,8 @@ export {
     RiUserReceivedLine,
     TimeIcon,
     UpdateRoundIcon,
-    SentToUserIcon
+    SentToUserIcon,
+    LuLayoutTemplate,
+    SearchIcon,
+    TreemapIcon
 };

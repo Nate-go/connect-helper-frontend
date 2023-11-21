@@ -87,8 +87,11 @@ const MailContentEdit = (defaultValue='') => {
             }
         });
 
+        setImageUploads([]);
+
         await Promise.all(promises);
         setLoading(false);
+        setContent(doc.documentElement.innerHTML);
         return doc.documentElement.innerHTML;
     };
 
@@ -96,17 +99,18 @@ const MailContentEdit = (defaultValue='') => {
         SunEditorComponent: (
             <SunEditor
                 onChange={setContent}
-                height="30em"
+                height="22em"
                 placeholder="Please type here..."
                 setOptions={{
                     buttonList: buttonList,
                 }}
-                defaultValue={content}
+                setContents={content}
                 onImageUpload={handleImageUpload}
             />
         ),
         saveContent,
         loading,
+        setContent
     };
 }
 export default MailContentEdit

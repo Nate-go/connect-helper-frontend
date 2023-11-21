@@ -1,4 +1,4 @@
-import { InputGroup, Input, SelectPicker, Button, Whisper, Tooltip, CheckPicker } from "rsuite";
+import { Panel, Drawer, InputGroup, Input, SelectPicker, Button, Whisper, Tooltip, CheckPicker } from "rsuite";
 import React from 'react';
 import ListConnection from "./ListConnection";
 import { useState, useEffect } from "react";
@@ -13,14 +13,14 @@ import MailContentEdit from "./MailContentEdit";
 import { sendMailEndpoints } from "@/apis";
 import { getIds } from '@/helpers/dataHelpers'
 
-const SendMail = ({openConfirmation}) => {
+const MailTemplate = ({openConfirmation}) => {
     const [connections, setConnections] = useState([]);
     const [tags, setTags] = useState([]);
     const { data, loading, callApi } = useApi();
-    const { data: tagData, loading:tagLoading, callApi: handleGetTag } = useApi();
+    const { data: tagData, loading: tagLoading, callApi: handleGetTag } = useApi();
     const { loading: sendMailLoading, callApi: handleSendMail } = useApi();
 
-    const { SunEditorComponent, saveContent, loading:saveContentLoading, setContent } = MailContentEdit();
+    const { SunEditorComponent, saveContent, loading: saveContentLoading, setContent } = MailContentEdit();
     const [contacts, SetContacts] = useState([]);
 
     const [mailData, setMailData] = useState({
@@ -87,14 +87,14 @@ const SendMail = ({openConfirmation}) => {
     const sendMail = async () => {
         const modifiedContent = await saveContent();
 
-        handleSendMail(sendMailEndpoints.sendMail,{
-            method:"POST",
+        handleSendMail(sendMailEndpoints.sendMail, {
+            method: "POST",
             data: {
-                name : mailData.name,
+                name: mailData.name,
                 title: mailData.subject,
                 type: mailData.type,
                 content: modifiedContent,
-                contactIds : getIds(contacts)
+                contactIds: getIds(contacts)
             }
         });
     }
@@ -151,4 +151,4 @@ const SendMail = ({openConfirmation}) => {
         </div>
     );
 }
-export default SendMail
+export default MailTemplate
