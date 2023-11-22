@@ -46,7 +46,8 @@ const MailContentEdit = (defaultValue='') => {
     const [content, setContent] = useState(defaultValue);
     const [loading, setLoading] = useState(false);
 
-    const handleImageUpload = (targetImgElement, index, state, imageInfo, remainingFilesCount) => {
+    const handleImageUpload = (imageInfo) => {
+        if(!imageInfo) return;
         setImageUploads([...imageUploads, {
             name: imageInfo.name,
             src: imageInfo.src
@@ -64,8 +65,6 @@ const MailContentEdit = (defaultValue='') => {
                 method: "POST",
                 body: data
             });
-
-            console.log(response);
 
             const responseData = await response.json();
             return responseData?.url.toString();
@@ -99,13 +98,13 @@ const MailContentEdit = (defaultValue='') => {
         SunEditorComponent: (
             <SunEditor
                 onChange={setContent}
-                height="22em"
+                height="33em"
                 placeholder="Please type here..."
                 setOptions={{
                     buttonList: buttonList,
                 }}
                 setContents={content}
-                onImageUpload={handleImageUpload}
+                onImageUpload={(targetImgElement, index, state, imageInfo, remainingFilesCount) => handleImageUpload(imageInfo)}
             />
         ),
         saveContent,

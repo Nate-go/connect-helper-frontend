@@ -1,6 +1,7 @@
 import * as jwt_decode from 'jwt-decode';
 
 export const getIds = (data) => {
+    if(!data) return [];
     const ids = data.map(element => element.id);
     return ids;
 }

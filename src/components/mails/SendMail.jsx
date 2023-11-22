@@ -1,4 +1,4 @@
-import { InputGroup, Input, SelectPicker, Button, Whisper, Tooltip, CheckPicker } from "rsuite";
+import { InputGroup, Input, SelectPicker, Button, Whisper, Tooltip, CheckPicker, Panel } from "rsuite";
 import React from 'react';
 import ListConnection from "./ListConnection";
 import { useState, useEffect } from "react";
@@ -12,6 +12,8 @@ import tagEndpoints from "@/apis/enpoints/tag";
 import MailContentEdit from "./MailContentEdit";
 import { sendMailEndpoints } from "@/apis";
 import { getIds } from '@/helpers/dataHelpers'
+import MailType from "./MailType";
+import { MailTemplateSelect } from "@/components/selects";
 
 const SendMail = ({openConfirmation}) => {
     const [connections, setConnections] = useState([]);
@@ -23,11 +25,13 @@ const SendMail = ({openConfirmation}) => {
     const { SunEditorComponent, saveContent, loading:saveContentLoading, setContent } = MailContentEdit();
     const [contacts, SetContacts] = useState([]);
 
-    const [mailData, setMailData] = useState({
+    const defaultMailTemplate = {
         subject: '',
         type: SendMailType.PERSONAL,
         name: ''
-    });
+    }
+
+    const [mailData, setMailData] = useState(defaultMailTemplate);
 
     const handleMailData = (data) => {
         setMailData((prevMailData) => ({ ...prevMailData, ...data }));
@@ -69,17 +73,6 @@ const SendMail = ({openConfirmation}) => {
         return connectionIds;
     }
 
-    const getToolTip = () => {
-        switch (mailData.type) {
-            case SendMailType.CC:
-                return 'The list of receiver the email is public'
-            case SendMailType.BCC:
-                return 'The list of receiver the email is private'
-            default:
-                return 'Send mail to multi people with the same template but different content\n{@name@, @note@, @title@, @content@, @username@, @enterprise@} = {connection name, connection note, contact title, contact content, your name, your enterprise}'
-        }
-    }
-
     const confirmSendMail = async () => {
         openConfirmation(sendMail, [], 'Are you sure to send this mail ?');
     }
@@ -99,56 +92,76 @@ const SendMail = ({openConfirmation}) => {
         });
     }
 
+    const handleSelectTemplate = (value) => {
+        if(!value) {
+            setMailData(defaultMailTemplate);
+            setContent('');
+            return;
+        }
+
+        setMailData({
+            name: value.name,
+            type: value.type,
+            subject: value.subject
+        });
+        setContent(value.content);
+    }
+
     return (
-        <div className="w-full h-full flex flex-col gap-4">
-            <div className="grid grid-cols-4 gap-2">
-                <CheckPicker className="w-full col-span-1" label="Tag" data={tagData?.map(item => ({
-                    label: item.name,
-                    value: item.id
-                })) ?? []} value={tags} onChange={handleTags} loading={tagLoading} />
-                <div className="col-span-3">
-                    <ListConnection value={connections} setValue={handleConnection} data={data} loading={loading} />
+        <div className="grid grid-cols-10 gap-3">
+            <Panel bordered shaded className="col-span-4">
+                <div className="flex flex-col gap-3">
+                    <p>Template review</p>
+                    <div className="flex flex-col">
+                        <MailTemplateSelect handleSelect={handleSelectTemplate} />
+                    </div>
+                    
                 </div>
-            </div>
-
-            <ListToContact connections={getConnections()} handleContact={handleContact} />
-            <InputGroup>
-                <InputGroup.Addon>Subject: </InputGroup.Addon>
-                <Input value={mailData.subject} onChange={(value) => handleMailData({ subject: value })} />
-            </InputGroup>
-
-            <div className="grid grid-cols-4 gap-2">
-                <InputGroup className="col-span-3">
-                    <InputGroup.Addon>Name: </InputGroup.Addon>
-                    <Input value={mailData.name} onChange={(value) => handleMailData({ name: value })} />
-                </InputGroup>
-                <div className="flex flex-row gap-4 w-full items-center col-span-1">
-                    <SelectPicker className="w-full" label="Type" value={mailData.type} onChange={(value) => handleMailData({ type: value })} data={Object.entries(SendMailType).map(([label, value]) => ({
-                        label,
-                        value,
-                    }))} />
-                    <Whisper placement="topEnd" trigger="hover" speaker={<Tooltip>{getToolTip()}</Tooltip>}>
-                        <div>
-                            <AiOutlineQuestionCircle style={{ fontSize: '2em' }} />
+            </Panel>
+            <Panel bordered shaded header="Mail editor" className="col-span-6">
+                <div className="w-full h-full flex flex-col gap-4 ">
+                    <div className="grid grid-cols-4 gap-2">
+                        <CheckPicker className="w-full col-span-1" label="Tag" data={tagData?.map(item => ({
+                            label: item.name,
+                            value: item.id
+                        })) ?? []} value={tags} onChange={handleTags} loading={tagLoading} />
+                        <div className="col-span-3">
+                            <ListConnection value={connections} setValue={handleConnection} data={data} loading={loading} />
                         </div>
-                    </Whisper>
+                    </div>
+                    <ListToContact connections={getConnections()} handleContact={handleContact} />
+                    <InputGroup>
+                        <InputGroup.Addon>Subject: </InputGroup.Addon>
+                        <Input value={mailData.subject} onChange={(value) => handleMailData({ subject: value })} />
+                    </InputGroup>
+
+                    <div className="grid grid-cols-7 gap-2">
+                        <InputGroup className="col-span-5">
+                            <InputGroup.Addon>Name: </InputGroup.Addon>
+                            <Input value={mailData.name} onChange={(value) => handleMailData({ name: value })} />
+                        </InputGroup>
+                        <div className="col-span-2">
+                            <MailType value={mailData.type} onChange={(value) => handleMailData({ type: value })} />
+                        </div>
+                    </div>
+
+                    {SunEditorComponent}
+
+                    <div className="flex flex-row gap-4 justify-end pb-5">
+                        <Button onClick={() => setContent('')} className="bg-gray-200">Cancel</Button>
+                        <AutoLoader
+                            display={!(saveContentLoading || sendMailLoading)}
+                            component={
+                                <Button color="blue" className='bg-blue-600' appearance="primary" startIcon={<SentToUserIcon />} onClick={confirmSendMail}>
+                                    Send mail
+                                </Button>
+                            }
+                        />
+                    </div>
                 </div>
-            </div>
-
-            {SunEditorComponent}
-
-            <div className="flex flex-row gap-4 justify-end pb-5">
-                <Button onClick={() => setContent('')} className="bg-gray-200">Cancel</Button>
-                <AutoLoader
-                    display={!(saveContentLoading || sendMailLoading)}
-                    component={
-                        <Button color="blue" className='bg-blue-600' appearance="primary" startIcon={<SentToUserIcon />} onClick={confirmSendMail}>
-                            Send mail
-                        </Button>
-                    }
-                />
-            </div>
+            </Panel>
         </div>
+        
     );
 }
 export default SendMail

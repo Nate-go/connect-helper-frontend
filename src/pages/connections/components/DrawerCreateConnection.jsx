@@ -1,14 +1,14 @@
-import { Modal, Input, List, Panel, Button, Drawer, Grid, Row, Col, InputPicker } from "rsuite";
+import { Modal, Input, List, Panel, Button, Drawer, Grid, Row, Col, InputPicker, InputGroup } from "rsuite";
 import { useApi } from "@/hooks";
 import { useEffect, useState } from "react";
 import { AutoLoader } from '@/components';
 import connectionEndpoints from "@/apis/enpoints/connection";
 import ConnectionTags from "./ConnectionTags";
 import { ConnectionStatus } from '@/constants';
+import { StatusSingleSelect } from "@/components/selects";
 
 const DrawerCreateConnection = ({ open, handleClose, openConfirmation, tagData, setFetchTag }) => {
     const [tags, setTags] = useState([]);
-    const statusData = Object.entries(ConnectionStatus).map(([label, value]) => ({ label, value }));
     const [connection, setConnection] = useState({
         name:'',
         note:'',
@@ -68,9 +68,9 @@ const DrawerCreateConnection = ({ open, handleClose, openConfirmation, tagData, 
                 <Grid fluid>
                     <Row className="show-grid">
                         <Col xs={24} sm={24} md={7} className='sm:mb-4'>
-                            <Panel header='Status' shaded className='w-full h-full'>
+                            <Panel header='Actions' shaded className='w-full h-full'>
                                 <div className='flex flex-col w-full h-full gap-4'>
-                                    <InputPicker value={connection.status} data={statusData} onChange={(value) => handleConnection({ status: value })} />
+                                    <StatusSingleSelect value={connection.status} onChange={(value) => handleConnection({ status: value })} />
                                     <hr />
                                     <AutoLoader
                                         display={tagData}
@@ -83,17 +83,22 @@ const DrawerCreateConnection = ({ open, handleClose, openConfirmation, tagData, 
                         </Col>
 
                         <Col xs={24} sm={24} md={17}>
-                            <div className='w-full h-full'>
+                            <div className='flex flex-col gap-3 w-full h-full'>
                                 <Panel header='Connection' shaded className='w-full h-full'>
                                     <div className='flex flex-col w-full h-full gap-4'>
-                                        <div>
-                                            <label>Name</label>
-                                            <Input value={connection.name} onChange={(value) => handleConnection({name:value})}/>
-                                        </div>
-                                        <div>
-                                            <label>Note</label>
+                                        <InputGroup>
+                                            <InputGroup.Addon>Name</InputGroup.Addon>
+                                            <Input value={connection.name} onChange={(value) => handleConnection({ name: value })} />
+                                        </InputGroup>
+                                        <InputGroup>
+                                            <InputGroup.Addon>Note</InputGroup.Addon>
                                             <Input value={connection.note} onChange={(value) => handleConnection({ note: value })} />
-                                        </div>
+                                        </InputGroup>
+                                    </div>
+                                </Panel>
+                                <Panel header='Create via csv file' shaded className='w-full h-full'>
+                                    <div className='flex flex-col w-full h-full gap-4'>
+                                        
                                     </div>
                                 </Panel>
                             </div>

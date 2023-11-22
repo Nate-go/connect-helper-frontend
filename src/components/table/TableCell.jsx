@@ -27,11 +27,17 @@ export const NameCell = ({ rowData, dataKey, dataKeyNote, ...props }) => {
     );
 }
 
-export const BaseCell = ({ rowData, dataKey, data = null, ...props }) => {
+export const BaseCell = ({ rowData, dataKey, attributes=[], ...props }) => {
+    let value = rowData[dataKey];
+
+    attributes.forEach(element => {
+        value = value[element]
+    });
+
     return (
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
-                <p>{data ?? rowData[dataKey]}</p>
+                <p>{value}</p>
             </div>
         </Cell>
 

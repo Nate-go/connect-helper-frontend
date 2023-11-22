@@ -55,7 +55,7 @@ const QuickAccess = () => {
                 open={isConfirmationOpen}
             />
             {openSendMail && <SendMailDrawer open={openSendMail} handleClose={() => setOpenSendMail(false)} openConfirmation={openConfirmation} />}
-            {openMailTemplate && <MailTemplateDrawer open={openMailTemplate} handleClose={() => setOpenopenMailTemplate(false)} openConfirmation={openConfirmation} />}
+            {openMailTemplate && <MailTemplateDrawer open={openMailTemplate} handleClose={() => setOpenMailTemplate(false)} openConfirmation={openConfirmation} />}
             <Dropdown className="quick-access flex flex-col gap-5 items-center pt-4" renderToggle={renderIconButton} placement="topEnd" trigger={"hover"} onOpen={() => setOpen(true)} onClose={() => setOpen(false)} onClick={scrollToTop}>
                 <Whisper placement="left" trigger="hover" speaker={<Tooltip>mail template</Tooltip>}>
                     <IconButton icon={<LuLayoutTemplate style={{ fontSize: '10em' }} />} circle color="blue" className="bg-blue-500 h-11 w-11" appearance="primary" onClick={() => setOpenMailTemplate(true)} />

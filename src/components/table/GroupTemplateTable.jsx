@@ -110,13 +110,13 @@ const GroupTemplateTable = ({ items, dataLoading, handleSort, checkedKeys, setCh
                     <HeaderCell>Status</HeaderCell>
                     <ConstantCell dataKey="status" constant={ConnectionStatus} colors={['red', 'green']} />
                 </Column>
-                <Column width={200} sortable>
+                <Column width={200}>
                     <HeaderCell>Owner</HeaderCell>
-                    <BaseCell dataKey="user" />
+                    <BaseCell dataKey="user" attributes={['name']}/>
                 </Column>
                 <Column width={375}>
                     <HeaderCell>Templates</HeaderCell>
-                    <SelectCell dataKey="templates" handleSelect={(value) => alert(value)} name='template' />
+                    <SelectCell dataKey="templates" handleChange={(value) => alert(value)} name='template' />
                 </Column>
                 <Column width={90} fixed="right">
                     <HeaderCell>Action</HeaderCell>

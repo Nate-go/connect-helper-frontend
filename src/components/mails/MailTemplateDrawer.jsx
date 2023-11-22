@@ -1,15 +1,15 @@
 import { Drawer } from "rsuite";
 import React from 'react';
-import MailTemplate from "./MailTemplate";
+import {TemplateGroup} from "@/pages/templateGroups";
 
 const MailTemplateDrawer = ({open, handleClose, openConfirmation }) => {
     return (
         <Drawer size="full" placement="right" open={open} onClose={handleClose}>
             <Drawer.Header>
-                <Drawer.Title>Mail template</Drawer.Title>
+                <Drawer.Title className="text-white">Mail template</Drawer.Title>
             </Drawer.Header>
             <Drawer.Body>
-                <MailTemplate openConfirmation={openConfirmation}/>
+                <TemplateGroup />
             </Drawer.Body>
         </Drawer>
     );

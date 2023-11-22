@@ -8,7 +8,8 @@ import {
     Col,
     InputPicker,
     Nav,
-    Avatar
+    Avatar,
+    InputGroup
 } from "rsuite";
 import { useApi } from "@/hooks";
 import { useEffect, useState } from "react";
@@ -154,22 +155,22 @@ const DrawerEditConnection = ({
                         <div className="flex flex-col gap-5 w-full h-full">
                             <Panel header="Connection" shaded className="w-full h-full">
                                 <div className="flex flex-col w-full h-full gap-4">
-                                    <div>
-                                        <label>Name</label>
+                                    <InputGroup>
+                                        <InputGroup.Addon>Name</InputGroup.Addon>
                                         <Input
                                             readOnly={!isOwner()}
                                             value={connection.name}
                                             onChange={(value) => handleConnection({ name: value })}
                                         />
-                                    </div>
-                                    <div>
-                                        <label>Note</label>
+                                    </InputGroup>
+                                    <InputGroup>
+                                        <InputGroup.Addon>Note</InputGroup.Addon>
                                         <Input
                                             readOnly={!isOwner()}
                                             value={connection.note}
                                             onChange={(value) => handleConnection({ note: value })}
                                         />
-                                    </div>
+                                    </InputGroup>
                                 </div>
                             </Panel>
                             <Panel header="Status" shaded className="w-full h-full">

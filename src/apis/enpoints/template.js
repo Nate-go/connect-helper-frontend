@@ -1,13 +1,12 @@
-const baseEndpoint = '/template-groups'
+const baseEndpoint = '/templates'
 
-const templateGroupEndpoints = {
+const templateEndpoints = {
     get: baseEndpoint,
     delete: baseEndpoint,
     update: baseEndpoint,
     create: baseEndpoint,
     show: baseEndpoint + '/',
     edit: baseEndpoint + '/',
-    getTemplates: baseEndpoint + '/'
 };
 
-export default templateGroupEndpoints;
+export default templateEndpoints;

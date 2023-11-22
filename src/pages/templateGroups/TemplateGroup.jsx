@@ -9,7 +9,8 @@ import { getIds } from '@/helpers/dataHelpers';
 import { useConfirmation, useApi } from '@/hooks';
 import { PopupConfirm } from '@/components/popups';
 import { ConfirmType, ConnectionStatus } from '@/constants';
-import { TemplateGroupToolbar } from './components';
+import { TemplateGroupToolbar, DrawerEditTemplateGroup } from './components';
+import { getAuthentication } from '@/helpers/authenHelpers';
 
 const TemplateGroup = () => {
     const {
@@ -35,9 +36,9 @@ const TemplateGroup = () => {
 
     const [fetchTemplateGroup, setFetchTemplateGroup] = useState(true);
     const [checkedKeys, setCheckedKeys] = useState([]);
-    const [editConnection, setEditConnection] = useState({
+    const [editTemplateGroup, setEditTemplateGroup] = useState({
         open: false,
-        id: null,
+        item: null,
     })
 
     const { data: templateGroupData, callApi: handleGetTemplateGroups, loading: templateGroupLoading } = useApi();
@@ -75,7 +76,7 @@ const TemplateGroup = () => {
 
     const updateTemplateGroups = async (updateData, ids) => {
         await handleUpdateTemplateGroups(
-            connectionEndpoints.update,
+            templateGroupEndpoints.update,
             {
                 "method": "PUT",
                 data: {
@@ -93,10 +94,12 @@ const TemplateGroup = () => {
     }
 
     const onEdit = (rowData) => {
-        setEditConnection({
+        setEditTemplateGroup({
             open: true,
-            id: rowData['id']
-        })
+            item: {
+                ...rowData
+            }
+        });
     }
 
     const confirmChangeStatus = () => {
@@ -110,7 +113,7 @@ const TemplateGroup = () => {
     }
 
     const confirmDeleteTemplateGroups = () => {
-        openConfirmation(deleteConnections, [getIds(checkedKeys)], 'Are you sure to delete ' + checkedKeys.length + ' selected connection ?');
+        openConfirmation(deleteTemplateGroups, [getIds(checkedKeys)], 'Are you sure to delete ' + checkedKeys.length + ' selected connection ?');
     }
 
     return (
@@ -124,14 +127,15 @@ const TemplateGroup = () => {
                 setValue={setConfirmValue}
                 open={isConfirmationOpen}
             />
-            {editConnection.id &&
-                <DrawerEditConnection
-                    open={editConnection.open}
-                    handleClose={() => { setEditConnection({ open: false, id: null }) }}
+            {editTemplateGroup.item &&
+                <DrawerEditTemplateGroup
+                    open={editTemplateGroup.open}
+                    handleClose={() => { 
+                        setEditTemplateGroup({ open: false, item: null });
+                        setFetchTemplateGroup(true);
+                    }}
                     openConfirmation={openConfirmation}
-                    tagData={tagData}
-                    setFetchTag={setFetchTag}
-                    connectionId={editConnection.id}
+                    templateGroupItem={editTemplateGroup.item}
                 />
             }
             <Panel header='Template groups' shaded className='w-full h-full'>
