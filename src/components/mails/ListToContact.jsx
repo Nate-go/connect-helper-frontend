@@ -31,13 +31,13 @@ const ConnectionElement = ({connection, handleContact}) => {
 
     return (
         <div className="flex flex-col w-full">
-            <ButtonGroup className="flex flex-row gap-1 w-full border-2 border-blue-500 rounded-lg">
+            <ButtonGroup className="flex flex-row gap-1 w-full border-2 border-blue-400 rounded-lg">
                 <div className='flex flex-col justify-center w-40 pl-1'>
                     <div className='truncate hover:text-clip text-base'>{connection.name}</div>
                     <div className='truncate text-xs text-gray-400'>{contact?.content}</div>
                 </div>
                 <Whisper placement="bottomEnd" trigger="click" speaker={renderMenu}>
-                    <IconButton className="bg-blue-500 hover:bg-blue-600" icon={<ArrowDownIcon className="text-white" />} />
+                    <IconButton className="bg-blue-400 hover:bg-blue-500" icon={<ArrowDownIcon className="text-white" />} />
                 </Whisper>
             </ButtonGroup>
         </div>
@@ -47,17 +47,14 @@ const ConnectionElement = ({connection, handleContact}) => {
 const ListToContact = ({connections, handleContact}) => {
 
     return (
-        <Panel bordered bodyFill>
-            <div className="flex flex-row gap-5 items-center px-3 py-2">
-                <div>To: </div>
-                <div className="flex flex-row gap-4 items-center overflow-x-auto overflow-y-hidden">
-                    {connections?.map((connection) => (
-                        <ConnectionElement connection={connection} key={'connection-' + connection.id} handleContact={handleContact}/>
-                    ))}
-                </div>
+        <div className="flex flex-row gap-5 items-center px-3 py-2 border border-gray-300 rounded-md">
+            <div>To: </div>
+            <div className="flex flex-row gap-4 items-center overflow-x-auto overflow-y-hidden">
+                {connections?.map((connection) => (
+                    <ConnectionElement connection={connection} key={'connection-' + connection.id} handleContact={handleContact} />
+                ))}
             </div>
-        </Panel>
-        
+        </div>
     );
 }
 export default ListToContact

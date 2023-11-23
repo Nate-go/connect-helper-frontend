@@ -3,13 +3,15 @@ import {
     Button,
     TagGroup,
     Tag,
-    Checkbox 
+    Checkbox,
+    SelectPicker 
 } from 'rsuite';
 import React from 'react';
 
 import { getDataTimeFormat } from '@/helpers/dateTimeHelpers';
 import { getConstantTitle } from '@/helpers/constantHelpers';
 import { TrashIcon, EditIcon } from '@/components/icons';
+import { useState } from 'react';
 
 const { Cell } = Table;
 
@@ -25,11 +27,17 @@ export const NameCell = ({ rowData, dataKey, dataKeyNote, ...props }) => {
     );
 }
 
-export const BaseCell = ({ rowData, dataKey, data = null, ...props }) => {
+export const BaseCell = ({ rowData, dataKey, attributes=[], ...props }) => {
+    let value = rowData[dataKey];
+
+    attributes.forEach(element => {
+        value = value[element]
+    });
+
     return (
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
-                <p>{data ?? rowData[dataKey]}</p>
+                <p>{value}</p>
             </div>
         </Cell>
 
@@ -89,6 +97,30 @@ export const ConstantCell = ({ rowData, dataKey, constant, colors, ...props }) =
     );
 }
 
+export const SelectCell = ({ rowData, dataKey, handleChange, name, ...props }) => {
+    const data = rowData[dataKey]?.map(item => ({
+        label: item.name,
+        value: item.id
+    })) ?? [];
+
+    const [open, setOpen] = useState(false);
+
+    const handleSelectClick = (event) => {
+        setOpen(!open);
+        event.stopPropagation();
+    };
+
+    return (
+        <Cell {...props}>
+            <div className='flex flex-col justify-center w-full h-full'>
+                <SelectPicker data={data} onChange={handleChange} onClick={handleSelectClick} open={open} placeholder={name + '(' + data.length + ')'} />
+
+            </div>
+        </Cell>
+
+    );
+}
+
 export const DateTimeCell = ({ rowData, dataKey, ...props }) => {
     return (
         <Cell {...props}>
@@ -104,9 +136,9 @@ export const ActionCell = ({ rowData, dataKey, onEdit, onDelete, ...props }) => 
     return (
         <Cell {...props}>
             <div className='flex flex-row justify-center w-full h-full'>
-                <Button appearance="link" onClick={() => onEdit(rowData)} startIcon={<EditIcon/>} className='hover:text-lg'>
+                <Button appearance="link" onClick={() => onEdit(rowData)} startIcon={<EditIcon/>} className='hover:text-lg hover:text-blue-700'>
                 </Button>
-                <Button appearance="link" onClick={() => onDelete(rowData)} startIcon={<TrashIcon />} className='hover:text-lg'>
+                <Button appearance="link" onClick={() => onDelete(rowData)} startIcon={<TrashIcon />} className='hover:text-lg hover:text-red-600'>
                 </Button>
             </div>
         </Cell>

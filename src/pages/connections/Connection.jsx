@@ -30,7 +30,8 @@ const Connection = () => {
         page: PaginationDefault.PAGE,
         limit: PaginationDefault.LIMIT,
         order: PaginationDefault.ORDER,
-        column: PaginationDefault.COLUMN
+        column: PaginationDefault.COLUMN,
+        search: PaginationDefault.SEARCH
     });
 
     const [statuses, setStatuses] = useState([]);

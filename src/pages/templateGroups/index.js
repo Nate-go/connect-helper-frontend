@@ -1,0 +1,1 @@
+export {default as TemplateGroup } from './TemplateGroup'
