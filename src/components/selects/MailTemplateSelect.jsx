@@ -4,13 +4,15 @@ import SunEditor from 'suneditor-react';
 
 import { useApi } from '@/hooks';
 import { templateEndpoints } from "@/apis";
-import { ConnectionStatus, SendMailType } from "@/constants";
+import { SendMailType } from "@/constants";
 import { getConstantTitle } from "@/helpers/constantHelpers";
-
+import { AutoLoader } from '@/components';
+import TemplateGenerator from "./TemplateGenerator";
 
 const MailTemplateSelect = ({handleSelect}) => {
     const [value, setValue] = useState(null);
     const [description, setDescription] = useState('');
+    const {generateTemplate, loadingGenerate } = TemplateGenerator();
     const {data, loading, callApi} = useApi();
     const defaultTemplate = {
         type: SendMailType.PERSONAL,
@@ -39,46 +41,6 @@ const MailTemplateSelect = ({handleSelect}) => {
         }); 
     }
 
-    const generateTemplate = async () => {
-        try {
-            const response = await fetch('https://api.openai.com/v1/completions', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + import.meta.env.VITE_OPEN_AI_API_KEY,
-                },
-                body: JSON.stringify({
-                    "model": "text-davinci-003",
-                    "prompt": "Craft an json of email template that includes three params: subject, type is between 'cc' or 'bcc', and content. The content html data but dont need the element <html> or <header>, it include paragraphs, images url from network, or other relevant elements typically found within an email body. Ensure the content is robust, consisting of at least 200 words. This guidance will be based on the following description: " + description,
-                    "temperature": 0,
-                    "max_tokens": 500,
-                    "top_p": 1.0,
-                    "frequency_penalty": 0.0,
-                    "presence_penalty": 0.0
-                })
-            });
-
-            const data = await response.json();
-            console.log(parseValue(data.choices[0].text));
-        } catch (error) {
-            console.error('Error generating email:', error);
-        }
-    }
-
-    const parseValue = (emailString) => {
-        try {
-            console.log(emailString.replace("\'s name\n\n", ''));
-            const emailData = JSON.parse(emailString.replace("\'s name\n\n", ''));
-
-            const { subject, type, content } = emailData;
-
-            return { subject, type, content };
-        } catch (error) {
-            console.error('Error parsing email string:', error);
-            return null;
-        }
-    }
-
     const getData = (data) => {
         if(!data) return [];
         let items = [];
@@ -93,6 +55,11 @@ const MailTemplateSelect = ({handleSelect}) => {
         });
 
         return items;
+    }
+
+    const handleGenerate = async () => {
+        const template = await generateTemplate(description);
+        setTemplateReview(template);
     }
 
     return (
@@ -124,9 +91,14 @@ const MailTemplateSelect = ({handleSelect}) => {
                         setContents={templateReview.content}
                     />
             <div className="flex-row flex gap-2 justify-between">
-                <Button color="green" className='bg-green-600' appearance="primary" onClick={generateTemplate}>
-                    Generate
-                </Button>
+                <AutoLoader
+                    display={!loadingGenerate}
+                    component={
+                        <Button color="green" className='bg-green-600' appearance="primary" onClick={handleGenerate}>
+                            Generate
+                        </Button>
+                    }
+                />
                 <Button color="blue" className='bg-blue-600' appearance="primary" onClick={() => handleSelect(templateReview)}>
                     Apply
                 </Button>

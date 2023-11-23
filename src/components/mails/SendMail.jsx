@@ -98,9 +98,10 @@ const SendMail = ({openConfirmation}) => {
             setContent('');
             return;
         }
+        
 
         setMailData({
-            name: value.name,
+            name: value.name ?? '',
             type: value.type,
             subject: value.subject
         });

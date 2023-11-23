@@ -9,14 +9,19 @@ import { MailType } from "@/components/mails";
 import { PlusIcon,  } from '@/components/icons';
 import { MailContentEdit } from "@/components/mails";
 import { getAuthentication } from '@/helpers/authenHelpers';
-import { StatusSingleSelect } from "@/components/selects";
+import { StatusSingleSelect, TemplateGenerator } from "@/components/selects";
+import SunEditor from 'suneditor-react';
+import { getConstantTitle } from "@/helpers/constantHelpers";
 
 const DrawerEditTemplateGroup = ({open, handleClose, openConfirmation, templateGroupItem}) => {
     const { SunEditorComponent, saveContent, loading: saveContentLoading, setContent } = MailContentEdit();
+    const { generateTemplate, loadingGenerate } = TemplateGenerator();
 
     const [item, setItem] = useState({
         ...templateGroupItem
     });
+    const [description, setDescription] = useState('');
+
 
     const [currentTemplate, setCurrentTemplate] = useState(null);
 
@@ -29,7 +34,14 @@ const DrawerEditTemplateGroup = ({open, handleClose, openConfirmation, templateG
         name: ''
     }
 
+    const defaultTemplateReview = {
+        type: SendMailType.PERSONAL,
+        content: '',
+        subject: '',
+    }
+
     const [template, setTemplate] = useState(defaultTemplate);
+    const [templateReview, setTemplateReview] = useState(defaultTemplateReview);
 
     const { data: getTemplatesData, loading: getTemplatesLoading, callApi: handleGetTemplates } = useApi();
     const { loading: updateGroupLoading, callApi: handleUpdateGroup } = useApi();
@@ -126,12 +138,17 @@ const DrawerEditTemplateGroup = ({open, handleClose, openConfirmation, templateG
     }, [])
 
     useEffect(() => {
-        if(!updateTemplateData && !createTemplateData) return;
+        if (!updateTemplateData && !createTemplateData && !deleteTemplateData) return;
 
         getTemplates();
-    }, [updateTemplateData, createTemplateData])
+    }, [updateTemplateData, createTemplateData, deleteTemplateData])
 
     const isOwner = getAuthentication().user.id === templateGroupItem.user.id;
+
+    const handleGenerate = async () => {
+        const newTemplate = await generateTemplate(description);
+        setTemplateReview(newTemplate);
+    }
 
     return (
         <Drawer size='full' placement='right' open={open} onClose={handleClose}>
@@ -191,6 +208,43 @@ const DrawerEditTemplateGroup = ({open, handleClose, openConfirmation, templateG
                                         onChange={handleSelectTemplate}
                                         value={currentTemplate}
                                     />
+                                </Panel>
+                                <Panel header="Template generator" shaded className="w-full h-full">
+                                    <div className="flex flex-col gap-3">
+                                        <InputGroup>
+                                            <InputGroup.Addon>Subject: </InputGroup.Addon>
+                                            <Input value={templateReview.subject} readOnly />
+                                        </InputGroup>
+                                        <InputGroup>
+                                            <InputGroup.Addon>Type: </InputGroup.Addon>
+                                            <Input value={getConstantTitle(SendMailType, templateReview.type)} readOnly />
+                                        </InputGroup>
+                                        <SunEditor
+                                            height="22em"
+                                            placeholder="Please type here..."
+                                            setOptions={{
+                                                buttonList: [],
+                                            }}
+                                            readOnly
+                                            setContents={templateReview.content}
+                                        />
+                                        <div className="flex-row flex gap-2 justify-between">
+                                            <AutoLoader
+                                                display={!loadingGenerate}
+                                                component={
+                                                    <Button color="green" className='bg-green-600' appearance="primary" onClick={handleGenerate}>
+                                                        Generate
+                                                    </Button>
+                                                }
+                                            />
+                                            <Button color="blue" className='bg-blue-600' appearance="primary" onClick={() => { setTemplate({ ...defaultTemplate, ...templateReview }); setContent(templateReview.content) }}>
+                                                Apply
+                                            </Button>
+                                        </div>
+                                        <Input value={description} onChange={setDescription} as="textarea" rows={3} placeholder="Enter your descriptions" />
+
+                                    </div>
+                                    
                                 </Panel>
                             </div>
                         </Col>
