@@ -3,6 +3,10 @@
     background: transparent;
 }
 
+.rs-stack-item .rs-btn-primary{
+    background-color: #3498ff !important;
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;

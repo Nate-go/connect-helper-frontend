@@ -10,7 +10,8 @@ import {
     AppSelectIcon,
     HelpOutlineIcon,
     PeopleBranchIcon,
-    TreemapIcon
+    TreemapIcon,
+    CalendarIcon
 } from '@/components/icons.js';
 
 import { logo_image } from '@/assets/images'
@@ -53,6 +54,10 @@ const BaseBody = ({ children }) => {
         navigate(path);
     };
 
+    const itemStyle = (path) => {
+        return activeKey(path) ? 'border-x-4 border-blue-600' : 'border-r-4 border-blue-100';
+    }
+
     return (
         <div className="show-fake-browser sidebar-page w-full min-h-screen">
             <Container className='w-full'>
@@ -70,17 +75,20 @@ const BaseBody = ({ children }) => {
                     <Sidenav expanded={expand} defaultOpenKeys={['3']} appearance="subtle">
                         <Sidenav.Body>
                             <Nav appearance="subtle">
-                                <Nav.Item eventKey="/dashboard" onClick={() => handleNavigate('/dashboard')} active={activeKey('/dashboard')} icon={<DashboardIcon />}>
+                                <Nav.Item className={itemStyle('/dashboard')} eventKey="/dashboard" onClick={() => handleNavigate('/dashboard')} active={activeKey('/dashboard')} icon={<DashboardIcon />}>
                                     Dashboard
                                 </Nav.Item>
-                                <Nav.Item eventKey="/users" onClick={() => handleNavigate('/users')} active={activeKey('/users')} icon={<GroupIcon />}>
+                                <Nav.Item className={itemStyle('/users')}  eventKey="/users" onClick={() => handleNavigate('/users')} active={activeKey('/users')} icon={<GroupIcon />}>
                                     Users
                                 </Nav.Item>
-                                <Nav.Item eventKey="/connections" onClick={() => handleNavigate('/connections')} active={activeKey('/connections')} icon={<PeopleBranchIcon />}>
+                                <Nav.Item className={itemStyle('/connections')}  eventKey="/connections" onClick={() => handleNavigate('/connections')} active={activeKey('/connections')} icon={<PeopleBranchIcon />}>
                                     Connections
                                 </Nav.Item>
-                                <Nav.Item eventKey="/mail-templates" onClick={() => handleNavigate('/mail-templates')} active={activeKey('/mail-templates')} icon={<TreemapIcon />}>
+                                <Nav.Item className={itemStyle('/mail-templates')} eventKey="/mail-templates" onClick={() => handleNavigate('/mail-templates')} active={activeKey('/mail-templates')} icon={<TreemapIcon />}>
                                     Mail templates
+                                </Nav.Item>
+                                <Nav.Item className={itemStyle('/schedules')}  eventKey="/schedules" onClick={() => handleNavigate('/schedules')} active={activeKey('/schedules')} icon={<CalendarIcon />}>
+                                    Schedules
                                 </Nav.Item>
                                 <Nav.Menu
                                     eventKey="3"
@@ -88,6 +96,7 @@ const BaseBody = ({ children }) => {
                                     title="Advanced"
                                     icon={<AppSelectIcon />}
                                     placement="rightStart"
+                                    className='border-r-4 border-blue-100'
                                 >
                                     <Nav.Item eventKey="3-1" onClick={() => handleNavigate('/')}>Home</Nav.Item>
                                     <Nav.Item eventKey="3-2" onClick={() => handleNavigate('/about')} >About</Nav.Item>

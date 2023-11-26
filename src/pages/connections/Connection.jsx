@@ -9,8 +9,9 @@ import { BasePagination, AutoLoader } from '@/components';
 import { getIds } from '@/helpers/dataHelpers';
 import { useConfirmation, useApi } from '@/hooks';
 import { PopupConfirm } from '@/components/popups';
-import { ConfirmType, ConnectionStatus } from '@/constants';
+import { ConfirmType, AccessStatus } from '@/constants';
 import { DrawerEditConnection } from './components';
+
 
 const Connection = () => {
     const [tags, setTags] = useState([]);
@@ -159,7 +160,7 @@ const Connection = () => {
             updateConnection,
             [{ 'status': confirmValue }, getIds(checkedKeys)],
             'Select status to finish action change status',
-            Object.entries(ConnectionStatus).map(([label, value]) => ({ label, value })),
+            Object.entries(AccessStatus).map(([label, value]) => ({ label, value })),
             ConfirmType.ONE_SELECTION
         );
     }

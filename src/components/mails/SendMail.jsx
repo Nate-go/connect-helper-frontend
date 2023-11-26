@@ -1,29 +1,21 @@
-import { InputGroup, Input, SelectPicker, Button, Whisper, Tooltip, CheckPicker, Panel } from "rsuite";
+import { InputGroup, Input, Button, Panel } from "rsuite";
 import React from 'react';
-import ListConnection from "./ListConnection";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useApi } from '@/hooks'
-import connectionEndpoints from "@/apis/enpoints/connection";
-import ListToContact from "./ListToContact";
-import { SentToUserIcon, AiOutlineQuestionCircle } from '@/components/icons';
+import { SentToUserIcon } from '@/components/icons';
 import { AutoLoader } from "@/components";
 import { SendMailType } from "@/constants";
-import tagEndpoints from "@/apis/enpoints/tag";
 import MailContentEdit from "./MailContentEdit";
 import { sendMailEndpoints } from "@/apis";
 import { getIds } from '@/helpers/dataHelpers'
 import MailType from "./MailType";
-import { MailTemplateSelect } from "@/components/selects";
+import { MailTemplateSelect, SelectContact } from "@/components/selects";
 
 const SendMail = ({openConfirmation}) => {
-    const [connections, setConnections] = useState([]);
-    const [tags, setTags] = useState([]);
-    const { data, loading, callApi } = useApi();
-    const { data: tagData, loading:tagLoading, callApi: handleGetTag } = useApi();
     const { loading: sendMailLoading, callApi: handleSendMail } = useApi();
 
     const { SunEditorComponent, saveContent, loading:saveContentLoading, setContent } = MailContentEdit();
-    const [contacts, SetContacts] = useState([]);
+    const [contacts, setContacts] = useState([]);
 
     const defaultMailTemplate = {
         subject: '',
@@ -35,42 +27,6 @@ const SendMail = ({openConfirmation}) => {
 
     const handleMailData = (data) => {
         setMailData((prevMailData) => ({ ...prevMailData, ...data }));
-    }
-
-    useEffect(() => {
-        callApi(connectionEndpoints.getUserConnections, {});
-        handleGetTag(tagEndpoints.get, {});
-    }, []);
-
-    const handleContact = (contact) => {
-        SetContacts([...contacts, contact]);
-    }
-
-    const handleConnection = (items) => {
-        SetContacts(contacts.filter((contact) => {
-            return items.includes(contact.connection_id);
-        }));
-        setConnections(items);
-    }
-
-    const getConnections = () => {
-        return data?.filter((connection) => {
-            return connections.includes(connection.id);
-        })
-    }
-
-    const handleTags = (items) => {
-        const deleteIds = tags.filter((item) => !items.includes(item));
-        setTags(items);
-        const connectionIds = getConnectionFromTags(items);
-        const deleteConnectionIds = getConnectionFromTags(deleteIds);
-        setConnections(Array.from(new Set([...connections, ...connectionIds])).filter((item) => !deleteConnectionIds.includes(item)));
-    }
-
-    const getConnectionFromTags = (tagIds) => {
-        const filteredTags = tagData.filter((tag) => tagIds.includes(tag.id));
-        const connectionIds = filteredTags.flatMap((tag) => tag.connections.map((connection) => connection.id));
-        return connectionIds;
     }
 
     const confirmSendMail = async () => {
@@ -121,16 +77,7 @@ const SendMail = ({openConfirmation}) => {
             </Panel>
             <Panel bordered shaded header="Mail editor" className="col-span-6">
                 <div className="w-full h-full flex flex-col gap-4 ">
-                    <div className="grid grid-cols-4 gap-2">
-                        <CheckPicker className="w-full col-span-1" label="Tag" data={tagData?.map(item => ({
-                            label: item.name,
-                            value: item.id
-                        })) ?? []} value={tags} onChange={handleTags} loading={tagLoading} />
-                        <div className="col-span-3">
-                            <ListConnection value={connections} setValue={handleConnection} data={data} loading={loading} />
-                        </div>
-                    </div>
-                    <ListToContact connections={getConnections()} handleContact={handleContact} />
+                    <SelectContact contacts={contacts} setContacts={setContacts}/>
                     <InputGroup>
                         <InputGroup.Addon>Subject: </InputGroup.Addon>
                         <Input value={mailData.subject} onChange={(value) => handleMailData({ subject: value })} />

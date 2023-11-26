@@ -14,3 +14,10 @@ export const convertToTitleCase = (str) => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) 
         .join(' ');
 };
+
+export const getConstantData = (constant) => {
+    return Object.entries(constant).map(([label, value]) => ({
+        label: getConstantTitle(constant, value),
+        value
+    }));
+}
