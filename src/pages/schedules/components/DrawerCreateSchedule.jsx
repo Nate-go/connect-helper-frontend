@@ -7,6 +7,7 @@ import { scheduleEndpoints } from "@/apis";
 import { SelectContact, SingleSelect, SelectDateTime, MultiCoworker } from "@/components/selects";
 import { getConstantData } from "@/helpers/constantHelpers";
 import { getIds } from "@/helpers/dataHelpers";
+import { toast } from 'react-toastify';
 
 const DrawerCreateSchedule = ({ open, handleClose, openConfirmation}) => {
     const newDate = new Date();
@@ -18,9 +19,8 @@ const DrawerCreateSchedule = ({ open, handleClose, openConfirmation}) => {
         type: ScheduleTypes.OFFLINE,
         status: ScheduleStatuses.UNPUBLISH,
         classification: ScheduleClassifications.ACTION,
-        started_at: newDate.setDate(newDate.getDate() + 0.5),
-        finished_at: newDate.setDate(newDate.getDate() + 0.75),
-        autoCreate: true,
+        started_at: newDate,
+        finished_at: newDate,
         userIds: [],
         contactIds: []
     }
@@ -31,12 +31,22 @@ const DrawerCreateSchedule = ({ open, handleClose, openConfirmation}) => {
     const {loading, callApi:handleCreateSchedule} = useApi();
 
     const createSchedule = () => {
+        if(schedule.type == ScheduleTypes.OFFLINE && schedule.place == '') {
+            toast.error("The place can not be empty while the the type is offline");
+            return;
+        }
+
+        if(schedule.title == '') {
+            toast.error("The title can not be empty");
+            return;
+        }
+
         handleCreateSchedule(
             scheduleEndpoints.create,
             {
                 method:"POST",
                 data: {
-                    ...schedule
+                    ...schedule,
                 }
             }
         )
@@ -74,14 +84,14 @@ const DrawerCreateSchedule = ({ open, handleClose, openConfirmation}) => {
                                         <div className="flex flex-row items-center gap-3">
                                             <SingleSelect
                                                 data={getConstantData(ScheduleClassifications)}
-                                                value={schedule.type}
-                                                onChange={(value) => setSchedule({ ...schedule, type: value })}
+                                                value={schedule.classification}
+                                                onChange={(value) => setSchedule({ ...schedule, classification: value })}
                                                 label="Classification"
                                             />
                                             <SingleSelect
                                                 data={getConstantData(ScheduleStatuses)}
-                                                value={schedule.type}
-                                                onChange={(value) => setSchedule({ ...schedule, type: value })}
+                                                value={schedule.status}
+                                                onChange={(value) => setSchedule({ ...schedule, status: value })}
                                                 label="Status"
                                             />
                                         </div>
@@ -93,20 +103,12 @@ const DrawerCreateSchedule = ({ open, handleClose, openConfirmation}) => {
                                             <InputGroup.Addon>Content</InputGroup.Addon>
                                             <Input as="textarea" rows={2} value={schedule.content} onChange={(value) => setSchedule({ ...schedule, content: value })} />
                                         </InputGroup>
-                                        <div className="grid grid-cols-4 gap-3">
-                                            <div className="flex col-span-3">
-                                                <SingleSelect
-                                                    data={getConstantData(ScheduleTypes)}
-                                                    value={schedule.type}
-                                                    onChange={(value) => setSchedule({ ...schedule, type: value })}
-                                                    label="Type"
-                                                />
-                                            </div>
-                                            <div className="flex flex-row col-span-1 items-center gap-3 justify-center">
-                                                <p>Auto create</p>
-                                                <Toggle disabled={schedule.type === ScheduleTypes.OFFLINE} checked={schedule.autoCreate} onChange={(value) => setSchedule({ ...schedule, autoCreate: value })} />
-                                            </div>
-                                        </div>
+                                        <SingleSelect
+                                            data={getConstantData(ScheduleTypes)}
+                                            value={schedule.type}
+                                            onChange={(value) => setSchedule({ ...schedule, type: value })}
+                                            label="Type"
+                                        />
                                         <InputGroup>
                                             <InputGroup.Addon>Place</InputGroup.Addon>
                                             <Input value={schedule.place} onChange={(value) => setSchedule({ ...schedule, place: value })} />
@@ -122,7 +124,7 @@ const DrawerCreateSchedule = ({ open, handleClose, openConfirmation}) => {
                                                 value={schedule.finished_at}
                                                 onChange={(value) => setSchedule({ ...schedule, finished_at: value })}
                                                 label="To"
-                                                limitStart={schedule.started_at}
+                                                limitStart={new Date(schedule.started_at)}
                                             />
                                         </div>
                                     </div>

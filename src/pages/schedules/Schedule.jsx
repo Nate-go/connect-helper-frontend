@@ -1,28 +1,30 @@
 import { Calendar, Whisper, Popover, Badge, Tooltip, Panel, ButtonToolbar, Button } from 'rsuite';
 import { PlusIcon } from '@/components/icons'
 import { useState } from 'react';
-import { DrawerCreateSchedule } from './components';
-import { useApi } from '@/hooks'
+import { DrawerCreateSchedule, DrawerEditSchedule } from './components';
 import { scheduleEndpoints } from '@/apis';
 import { AutoLoader } from '@/components';
 import { useEffect } from 'react';
-import { createReducer } from '@reduxjs/toolkit';
+import { useConfirmation, useApi } from '@/hooks';
+import { PopupConfirm } from '@/components/popups';
+import { ScheduleStatuses } from '@/constants/ScheduleConstant';
+import { getDateTimeZone } from '@/helpers/dateTimeHelpers';
 
 const getTodoList = (date, data) => {
-    const day = date.getDate();
     const filteredSchedules = data.filter(schedule => {
-        const startedAtDate = new Date(schedule.started_at);
+        const startedAtDate = getDateTimeZone(schedule.started_at);
         return (startedAtDate.getDate() === date.getDate() && startedAtDate.getMonth() === date.getMonth());
     });
 
     const extractedInfo = filteredSchedules.map(schedule => {
-        const startedAt = new Date(schedule.started_at);
+        const startedAt = getDateTimeZone(schedule.started_at);
         const time = `${startedAt.getHours()}:${startedAt.getMinutes()}`;
 
         return {
             id: schedule.id,
             time,
-            title: schedule.title
+            title: schedule.title,
+            status: schedule.status,
         };
     });
 
@@ -54,10 +56,22 @@ const getCalendarPage = (month, year) => {
 }
 
 const Schedule = () => {
+    const {
+        isConfirmationOpen,
+        openConfirmation,
+        handleConfirm,
+        handleCancel,
+        confirmType,
+        confirmData,
+        confirmValue,
+        setConfirmValue,
+        message
+    } = useConfirmation();
+
     const renderCell = (date) => {
         const list = getTodoList(date, data ?? []);
         const displayList = list.filter((item, index) => index < 2);
-
+        const [open, setOpen] = useState(false);
         if (list.length) {
             const moreCount = list.length - displayList.length;
             const moreItem = (
@@ -65,17 +79,18 @@ const Schedule = () => {
                     <Whisper
                         placement="top"
                         trigger="click"
+                        open={open}
                         speaker={
                             <Popover>
                                 {list.map((item, index) => (
-                                    <p key={index} onClick={() => alert(item)}>
-                                        <b>{item.time}</b> - {item.title}
-                                    </p>
+                                    <div key={index} onClick={() => {setOpenEdit({open: true, id:item.id}); setOpen(false)}} className='flex flex-row items-center gap-1 cursor-pointer hover:text-blue-500'>
+                                        <Badge color={item.status === ScheduleStatuses.PUBLISH ? "green" : "red"} /> <p><b>{item.time}</b> - {item.title}</p>
+                                    </div>
                                 ))}
                             </Popover>
                         }
                     >
-                        <a className='text-blue-500'>{moreCount} more</a>
+                        <a className='text-blue-500' onClick={() => setOpen(!open)}>{moreCount} more</a>
                     </Whisper>
                 </li>
             );
@@ -91,8 +106,10 @@ const Schedule = () => {
                                     <Tooltip>{item.title}</Tooltip>
                                 }
                             >
-                                <div className='truncate' onClick={() => alert(item)}>
-                                    <Badge /> <b>{item.time}</b> - {item.title}
+                                <div className=' hover:text-blue-500' onClick={() => setOpenEdit({ open: true, id: item.id })}>
+                                    <div className='flex flex-row items-center justify-start gap-1'>
+                                        <Badge color={item.status === ScheduleStatuses.PUBLISH ? "green" : "red"} /> <p className='truncate'><b>{item.time}</b> - {item.title}</p>
+                                    </div>
                                 </div>
                             </Whisper>
                         </li>
@@ -130,10 +147,24 @@ const Schedule = () => {
     }
 
     const [openCreate, setOpenCreate] = useState(false);
+    const [openEdit, setOpenEdit] = useState({
+        open: false,
+        id: null,
+    });
 
     return (
         <Panel header="Schedules" bordered shaded>
-            { openCreate && <DrawerCreateSchedule open={openCreate} handleClose={() => setOpenCreate(false)}/> }
+            <PopupConfirm
+                handleConfirm={handleConfirm}
+                handleCancel={handleCancel}
+                type={confirmType}
+                data={confirmData}
+                message={() => message()}
+                setValue={setConfirmValue}
+                open={isConfirmationOpen}
+            />
+            {openEdit.open && <DrawerEditSchedule open={openEdit.open} handleClose={() => {setOpenEdit({ open: false, id: null }), getSchedule(currentDate);}} id={openEdit.id} openConfirmation={openConfirmation}/>}
+            {openCreate && <DrawerCreateSchedule open={openCreate} handleClose={() => { setOpenCreate(false), getSchedule(currentDate); }}/> }
             <ButtonToolbar className="pl-3">
                 <Button color="green" className='bg-green-600' appearance="primary" startIcon={<PlusIcon />} onClick={() => setOpenCreate(true)}>
                     New schedule

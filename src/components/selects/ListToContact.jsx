@@ -3,7 +3,7 @@ import { ArrowDownIcon, CloseIcon } from '@/components/icons'
 import { useState } from "react";
 
 const ConnectionElement = ({connection, handleContact}) => {
-    const [contact, setContact] = useState(null);
+    const [contact, setContact] = useState(connection.defaultContact);
 
     const renderMenu = ({ onClose, left, top, className }, ref) => {
         const handleSelect = eventKey => {
