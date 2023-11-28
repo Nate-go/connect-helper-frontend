@@ -49,7 +49,7 @@ const MailTemplateSelect = ({handleSelect}) => {
                 items.push({
                     label: template.name,
                     value: template.id,
-                    groupName: group.name
+                    groupName: group.name + " (" + group.templates.length + ")"
                 })
             });
         });

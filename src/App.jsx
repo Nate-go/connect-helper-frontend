@@ -5,6 +5,8 @@ import '@/App.css'
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import 'suneditor/dist/css/suneditor.min.css';
+import 'rsuite/Button/styles/index.less';
+import 'rsuite/ButtonToolbar/styles/index.less';
 
 const App = () => {
 

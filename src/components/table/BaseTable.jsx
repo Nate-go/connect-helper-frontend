@@ -106,9 +106,9 @@ const BaseTable = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys
                     <HeaderCell>Tags</HeaderCell>
                     <TagGroupCell dataKey="tags" />
                 </Column>
-                <Column width={100}>
+                <Column width={100} sortable>
                     <HeaderCell>Status</HeaderCell>
-                    <ConstantCell dataKey="status" constant={ConnectionStatus} colors={['red', 'green']} />
+                    <ConstantCell dataKey="status" constant={ConnectionStatus} colors={['red', 'green', 'yellow']} />
                 </Column>
                 <Column width={150} sortable>
                     <HeaderCell>Owner</HeaderCell>

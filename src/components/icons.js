@@ -38,6 +38,7 @@ import SentToUserIcon from '@rsuite/icons/SentToUser';
 import { LuLayoutTemplate } from "react-icons/lu";
 import SearchIcon from '@rsuite/icons/Search';
 import TreemapIcon from '@rsuite/icons/Treemap';
+import CalendarIcon from '@rsuite/icons/Calendar';
 
 export {
     CogIcon,
@@ -83,5 +84,6 @@ export {
     SentToUserIcon,
     LuLayoutTemplate,
     SearchIcon,
-    TreemapIcon
+    TreemapIcon,
+    CalendarIcon
 };

@@ -15,7 +15,7 @@ const MultiCoworker = ({defaultValue, setValue}) => {
     if(loading || loading == null) return (<BaseLoader/>);
 
     return (
-        <CheckPicker label="User" data={data?.map((user) => ({label: user.name, value: user.id}))} value={defaultValue} onChange={setValue} className="w-full"/>
+        <CheckPicker label="User" data={data ? data?.map((user) => ({label: user.name, value: user.id})) : []} value={defaultValue} onChange={setValue} className="w-full"/>
     );
 }
 export default MultiCoworker

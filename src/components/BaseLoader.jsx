@@ -3,7 +3,7 @@ import { Loader } from 'rsuite';
 const BaseLoader = () => {
 
     return (
-        <Loader content="Loading..." />
+        <Loader content="Loading..." className='pt-2'/>
     );
 };
 

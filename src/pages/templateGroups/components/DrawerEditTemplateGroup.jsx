@@ -55,12 +55,16 @@ const DrawerEditTemplateGroup = ({open, handleClose, openConfirmation, templateG
 
     const updateGroupTemplate = () => {
         handleUpdateGroup(
-            templateGroupEndpoints.update + templateGroupItem.id, 
+            templateGroupEndpoints.update, 
             {
                 method:"PUT",
                 data: {
-                    name: item.name,
-                    status: item.status
+                    ids: [templateGroupItem.id],
+                    data: {
+                        name: item.name,
+                        status: item.status
+                    }
+                    
                 }
             }
         )
