@@ -10,11 +10,15 @@ const Home = () => {
 
         if (searchParams.has('code') && !searchParams.has('state')) {
             navigate('/signup?code=' + searchParams.get('code'));
+            return;
         }
 
         if (searchParams.has('code') && searchParams.has('state')) {
             navigate('/signup-employee?code=' + searchParams.get('code') + "&state=" + searchParams.get('state'));
+            return;
         }
+
+        navigate('/dashboard');
 
     }, []);
 

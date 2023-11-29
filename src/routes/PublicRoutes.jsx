@@ -9,7 +9,7 @@ const PublicRoutes = [
     },
     {
         path: "/",
-        element: <Navigate to="/dashboard" />,
+        element: <Home/>,
     },
     {
         path: "/signup",
