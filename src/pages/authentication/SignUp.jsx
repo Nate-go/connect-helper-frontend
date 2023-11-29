@@ -37,7 +37,7 @@ const SignUp = () => {
 
             const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${encodeURIComponent(
                 scopes
-            )}&response_type=code&prompt=select_account&access_type=offline`;
+            )}&response_type=code&prompt=consent&access_type=offline`;
             window.location.href = authUrl;
         } catch (error) {
             console.error('Error initiating authorization flow:', error);
