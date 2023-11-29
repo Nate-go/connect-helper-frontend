@@ -32,11 +32,11 @@ const CustomNavbar = ({ onSelect, ...props }) => {
                 <img src={logo_image} alt="" className='w-28 -mt-5 h-14 -ml-3' />
             </Navbar.Brand>
             <Nav onSelect={onSelect} >
-                <Nav.Item eventKey="/" active={activeKey('/')} icon={<IoIosHome />} onClick={() => navigate('/')}>
+                {/* <Nav.Item eventKey="/" active={activeKey('/')} icon={<IoIosHome />} onClick={() => navigate('/')}>
                     Home
                 </Nav.Item>
                 <Nav.Item eventKey="/about" active={activeKey('/about')}  onClick={() => navigate('/about')} icon={<InfoRoundIcon/>}>About</Nav.Item>
-                <Nav.Item eventKey="/contact" active={activeKey('/contact')}  onClick={() => navigate('/contact')} icon={<IoMdContacts/>}>Contact</Nav.Item>
+                <Nav.Item eventKey="/contact" active={activeKey('/contact')}  onClick={() => navigate('/contact')} icon={<IoMdContacts/>}>Contact</Nav.Item> */}
                 {!auth && (
                     <>
                         <Nav.Item eventKey="/login" active={activeKey('/login')}  onClick={() => navigate('/login')}  icon={<CgLogIn/>}>Login</Nav.Item>

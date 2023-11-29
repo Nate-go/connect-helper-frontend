@@ -10,7 +10,6 @@ import {
     Loader,
 } from 'rsuite';
 
-import { register_gif } from '@/assets/images'
 import { authenticationEndpoints } from "@/apis";
 import { useApi } from "@/hooks";
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -115,7 +114,7 @@ const SignUpEmployee = () => {
         <div className="show-fake-browser login-page max-h-screen">
             <div className='grid md:grid-cols-7 col-span-4'>
                 <div className='col-span-3 md:block hidden'>
-                    <img src={register_gif} alt="" />
+                    <img src="https://res.cloudinary.com/dsrtzowwc/image/upload/v1701227993/register_p61juw.webp" alt="" />
                 </div>
 
                 <div className='col-span-4 flex items-center'>

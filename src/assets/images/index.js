@@ -1,7 +1,6 @@
 export { default as logo_image} from './logo-web.webp'
 export { default as vertical_bg } from './vertical-bg.webp'
 export { default as not_found_image } from './not-found.webp'
-export { default as register_gif } from './register.webp'
 export { default as connection_bg } from './connection_bg.webp'
 export { default as active_account_img } from './active-account.webp'
 export { default as icon } from './icon.webp'

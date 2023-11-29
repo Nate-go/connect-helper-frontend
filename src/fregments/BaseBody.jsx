@@ -95,7 +95,7 @@ const BaseBody = ({ children }) => {
                                 <Nav.Item className={itemStyle('/schedules')}  eventKey="/schedules" onClick={() => handleNavigate('/schedules')} active={activeKey('/schedules')} icon={<CalendarIcon />}>
                                     Schedules
                                 </Nav.Item>
-                                <Nav.Menu
+                                {/* <Nav.Menu
                                     eventKey="3"
                                     trigger="hover"
                                     title="Advanced"
@@ -106,7 +106,7 @@ const BaseBody = ({ children }) => {
                                     <Nav.Item eventKey="3-1" onClick={() => handleNavigate('/')}>Home</Nav.Item>
                                     <Nav.Item eventKey="3-2" onClick={() => handleNavigate('/about')} >About</Nav.Item>
                                     <Nav.Item eventKey="3-3" onClick={() => handleNavigate('/contact')}>Contact</Nav.Item>
-                                </Nav.Menu>
+                                </Nav.Menu> */}
                             </Nav>
                         </Sidenav.Body>
                     </Sidenav>
