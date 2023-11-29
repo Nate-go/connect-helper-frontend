@@ -1,7 +1,7 @@
 import { User } from '@/pages/users'
 import { Dashboard } from '@/pages/dashboards'
 import { Connection } from '@/pages/connections'
-import { TemplateGroup } from '@/pages/templateGRoups'
+import { TemplateGroup } from '@/pages/templateGroups'
 import { Schedule } from '@/pages/schedules'
 
 const ProtectedRoutes = [
