@@ -41,6 +41,9 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
+        <li><a href="#project-structure">Project Structure</a></li>
+        <li><a href="#architecture-diagram">Architecture Diagram</a></li>
+        <li><a href="#database-diagram">Database Diagram</a></li>
       </ul>
     </li>
     <li>
@@ -88,7 +91,110 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Project structure
+```
+.
+├───app
+│   ├───Console
+│   │   └───Commands
+│   ├───Constant
+│   ├───Events
+│   ├───Exceptions
+│   ├───Http
+│   │   ├───Controllers
+│   │   ├───Requests
+│   │   ├───Middleware
+│   │   └───Resources
+│   ├───Jobs
+│   ├───Mail
+│   ├───Models
+│   ├───Providers
+│   ├───Services
+│   │   └───ModelServices
+│   └───Traits
+│       ├───Model
+│       └───ServiceInjection
+├───bootstrap
+│   └───cache
+├───config
+├───database
+│   ├───factories
+│   ├───migrations
+│   └───seeders
+├───public
+│   ├───build
+│   │   └───assets
+│   ├───css
+│   ├───img
+│   ├───js
+│   └───storage
+├───resources
+├───routes
+├───scripts
+├───storage
+├───tests
+│   ├───Feature
+│   └───Unit
+│       └───Services
+│           └───ModelServices
+│               ├───ExamServiceTest
+│               ├───GradeServiceTest
+│               ├───InsistenceServiceTest
+│               ├───RoomServiceTest
+│               ├───SchoolYearServiceTest
+│               ├───StudentServiceTest
+│               ├───SubjectServiceTest
+│               ├───TeacherServiceTest
+│               └───UserServiceTest
+└───xdebug
+    ├───.azure
+    │   ├───i386
+    │   └───macos
+    ├───.build.scripts
+    ├───.circleci
+    ├───.github
+    │   └───workflows
+    ├───.xdebugci
+    ├───contrib
+    ├───m4
+    ├───src
+    │   ├───base
+    │   ├───coverage
+    │   ├───debugger
+    │   ├───develop
+    │   ├───gcstats
+    │   ├───lib
+    │   ├───profiler
+    │   └───tracing
+    └───tests
+        ├───base
+        ├───coverage
+        ├───debugger
+        │   └───dbgp
+        ├───develop
+        ├───filter
+        │   ├───foobar
+        │   ├───stack
+        │   └───xdebug
+        │       └───trace
+        ├───gcstats
+        ├───library
+        ├───profiler
+        └───tracing
+```
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Architecture diagram
+
+![screenshot_1701221987](https://github.com/Nate-go/connect-helper-frontend/assets/140036945/3da6df60-adee-4d8a-878c-e4dee9a71d41)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Database diagram
+
+![Untitled diagram-2023-11-29-013624](https://github.com/Nate-go/connect-helper-frontend/assets/140036945/ae289763-57a3-4810-a673-f7d12b9bd1ed)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
