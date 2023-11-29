@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import 'suneditor/dist/css/suneditor.min.css';
 import 'rsuite/Button/styles/index.less';
 import 'rsuite/ButtonToolbar/styles/index.less';
+import '@coreui/coreui/dist/css/coreui.min.css'
 
 const App = () => {
 

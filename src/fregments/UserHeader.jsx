@@ -68,7 +68,7 @@ const UserHeader = () => {
 
     return (
         <div className="flex w-full h-full justify-end gap-5 pb-2 pt-4 pr-5">
-            <InviteEmployee open={open} handleClose={() => setOpen(false)}/>
+            {open && <InviteEmployee open={open} handleClose={() => setOpen(false)} />}
             <ButtonGroup className="flex flex-row gap-4">
                 <div className="flex flex-row items-center gap-3">
                     <Avatar

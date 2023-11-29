@@ -4,7 +4,8 @@ import {
     TagGroup,
     Tag,
     Checkbox,
-    SelectPicker 
+    SelectPicker,
+    Avatar 
 } from 'rsuite';
 import React from 'react';
 
@@ -12,6 +13,7 @@ import { getDataTimeFormat } from '@/helpers/dateTimeHelpers';
 import { getConstantTitle } from '@/helpers/constantHelpers';
 import { TrashIcon, EditIcon } from '@/components/icons';
 import { useState } from 'react';
+import { data } from 'browserslist';
 
 const { Cell } = Table;
 
@@ -89,7 +91,7 @@ export const ConstantCell = ({ rowData, dataKey, constant, colors, ...props }) =
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
                 <TagGroup>
-                    <Tag color={colors[rowData[dataKey]]} key={rowData['id']} size="md">{getConstantTitle(constant, rowData[dataKey])}</Tag>
+                    <Tag color={colors[rowData[dataKey] ?? 0]} key={rowData['id']} size="md">{getConstantTitle(constant, rowData[dataKey])}</Tag>
                 </TagGroup>
             </div>
         </Cell>
@@ -132,14 +134,36 @@ export const DateTimeCell = ({ rowData, dataKey, ...props }) => {
     );
 }
 
-export const ActionCell = ({ rowData, dataKey, onEdit, onDelete, ...props }) => {
+export const UserCell = ({ rowData, dataKey, image, ...props }) => {
+    return (
+        <Cell {...props}>
+            <div className="flex flex-row items-center gap-3 w-full h-full">
+                <Avatar
+                    size="md"
+                    circle
+                    src={rowData[image]}
+                />
+                <p className='text-base'>{rowData[dataKey]}</p>
+            </div>
+        </Cell>
+
+    );
+}
+
+export const ActionCell = ({ rowData, dataKey, onEdit=(value) => {}, onDelete=(value) => {}, elements={edit:true, delete:true},  ...props }) => {
     return (
         <Cell {...props}>
             <div className='flex flex-row justify-center w-full h-full'>
-                <Button appearance="link" onClick={() => onEdit(rowData)} startIcon={<EditIcon/>} className='hover:text-lg hover:text-blue-700'>
-                </Button>
-                <Button appearance="link" onClick={() => onDelete(rowData)} startIcon={<TrashIcon />} className='hover:text-lg hover:text-red-600'>
-                </Button>
+                {
+                    elements.edit && 
+                    <Button appearance="link" onClick={() => onEdit(rowData)} startIcon={<EditIcon />} className='hover:text-lg hover:text-blue-700'>
+                    </Button>
+                }
+                {
+                    elements.delete &&
+                    <Button appearance="link" onClick={() => onDelete(rowData)} startIcon={<TrashIcon />} className='hover:text-lg hover:text-red-600'>
+                    </Button>
+                }
             </div>
         </Cell>
 

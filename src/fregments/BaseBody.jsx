@@ -18,6 +18,8 @@ import { logo_image } from '@/assets/images'
 import { getCurrentPath } from '@/helpers/pathHelper';
 import UserHeader from './UserHeader';
 import QuickAccess from './QuickAccess';
+import { getAuthentication } from "@/helpers/authenHelpers";
+import { UserRole } from "@/constants";
 
 const NavToggle = ({ expand, onChange, handleSignOut }) => {
     return (
@@ -78,9 +80,12 @@ const BaseBody = ({ children }) => {
                                 <Nav.Item className={itemStyle('/dashboard')} eventKey="/dashboard" onClick={() => handleNavigate('/dashboard')} active={activeKey('/dashboard')} icon={<DashboardIcon />}>
                                     Dashboard
                                 </Nav.Item>
-                                <Nav.Item className={itemStyle('/users')}  eventKey="/users" onClick={() => handleNavigate('/users')} active={activeKey('/users')} icon={<GroupIcon />}>
-                                    Users
-                                </Nav.Item>
+                                {
+                                    getAuthentication().user.role == UserRole.OWNER &&
+                                    <Nav.Item className={itemStyle('/users')} eventKey="/users" onClick={() => handleNavigate('/users')} active={activeKey('/users')} icon={<GroupIcon />}>
+                                        Users
+                                    </Nav.Item>
+                                }
                                 <Nav.Item className={itemStyle('/connections')}  eventKey="/connections" onClick={() => handleNavigate('/connections')} active={activeKey('/connections')} icon={<PeopleBranchIcon />}>
                                     Connections
                                 </Nav.Item>
