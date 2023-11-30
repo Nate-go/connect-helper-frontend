@@ -152,7 +152,7 @@ const DrawerEditConnection = ({
             <Grid fluid>
                 <Row className="show-grid">
                     <Col xs={24} sm={24} md={6} className="sm:mb-4">
-                        <div className="flex flex-col gap-5 w-full h-full">
+                        <div className="flex flex-col gap-3 w-full h-full">
                             <Panel header="Connection" shaded className="w-full h-full">
                                 <div className="flex flex-col w-full h-full gap-4">
                                     <InputGroup>
