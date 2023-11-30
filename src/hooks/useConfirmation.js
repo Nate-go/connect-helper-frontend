@@ -21,6 +21,7 @@ const useConfirmation = () => {
     const handleConfirm = () => {
         const { onConfirm, additionalParams } = confirmationData;
         onConfirm(...fillNullValues(additionalParams, confirmValue));
+        setConfirmValue(null);
         setIsConfirmationOpen(false);
     };
 
