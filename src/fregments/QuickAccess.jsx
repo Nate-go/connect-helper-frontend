@@ -60,7 +60,7 @@ const QuickAccess = () => {
             {openMailTemplate && <MailTemplateDrawer open={openMailTemplate} handleClose={() => setOpenMailTemplate(false)} openConfirmation={openConfirmation} />}
             <Dropdown className="quick-access flex flex-col gap-3 items-center pt-4" renderToggle={renderIconButton} placement="topEnd" trigger={"hover"} onOpen={() => setOpen(true)} onClose={() => setOpen(false)}>
                 {
-                    getAuthentication().user.role !== UserRole.ADMIN &&
+                    getAuthentication()?.user.role !== UserRole.ADMIN &&
                     <>
                         <Whisper placement="left" trigger="hover" speaker={<Tooltip>schedule</Tooltip>}>
                             <IconButton icon={<CalendarIcon style={{ fontSize: '10em' }} />} circle color="blue" className="bg-blue-500 h-11 w-11" appearance="primary" onClick={() => setOpenMailTemplate(true)} />
