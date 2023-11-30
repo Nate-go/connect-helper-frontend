@@ -39,6 +39,7 @@ import { LuLayoutTemplate } from "react-icons/lu";
 import SearchIcon from '@rsuite/icons/Search';
 import TreemapIcon from '@rsuite/icons/Treemap';
 import CalendarIcon from '@rsuite/icons/Calendar';
+import ModelIcon from '@rsuite/icons/Model';
 
 export {
     CogIcon,
@@ -85,5 +86,6 @@ export {
     LuLayoutTemplate,
     SearchIcon,
     TreemapIcon,
-    CalendarIcon
+    CalendarIcon,
+    ModelIcon
 };

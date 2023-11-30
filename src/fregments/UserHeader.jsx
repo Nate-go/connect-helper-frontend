@@ -86,11 +86,11 @@ const UserHeader = () => {
                 </Whisper>
             </ButtonGroup>
 
-            <Whisper placement="bottomEnd" trigger="click" speaker={notificationMenu}>
+            {/* <Whisper placement="bottomEnd" trigger="click" speaker={notificationMenu}>
                 <Badge content={999} maxCount={5}>
                     <IconButton appearance="primary" icon={<NoticeIcon style={{ fontSize: '10em' }} />} circle className="bg-blue-500 h-10 w-10" />
                 </Badge>
-            </Whisper>
+            </Whisper> */}
         </div>
     );
 }

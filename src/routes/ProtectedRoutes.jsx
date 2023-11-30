@@ -3,6 +3,7 @@ import { Dashboard } from '@/pages/dashboards'
 import { Connection } from '@/pages/connections'
 import { TemplateGroup } from '@/pages/templateGroups'
 import { Schedule } from '@/pages/schedules'
+import { Enterprise } from '@/pages/enterprises'
 
 const ProtectedRoutes = [
     {
@@ -24,6 +25,10 @@ const ProtectedRoutes = [
     {
         path: "/schedules",
         element: <Schedule />,
+    },
+    {
+        path: "/enterprises",
+        element: <Enterprise />,
     }
 ]
 

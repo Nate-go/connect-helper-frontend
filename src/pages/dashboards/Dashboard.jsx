@@ -8,7 +8,7 @@ const Dashboard = () => {
         <div className="flex flex-col gap-4">
             <div className="grid grid-cols-10 gap-4 max-w-7xl">
                 <div className="lg:col-span-6 col-span-10">
-                    <Panel header="Tags - Connections" bordered shaded>
+                    <Panel header="Connections" bordered shaded>
                         <CChart
                             type="bar"
                             data={{
@@ -18,9 +18,14 @@ const Dashboard = () => {
                                 ],
                                 datasets: [
                                     {
-                                        label: 'GitHub Commits2',
-                                        backgroundColor: '#f87945',
-                                        data: [40, 80, 39, 40, 10, 39, 12, 20, 40],
+                                        label: 'Public connection',
+                                        backgroundColor: '#00c230',
+                                        data: [10, 30, 28, 35, 14, 25, 22, 31, 15, 27, 15, 26],
+                                    },
+                                    {
+                                        label: 'Private connection',
+                                        backgroundColor: '#c20000',
+                                        data: [47, 23, 51, 15, 38, 29, 42, 57, 32, 45, 50, 18],
                                     }
                                 ],
                             }}
@@ -56,11 +61,11 @@ const Dashboard = () => {
                     </Panel>
                 </div>
                 <div className="lg:col-span-4 col-span-10 ">
-                    <Panel header="Tags - Connections" bordered shaded>
+                    <Panel header="Contact types" bordered shaded>
                         <CChart
                             type="doughnut"
                             data={{
-                                labels: ['VueJs', 'EmberJs', 'ReactJs', 'AngularJs'],
+                                labels: ['Phonenumber', 'Social media', 'Email', 'Adress'],
                                 datasets: [
                                     {
                                         backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
@@ -83,57 +88,12 @@ const Dashboard = () => {
             </div>
 
             <div className="grid grid-cols-10 gap-4 max-w-7xl">
-                <div className="lg:col-span-6 col-span-10 ">
-                    <Panel header="Connections - Contacts" bordered shaded>
-                        <CChart
-                            type="bar"
-                            data={{
-                                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                                datasets: [
-                                    {
-                                        label: 'GitHub Commits',
-                                        backgroundColor: '#f87979',
-                                        data: [40, 20, 12, 39, 10, 40, 39, 80, 40],
-                                    },
-                                ],
-                            }}
-                            labels="months"
-                            options={{
-                                plugins: {
-                                    legend: {
-                                        labels: {
-                                            color: "rgba(44, 56, 74, 0.95)",
-                                        }
-                                    }
-                                },
-                                scales: {
-                                    x: {
-                                        grid: {
-                                            color: "rgba(0, 0, 21, 0.175)",
-                                        },
-                                        ticks: {
-                                            color: "rgba(44, 56, 74, 0.95)",
-                                        },
-                                    },
-                                    y: {
-                                        grid: {
-                                            color: "rgba(0, 0, 21, 0.175)",
-                                        },
-                                        ticks: {
-                                            color: "rgba(44, 56, 74, 0.95)",
-                                        },
-                                    },
-                                },
-                            }}
-                        />
-                    </Panel>
-                </div>
                 <div className="lg:col-span-4 col-span-10">
-                    <Panel header="Type contact" bordered shaded>
+                    <Panel header="Top 6 month send mail" bordered shaded>
                         <CChart
                             type="polarArea"
                             data={{
-                                labels: ['Red', 'Green', 'Yellow', 'Grey', 'Blue'],
+                                labels: ["May", "September", "November", "May", "February", "December"],
                                 datasets: [
                                     {
                                         data: [11, 16, 7, 3, 14],
@@ -160,31 +120,31 @@ const Dashboard = () => {
                         />
                     </Panel>
                 </div>
-            </div>
-
-            <div className="grid grid-cols-10 gap-4 max-w-7xl">
-                <div className="lg:col-span-6 col-span-10">
+                <div className="lg:col-span-6 col-span-10 ">
                     <Panel header="Schedule - Classification" bordered shaded>
                         <CChart
                             type="line"
                             data={{
-                                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                                labels: [
+                                    'January', 'February', 'March', 'April', 'May', 'June',
+                                    'July', 'August', 'September', 'October', 'November', 'December'
+                                ],
                                 datasets: [
                                     {
-                                        label: "My First dataset",
-                                        backgroundColor: "rgba(220, 220, 220, 0.2)",
-                                        borderColor: "rgba(220, 220, 220, 1)",
-                                        pointBackgroundColor: "rgba(220, 220, 220, 1)",
-                                        pointBorderColor: "#fff",
-                                        data: [40, 20, 12, 39, 10, 40, 39, 80, 40]
+                                        label: "Meeting",
+                                        backgroundColor: "rgba(250, 152, 248)",
+                                        borderColor: "rgba(250, 152, 248)",
+                                        pointBackgroundColor: "rgba(141, 7, 219)",
+                                        pointBorderColor: "#8d07db",
+                                        data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 23, 15, 41]
                                     },
                                     {
-                                        label: "My Second dataset",
-                                        backgroundColor: "rgba(151, 187, 205, 0.2)",
-                                        borderColor: "rgba(151, 187, 205, 1)",
-                                        pointBackgroundColor: "rgba(151, 187, 205, 1)",
-                                        pointBorderColor: "#fff",
-                                        data: [50, 12, 28, 29, 7, 25, 12, 70, 60]
+                                        label: "Action",
+                                        backgroundColor: "rgba(124, 130, 252)",
+                                        borderColor: "rgba(124, 130, 252)",
+                                        pointBackgroundColor: "rgba(2, 13, 214)",
+                                        pointBorderColor: "#020dd6",
+                                        data: [50, 12, 28, 29, 7, 25, 12, 70, 60, 45, 20, 47]
                                     },
                                 ],
                             }}
@@ -218,13 +178,8 @@ const Dashboard = () => {
                         />
                     </Panel>
                 </div>
-                <div className="lg:col-span-4 col-span-10">
-                    <Panel header="Mail template" bordered shaded>
-
-                    </Panel>
-                </div>
+                
             </div>
-
         </div>
     )
 }

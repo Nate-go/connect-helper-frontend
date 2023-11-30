@@ -5,7 +5,10 @@ import {
     Tag,
     Checkbox,
     SelectPicker,
-    Avatar 
+    Avatar,
+    AvatarGroup,
+    Whisper,
+    Tooltip 
 } from 'rsuite';
 import React from 'react';
 
@@ -134,17 +137,67 @@ export const DateTimeCell = ({ rowData, dataKey, ...props }) => {
     );
 }
 
-export const UserCell = ({ rowData, dataKey, image, ...props }) => {
+export const UserCell = ({ rowData, dataKeys, images, ...props }) => {
+    let image = rowData;
+    let name = rowData;
+
+    images.forEach(element => {
+        image = image[element];
+    });
+
+    dataKeys.forEach(element => {
+        name = name[element];
+    });
+
     return (
         <Cell {...props}>
             <div className="flex flex-row items-center gap-3 w-full h-full">
                 <Avatar
                     size="md"
                     circle
-                    src={rowData[image]}
+                    src={image}
                 />
-                <p className='text-base'>{rowData[dataKey]}</p>
+                <p className='text-base'>{name}</p>
             </div>
+        </Cell>
+
+    );
+}
+
+export const ImagesCell = ({ rowData, dataKeys, ...props }) => {
+    let users = rowData;
+    const max = 7;
+    dataKeys.forEach(element => {
+        users = users[element];
+    });
+
+    return (
+        <Cell {...props}>
+            <div className="flex flex-row items-center gap-3 w-full h-full">
+                <AvatarGroup stack>
+                    {users
+                        .filter((user, i) => i < max)
+                        .map(user => (
+                            <Whisper key={user.id}
+                                trigger="hover"
+                                placement="topStart"
+                                speaker={
+                                    <Tooltip>{user.name}</Tooltip>
+                                }
+                            >
+                                <Avatar size="sm" circle src={user.image_url} alt={user.name} />
+                            </Whisper>
+                        ))}
+                    {
+                        users.length - max > 0 &&
+                        <Avatar circle size="sm" className='bg-black'>
+                            +{users.length - max}
+                        </Avatar>
+                    }
+
+                </AvatarGroup>
+            </div>
+            
         </Cell>
 
     );

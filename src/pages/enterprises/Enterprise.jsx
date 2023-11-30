@@ -1,8 +1,8 @@
-import { userEndpoints } from "@/apis";
+import { enterpriseEndpoints } from "@/apis";
 import { useEffect, useState } from "react";
 
 import { useApi, useConfirmation } from "@/hooks";
-import { UserTable } from "@/components/table";
+import { EnterpriseTable } from "@/components/table";
 import { Grid, Panel, Button, ButtonToolbar } from 'rsuite';
 
 import { GroupTemplateTable } from '@components/table';
@@ -12,8 +12,7 @@ import { PopupConfirm } from '@/components/popups';
 import { getAuthentication } from '@/helpers/authenHelpers';
 
 const Enterprise = () => {
-  const { data: userData, loading: userLoading, callApi: handldeUser } = useApi();
-  const { data: deleteUserData, loading: deleteUserLoading, callApi: handldeDeleteUser } = useApi();
+  const { data: enterpriseData, loading: enterpriseLoading, callApi: handldeEnterprise } = useApi();
 
   const [pagination, setPagination] = useState({
     page: PaginationDefault.PAGE,
@@ -24,7 +23,7 @@ const Enterprise = () => {
   });
 
   const [checkedKeys, setCheckedKeys] = useState([]);
-  const [fetchUsers, setFetchUsers] = useState(true);
+  const [fetchEnterprises, setFetchEnterprises] = useState(true);
 
   const {
     isConfirmationOpen,
@@ -40,12 +39,12 @@ const Enterprise = () => {
 
   const handlePagination = (data) => {
     setPagination((prevPagination) => ({ ...prevPagination, ...data }));
-    setFetchUsers(true);
+    setFetchEnterprises(true);
   };
 
   const getUser = () => {
-    handldeUser(
-      userEndpoints.get,
+    handldeEnterprise(
+      enterpriseEndpoints.get,
       {
         params: {
           ...pagination,
@@ -54,32 +53,15 @@ const Enterprise = () => {
     );
   }
 
-  const deleteUsers = (ids) => {
-    handldeDeleteUser(userEndpoints.delete, 
-      {
-        method: "DELETE",
-        data: {
-          ids
-        }
-      }
-    )
+  const onEdit = (rowData) => {
 
-    setFetchUsers(true);
-  }
-
-  const confirmDeleteUsers = () => {
-    openConfirmation(deleteUsers, [checkedKeys], "Are you sure to delete " + checkedKeys.length + " users ?");
-  }
-
-  const confirmDeleteUser = (id) => {
-    openConfirmation(deleteUsers, [[id]], "Are you sure to delete this user ?");
   }
 
   useEffect(() => {
-    if(!fetchUsers) return;
+    if(!fetchEnterprises) return;
     getUser();
-    setFetchUsers(false);
-  }, [fetchUsers])
+    setFetchEnterprises(false);
+  }, [fetchEnterprises])
 
   return (
     <Grid fluid>
@@ -92,13 +74,13 @@ const Enterprise = () => {
         setValue={setConfirmValue}
         open={isConfirmationOpen}
       />
-      <Panel header='Template groups' shaded className='w-full h-full'>
+      <Panel header='Enterprises' shaded className='w-full h-full'>
         <AutoLoader
-          display={userData?.data}
+          display={enterpriseData?.data}
           component={
             <>
-              <UserTable items={userData?.data?.items} dataLoading={userLoading} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={(rowData) => confirmDeleteUser(rowData.id)} onDeletes={confirmDeleteUsers}/>
-              <BasePagination pagination={userData?.data?.pagination} handlePagination={handlePagination} />
+              <EnterpriseTable items={enterpriseData?.data?.items} dataLoading={enterpriseLoading} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onEdit={onEdit}/>
+              <BasePagination pagination={enterpriseData?.data?.pagination} handlePagination={handlePagination} />
             </>
           }
         />
