@@ -8,3 +8,4 @@ export { default as connectionHistoryEndpoints } from './enpoints/connectionHist
 export { default as templateGroupEndpoints } from './enpoints/templateGroup'
 export { default as templateEndpoints } from './enpoints/template'
 export { default as scheduleEndpoints } from './enpoints/schedule'
+export { default as enterpriseEndpoints } from './enpoints/enterprise'

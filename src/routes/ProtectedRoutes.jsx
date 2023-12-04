@@ -1,8 +1,9 @@
-import { UserDetail, UserList} from '@/pages/users'
+import { User } from '@/pages/users'
 import { Dashboard } from '@/pages/dashboards'
 import { Connection } from '@/pages/connections'
-import { TemplateGroup } from '@/pages/templateGRoups'
+import { TemplateGroup } from '@/pages/templateGroups'
 import { Schedule } from '@/pages/schedules'
+import { Enterprise } from '@/pages/enterprises'
 
 const ProtectedRoutes = [
     {
@@ -10,12 +11,8 @@ const ProtectedRoutes = [
         element: <Dashboard />,
     },
     {
-        path: "/users-detail",
-        element: <UserDetail />,
-    },
-    {
         path: "/users",
-        element: <UserList />,
+        element: <User />,
     },
     {
         path: "/connections",
@@ -28,6 +25,10 @@ const ProtectedRoutes = [
     {
         path: "/schedules",
         element: <Schedule />,
+    },
+    {
+        path: "/enterprises",
+        element: <Enterprise />,
     }
 ]
 

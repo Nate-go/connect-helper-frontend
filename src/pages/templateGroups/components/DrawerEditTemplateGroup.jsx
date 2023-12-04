@@ -177,7 +177,7 @@ const DrawerEditTemplateGroup = ({open, handleClose, openConfirmation, templateG
                 <Grid fluid>
                     <Row className="show-grid">
                         <Col xs={24} sm={24} md={7} className='sm:mb-4'>
-                            <div className="flex flex-col gap-5 w-full h-full">
+                            <div className="flex flex-col gap-3 w-full h-full">
                                 <Panel header="Template group" shaded className="w-full h-full">
                                     <div className='flex flex-col w-full h-full gap-4'>
                                         <div>
@@ -200,18 +200,6 @@ const DrawerEditTemplateGroup = ({open, handleClose, openConfirmation, templateG
                                             
                                         </div>
                                     </div>
-                                </Panel>
-                                <Panel header="Templates" shaded className="w-full h-full">
-                                    <SelectPicker 
-                                        data={getTemplatesData ? getTemplatesData.map(template => ({
-                                            label: template.name,
-                                            value: template.id
-                                        })): []} 
-                                        className="w-full"
-                                        loading={getTemplatesLoading}
-                                        onChange={handleSelectTemplate}
-                                        value={currentTemplate}
-                                    />
                                 </Panel>
                                 <Panel header="Template generator" shaded className="w-full h-full">
                                     <div className="flex flex-col gap-3">
@@ -254,10 +242,21 @@ const DrawerEditTemplateGroup = ({open, handleClose, openConfirmation, templateG
                         </Col>
 
                         <Col xs={24} sm={24} md={17}>
-                            <div className='w-full h-full'>
+                            <div className='w-full h-full flex flex-col gap-3'>
+                                <Panel header="Templates" shaded className="w-full h-full">
+                                    <SelectPicker
+                                        data={getTemplatesData ? getTemplatesData.map(template => ({
+                                            label: template.name,
+                                            value: template.id
+                                        })) : []}
+                                        className="w-full"
+                                        loading={getTemplatesLoading}
+                                        onChange={handleSelectTemplate}
+                                        value={currentTemplate}
+                                    />
+                                </Panel>
                                 <Panel header='Template' shaded className='w-full h-full'>
                                     <div className="w-full h-full flex flex-col gap-4">
-
                                         <div className="grid grid-cols-7 gap-2">
                                             <InputGroup className="col-span-5">
                                                 <InputGroup.Addon>Name: </InputGroup.Addon>

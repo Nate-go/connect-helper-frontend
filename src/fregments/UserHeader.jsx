@@ -68,7 +68,7 @@ const UserHeader = () => {
 
     return (
         <div className="flex w-full h-full justify-end gap-5 pb-2 pt-4 pr-5">
-            <InviteEmployee open={open} handleClose={() => setOpen(false)}/>
+            {open && <InviteEmployee open={open} handleClose={() => setOpen(false)} />}
             <ButtonGroup className="flex flex-row gap-4">
                 <div className="flex flex-row items-center gap-3">
                     <Avatar
@@ -86,11 +86,11 @@ const UserHeader = () => {
                 </Whisper>
             </ButtonGroup>
 
-            <Whisper placement="bottomEnd" trigger="click" speaker={notificationMenu}>
+            {/* <Whisper placement="bottomEnd" trigger="click" speaker={notificationMenu}>
                 <Badge content={999} maxCount={5}>
                     <IconButton appearance="primary" icon={<NoticeIcon style={{ fontSize: '10em' }} />} circle className="bg-blue-500 h-10 w-10" />
                 </Badge>
-            </Whisper>
+            </Whisper> */}
         </div>
     );
 }

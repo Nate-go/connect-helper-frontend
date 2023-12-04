@@ -209,7 +209,7 @@ const Connection = () => {
             {editConnection.id && 
                 <DrawerEditConnection
                     open={editConnection.open}
-                    handleClose={() => { setEditConnection({open:false, id:null}) }}
+                    handleClose={() => { setEditConnection({open:false, id:null}); setFetchConnection(true) }}
                     openConfirmation={openConfirmation}
                     tagData={tagData}
                     setFetchTag={setFetchTag}

@@ -11,13 +11,16 @@ import {
     HelpOutlineIcon,
     PeopleBranchIcon,
     TreemapIcon,
-    CalendarIcon
+    CalendarIcon,
+    ModelIcon
 } from '@/components/icons.js';
 
 import { logo_image } from '@/assets/images'
 import { getCurrentPath } from '@/helpers/pathHelper';
 import UserHeader from './UserHeader';
 import QuickAccess from './QuickAccess';
+import { getAuthentication } from "@/helpers/authenHelpers";
+import { UserRole } from "@/constants";
 
 const NavToggle = ({ expand, onChange, handleSignOut }) => {
     return (
@@ -78,19 +81,36 @@ const BaseBody = ({ children }) => {
                                 <Nav.Item className={itemStyle('/dashboard')} eventKey="/dashboard" onClick={() => handleNavigate('/dashboard')} active={activeKey('/dashboard')} icon={<DashboardIcon />}>
                                     Dashboard
                                 </Nav.Item>
-                                <Nav.Item className={itemStyle('/users')}  eventKey="/users" onClick={() => handleNavigate('/users')} active={activeKey('/users')} icon={<GroupIcon />}>
-                                    Users
-                                </Nav.Item>
-                                <Nav.Item className={itemStyle('/connections')}  eventKey="/connections" onClick={() => handleNavigate('/connections')} active={activeKey('/connections')} icon={<PeopleBranchIcon />}>
-                                    Connections
-                                </Nav.Item>
-                                <Nav.Item className={itemStyle('/mail-templates')} eventKey="/mail-templates" onClick={() => handleNavigate('/mail-templates')} active={activeKey('/mail-templates')} icon={<TreemapIcon />}>
-                                    Mail templates
-                                </Nav.Item>
-                                <Nav.Item className={itemStyle('/schedules')}  eventKey="/schedules" onClick={() => handleNavigate('/schedules')} active={activeKey('/schedules')} icon={<CalendarIcon />}>
-                                    Schedules
-                                </Nav.Item>
-                                <Nav.Menu
+                                {
+                                    getAuthentication().user.role == UserRole.OWNER &&
+                                    <>
+                                        <Nav.Item className={itemStyle('/users')} eventKey="/users" onClick={() => handleNavigate('/users')} active={activeKey('/users')} icon={<GroupIcon />}>
+                                            Users
+                                        </Nav.Item>
+                                    </>
+                                    
+                                }
+                                {
+                                    getAuthentication().user.role == UserRole.ADMIN && 
+                                    <Nav.Item className={itemStyle('/enterprises')} eventKey="/users" onClick={() => handleNavigate('/enterprises')} active={activeKey('/enterprises')} icon={<ModelIcon />}>
+                                        Enterprises
+                                    </Nav.Item>
+                                }
+                                {
+                                    getAuthentication().user.role !== UserRole.ADMIN &&
+                                    <>
+                                        <Nav.Item className={itemStyle('/connections')} eventKey="/connections" onClick={() => handleNavigate('/connections')} active={activeKey('/connections')} icon={<PeopleBranchIcon />}>
+                                            Connections
+                                        </Nav.Item>
+                                        <Nav.Item className={itemStyle('/mail-templates')} eventKey="/mail-templates" onClick={() => handleNavigate('/mail-templates')} active={activeKey('/mail-templates')} icon={<TreemapIcon />}>
+                                            Mail templates
+                                        </Nav.Item>
+                                        <Nav.Item className={itemStyle('/schedules')} eventKey="/schedules" onClick={() => handleNavigate('/schedules')} active={activeKey('/schedules')} icon={<CalendarIcon />}>
+                                            Schedules
+                                        </Nav.Item>
+                                    </>
+                                }
+                                {/* <Nav.Menu
                                     eventKey="3"
                                     trigger="hover"
                                     title="Advanced"
@@ -101,7 +121,7 @@ const BaseBody = ({ children }) => {
                                     <Nav.Item eventKey="3-1" onClick={() => handleNavigate('/')}>Home</Nav.Item>
                                     <Nav.Item eventKey="3-2" onClick={() => handleNavigate('/about')} >About</Nav.Item>
                                     <Nav.Item eventKey="3-3" onClick={() => handleNavigate('/contact')}>Contact</Nav.Item>
-                                </Nav.Menu>
+                                </Nav.Menu> */}
                             </Nav>
                         </Sidenav.Body>
                     </Sidenav>

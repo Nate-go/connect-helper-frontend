@@ -1,10 +1,11 @@
 const baseEndpoint = "/users";
 
 const userEndpoints = {
-    getAll: baseEndpoint,
+    get: baseEndpoint,
     getUserInformation: baseEndpoint + '/',
     getCoworkers: baseEndpoint + '/coworkers',
     invites: baseEndpoint + '/invites',
+    delete: baseEndpoint
 };
 
 export default userEndpoints;

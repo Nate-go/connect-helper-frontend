@@ -1,6 +1,7 @@
 import { Container, Header, Content, Footer, Sidebar } from 'rsuite';
 
 import BaseBody from './BaseBody';
+import BaseFooter from './BaseFooter';
 
 const BaseComponent = ({ children }) => {
     return (
@@ -9,7 +10,9 @@ const BaseComponent = ({ children }) => {
                 <BaseBody>
                     {children}
                 </BaseBody>
-                <Footer>Footer</Footer>
+                <Footer>
+                    <BaseFooter/>
+                </Footer>
             </Sidebar>
         </div>
     );

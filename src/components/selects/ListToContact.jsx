@@ -1,9 +1,10 @@
 import { Dropdown, Popover, ButtonGroup, Whisper, IconButton, Button, Panel } from "rsuite";
 import { ArrowDownIcon, CloseIcon } from '@/components/icons'
 import { useState } from "react";
+import { useEffect } from "react";
 
 const ConnectionElement = ({connection, handleContact}) => {
-    const [contact, setContact] = useState(connection.defaultContact);
+    const [contact, setContact] = useState(null);
 
     const renderMenu = ({ onClose, left, top, className }, ref) => {
         const handleSelect = eventKey => {
@@ -28,6 +29,13 @@ const ConnectionElement = ({connection, handleContact}) => {
             </Popover>
         );
     };
+
+    useEffect(() => {
+        if (contact) return;
+        const defaultContact = connection.contacts?.find(contact => contact.id === connection.contact_id);
+        if(!defaultContact) return;
+        setContact(defaultContact);
+    }, [])
 
     return (
         <div className="flex flex-col w-full">

@@ -1,6 +1,7 @@
 import { Container, Header, Content, Footer, Sidebar } from 'rsuite';
 
 import BaseHeader from './BaseHeader';
+import BaseFooter from './BaseFooter'
 
 const GuestComponent = ({ children }) => {
     return (
@@ -13,7 +14,7 @@ const GuestComponent = ({ children }) => {
                     { children }
                 </Content>
                 <Footer>
-                    <div className='w-full bg-black h-full'>haha</div>
+                    <BaseFooter/>
                 </Footer>
             </Container>
         </div>

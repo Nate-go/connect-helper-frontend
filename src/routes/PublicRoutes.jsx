@@ -1,10 +1,15 @@
 import { Login, SignUp, SignUpEmployee } from '@pages/authentication'
 import { About, Home, Contact } from '@/pages/guest'
+import { Navigate } from 'react-router-dom';
 
 const PublicRoutes = [
     {
         path: "/login",
         element: <Login />,
+    },
+    {
+        path: "/",
+        element: <Home/>,
     },
     {
         path: "/signup",
@@ -17,10 +22,6 @@ const PublicRoutes = [
     {
         path: '/About',
         element: <About/>
-    },
-    {
-        path: '/',
-        element: <Home />
     },
     {
         path: '/Contact',

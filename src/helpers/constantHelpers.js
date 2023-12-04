@@ -5,7 +5,7 @@ export const getConstantTitle = (constants, value) => {
             return convertToTitleCase(key);
         }
     }
-    return constants[0];
+    return convertToTitleCase(Object.keys(constants)[0]);
 };
 
 export const convertToTitleCase = (str) => {

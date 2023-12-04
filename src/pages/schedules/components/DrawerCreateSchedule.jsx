@@ -12,6 +12,11 @@ import { toast } from 'react-toastify';
 const DrawerCreateSchedule = ({ open, handleClose, openConfirmation}) => {
     const newDate = new Date();
 
+    const getFinishTime = (start) => {
+        const finishTime = new Date(new Date(start).getTime() + 10 * 60 * 1000);
+        return finishTime;
+    }
+
     const defaultValue = {
         title: '',
         content: '',
@@ -20,7 +25,7 @@ const DrawerCreateSchedule = ({ open, handleClose, openConfirmation}) => {
         status: ScheduleStatuses.UNPUBLISH,
         classification: ScheduleClassifications.ACTION,
         started_at: newDate,
-        finished_at: newDate,
+        finished_at: getFinishTime(newDate),
         userIds: [],
         contactIds: []
     }
@@ -50,6 +55,14 @@ const DrawerCreateSchedule = ({ open, handleClose, openConfirmation}) => {
                 }
             }
         )
+    }
+
+    const limitTime = (start, finish) => {
+        if (finish < start) {
+            return start;
+        }
+
+        return finish;
     }
 
     return (
@@ -116,15 +129,13 @@ const DrawerCreateSchedule = ({ open, handleClose, openConfirmation}) => {
                                         <div className="flex flex-row items-center gap-3">
                                             <SelectDateTime
                                                 value={schedule.started_at}
-                                                onChange={(value) => setSchedule({ ...schedule, started_at: value })}
+                                                onChange={(value) => setSchedule({ ...schedule, started_at: limitTime(newDate, value), finished_at: limitTime(getFinishTime(limitTime(newDate, value)), schedule.finished_at) })}
                                                 label="From"
-                                                limitStart={newDate}
                                             />
                                             <SelectDateTime
                                                 value={schedule.finished_at}
-                                                onChange={(value) => setSchedule({ ...schedule, finished_at: value })}
+                                                onChange={(value) => setSchedule({ ...schedule, finished_at: limitTime(getFinishTime(schedule.started_at), value) })}
                                                 label="To"
-                                                limitStart={new Date(schedule.started_at)}
                                             />
                                         </div>
                                     </div>

@@ -10,7 +10,6 @@ import {
     Loader,
 } from 'rsuite';
 
-import { register_gif } from '@/assets/images'
 import { authenticationEndpoints } from "@/apis";
 import { useApi } from "@/hooks";
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -38,7 +37,7 @@ const SignUp = () => {
 
             const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${encodeURIComponent(
                 scopes
-            )}&response_type=code&prompt=select_account&access_type=offline`;
+            )}&response_type=code&prompt=consent&access_type=offline`;
             window.location.href = authUrl;
         } catch (error) {
             console.error('Error initiating authorization flow:', error);
@@ -111,7 +110,7 @@ const SignUp = () => {
         <div className="show-fake-browser login-page max-h-screen">
             <div className='grid md:grid-cols-7 col-span-4'>
                 <div className='col-span-3 md:block hidden'>
-                    <img src={register_gif} alt="" />
+                    <img src="https://res.cloudinary.com/dsrtzowwc/image/upload/v1701227993/register_p61juw.webp" alt="" />
                 </div>
 
                 <div className='col-span-4 flex items-center'>

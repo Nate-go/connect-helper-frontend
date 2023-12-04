@@ -23,6 +23,7 @@ import { Contacts } from "@/pages/contacts";
 import UserConnection from "./UserConnection";
 import { HistoriesContact } from "@/pages/contacts/components";
 import { getAuthentication } from '@/helpers/authenHelpers';
+import { StatusSingleSelect } from "@/components/selects";
 
 const tabConstant = {
     CONTACTS : 0,
@@ -39,10 +40,6 @@ const DrawerEditConnection = ({
     connectionId,
 }) => {
     const [tags, setTags] = useState([]);
-    const statusData = Object.entries(ConnectionStatus).map(([label, value]) => ({
-        label,
-        value,
-    }));
     const [connection, setConnection] = useState({});
     const [tab, setTab] = useState(tabConstant.CONTACTS);
     const [fetchContacts, setFetchContacts] = useState(true);
@@ -78,7 +75,8 @@ const DrawerEditConnection = ({
                 name: connection.name,
                 note: connection.note,
                 status: connection.status,
-                ownerId: ownerId
+                ownerId: ownerId,
+                contact_id: connection.contact_id
             },
         });
         setFetchConnections(true);
@@ -134,7 +132,7 @@ const DrawerEditConnection = ({
 
     const tabs = () => {
         if(tab == tabConstant.CONTACTS) return (
-            <Contacts contacts={contactData?.contacts ?? []} isMember={isMember} setFetchContacts={setFetchContacts} openConfirmation={openConfirmation} contactLoading={contactLoading} connectionId={connectionId}/>
+            <Contacts contacts={contactData?.contacts ?? []} isMember={isMember} setFetchContacts={setFetchContacts} openConfirmation={openConfirmation} contactLoading={contactLoading} connection={connection} updateConnection={(value) => handleConnection({ contact_id: value })} />
         );
 
         if (tab == tabConstant.USERS) return (
@@ -152,7 +150,7 @@ const DrawerEditConnection = ({
             <Grid fluid>
                 <Row className="show-grid">
                     <Col xs={24} sm={24} md={6} className="sm:mb-4">
-                        <div className="flex flex-col gap-5 w-full h-full">
+                        <div className="flex flex-col gap-3 w-full h-full">
                             <Panel header="Connection" shaded className="w-full h-full">
                                 <div className="flex flex-col w-full h-full gap-4">
                                     <InputGroup>
@@ -175,10 +173,9 @@ const DrawerEditConnection = ({
                             </Panel>
                             <Panel header="Status" shaded className="w-full h-full">
                                 <div className="flex flex-col w-full h-full gap-4">
-                                    <InputPicker
+                                    <StatusSingleSelect
                                         readOnly={!isOwner()}
                                         value={connection.status}
-                                        data={statusData}
                                         onChange={(value) => handleConnection({ status: value })}
                                     />
                                     <hr />
@@ -207,7 +204,12 @@ const DrawerEditConnection = ({
                                     <Nav.Item active={(tab == tabConstant.USERS)} onClick={() => setTab(tabConstant.USERS)}>Users</Nav.Item>
                                     <Nav.Item active={(tab == tabConstant.HISTORIES)} onClick={() => setTab(tabConstant.HISTORIES)}>Histories</Nav.Item>
                                 </Nav>
-                                {tabs()}
+                                <AutoLoader
+                                    display={!connectionLoading}
+                                    component={
+                                        connection && tabs()
+                                    }
+                                />
                             </Panel>
                         </div>
                     </Col>

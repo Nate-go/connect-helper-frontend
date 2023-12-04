@@ -66,6 +66,7 @@ const InviteEmployee = ({ open, handleClose }) => {
                             onCreate={(value, item) => {
                                 handleInputMail(value)
                             }}
+                            value={emails}
                             onClean={() => setEmails([])}
                             onTagRemove={(value, event) => removeEmail(value)}
                         />

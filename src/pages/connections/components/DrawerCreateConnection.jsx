@@ -96,11 +96,11 @@ const DrawerCreateConnection = ({ open, handleClose, openConfirmation, tagData, 
                                         </InputGroup>
                                     </div>
                                 </Panel>
-                                <Panel header='Create via csv file' shaded className='w-full h-full'>
+                                {/* <Panel header='Create via csv file' shaded className='w-full h-full'>
                                     <div className='flex flex-col w-full h-full gap-4'>
                                         
                                     </div>
-                                </Panel>
+                                </Panel> */}
                             </div>
                         </Col>
                     </Row>

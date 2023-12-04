@@ -4,15 +4,16 @@ import { useState } from 'react';
 import { TrashIcon, TbStatusChange, PlusIcon} from '@/components/icons';
 import { useApi } from '@/hooks';
 import { templateGroupEndpoints } from '@/apis';
-import { ConnectionStatus } from '@/constants';
+import { AccessStatus } from '@/constants';
 import { AutoLoader } from '@/components';
+import { StatusSingleSelect } from '@/components/selects';
 
 const CreateTemplateGroup = ({open, handleClose}) => {
 
     const {callApi, loading} = useApi();
     const [templateGroup, setTemplateGroup] = useState({
         name: '',
-        status: ConnectionStatus.Private
+        status: AccessStatus.Private
     })
 
     const create = () => {
@@ -33,14 +34,10 @@ const CreateTemplateGroup = ({open, handleClose}) => {
                 <Modal.Title>Create template group</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div className='flex flex-col gap-5'>
+                <div className='flex flex-col gap-3'>
                     <Input value={templateGroup.name} onChange={(value) => setTemplateGroup((prevTemplateGroup) => ({ ...prevTemplateGroup, ...{ name: value } }))} placeholder="Group's name" />
-                    <InputPicker
+                    <StatusSingleSelect
                         value={templateGroup.status}
-                        data={Object.entries(ConnectionStatus).map(([label, value]) => ({
-                            label,
-                            value,
-                        }))}
                         onChange={(value) => setTemplateGroup((prevTemplateGroup) => ({ ...prevTemplateGroup, ...{ status: value } }))}
                     />
                 </div>

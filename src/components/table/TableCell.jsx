@@ -4,7 +4,11 @@ import {
     TagGroup,
     Tag,
     Checkbox,
-    SelectPicker 
+    SelectPicker,
+    Avatar,
+    AvatarGroup,
+    Whisper,
+    Tooltip 
 } from 'rsuite';
 import React from 'react';
 
@@ -12,6 +16,7 @@ import { getDataTimeFormat } from '@/helpers/dateTimeHelpers';
 import { getConstantTitle } from '@/helpers/constantHelpers';
 import { TrashIcon, EditIcon } from '@/components/icons';
 import { useState } from 'react';
+import { data } from 'browserslist';
 
 const { Cell } = Table;
 
@@ -89,7 +94,7 @@ export const ConstantCell = ({ rowData, dataKey, constant, colors, ...props }) =
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
                 <TagGroup>
-                    <Tag color={colors[rowData[dataKey]]} key={rowData['id']} size="md">{getConstantTitle(constant, rowData[dataKey])}</Tag>
+                    <Tag color={colors[rowData[dataKey] ?? 0]} key={rowData['id']} size="md">{getConstantTitle(constant, rowData[dataKey])}</Tag>
                 </TagGroup>
             </div>
         </Cell>
@@ -132,14 +137,86 @@ export const DateTimeCell = ({ rowData, dataKey, ...props }) => {
     );
 }
 
-export const ActionCell = ({ rowData, dataKey, onEdit, onDelete, ...props }) => {
+export const UserCell = ({ rowData, dataKeys, images, ...props }) => {
+    let image = rowData;
+    let name = rowData;
+
+    images.forEach(element => {
+        image = image[element];
+    });
+
+    dataKeys.forEach(element => {
+        name = name[element];
+    });
+
+    return (
+        <Cell {...props}>
+            <div className="flex flex-row items-center gap-3 w-full h-full">
+                <Avatar
+                    size="md"
+                    circle
+                    src={image}
+                />
+                <p className='text-base'>{name}</p>
+            </div>
+        </Cell>
+
+    );
+}
+
+export const ImagesCell = ({ rowData, dataKeys, ...props }) => {
+    let users = rowData;
+    const max = 7;
+    dataKeys.forEach(element => {
+        users = users[element];
+    });
+
+    return (
+        <Cell {...props}>
+            <div className="flex flex-row items-center gap-3 w-full h-full">
+                <AvatarGroup stack>
+                    {users
+                        .filter((user, i) => i < max)
+                        .map(user => (
+                            <Whisper key={user.id}
+                                trigger="hover"
+                                placement="topStart"
+                                speaker={
+                                    <Tooltip>{user.name}</Tooltip>
+                                }
+                            >
+                                <Avatar size="sm" circle src={user.image_url} alt={user.name} />
+                            </Whisper>
+                        ))}
+                    {
+                        users.length - max > 0 &&
+                        <Avatar circle size="sm" className='bg-black'>
+                            +{users.length - max}
+                        </Avatar>
+                    }
+
+                </AvatarGroup>
+            </div>
+            
+        </Cell>
+
+    );
+}
+
+export const ActionCell = ({ rowData, dataKey, onEdit=(value) => {}, onDelete=(value) => {}, elements={edit:true, delete:true},  ...props }) => {
     return (
         <Cell {...props}>
             <div className='flex flex-row justify-center w-full h-full'>
-                <Button appearance="link" onClick={() => onEdit(rowData)} startIcon={<EditIcon/>} className='hover:text-lg hover:text-blue-700'>
-                </Button>
-                <Button appearance="link" onClick={() => onDelete(rowData)} startIcon={<TrashIcon />} className='hover:text-lg hover:text-red-600'>
-                </Button>
+                {
+                    elements.edit && 
+                    <Button appearance="link" onClick={() => onEdit(rowData)} startIcon={<EditIcon />} className='hover:text-lg hover:text-blue-700'>
+                    </Button>
+                }
+                {
+                    elements.delete &&
+                    <Button appearance="link" onClick={() => onDelete(rowData)} startIcon={<TrashIcon />} className='hover:text-lg hover:text-red-600'>
+                    </Button>
+                }
             </div>
         </Cell>
 
