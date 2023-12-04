@@ -10,12 +10,20 @@ import { sendMailEndpoints } from "@/apis";
 import { getIds } from '@/helpers/dataHelpers'
 import MailType from "./MailType";
 import { MailTemplateSelect, SelectContact } from "@/components/selects";
+import ModalScheduleMail from "./ModalScheduleMail";
+import { ScheduleMailAfter } from "@/constants";
 
 const SendMail = ({openConfirmation}) => {
     const { loading: sendMailLoading, callApi: handleSendMail } = useApi();
 
     const { SunEditorComponent, saveContent, loading:saveContentLoading, setContent } = MailContentEdit();
     const [contacts, setContacts] = useState([]);
+    const [openSchedule, setOpenSchedule] = useState(false);
+    const [scheduleMail, setScheduleMail] = useState({
+        started_at: new Date(),
+        number: 1,
+        after:  ScheduleMailAfter.WEEK
+    });
 
     const defaultMailTemplate = {
         subject: '',
@@ -29,11 +37,11 @@ const SendMail = ({openConfirmation}) => {
         setMailData((prevMailData) => ({ ...prevMailData, ...data }));
     }
 
-    const confirmSendMail = async () => {
-        openConfirmation(sendMail, [], 'Are you sure to send this mail ?');
+    const confirmSendMail = async (isSchedule=false) => {
+        openConfirmation(sendMail, [isSchedule], 'Are you sure to send this mail ?');
     }
 
-    const sendMail = async () => {
+    const sendMail = async (isSchedule) => {
         const modifiedContent = await saveContent();
 
         handleSendMail(sendMailEndpoints.sendMail,{
@@ -43,7 +51,11 @@ const SendMail = ({openConfirmation}) => {
                 title: mailData.subject,
                 type: mailData.type,
                 content: modifiedContent,
-                contactIds : getIds(contacts)
+                contactIds : getIds(contacts),
+                schedule: isSchedule ? {
+                    started_at: scheduleMail.started_at,
+                    after_second: scheduleMail.number * scheduleMail.after
+                } : null
             }
         });
     }
@@ -94,9 +106,18 @@ const SendMail = ({openConfirmation}) => {
                     </div>
 
                     {SunEditorComponent}
-
-                    <div className="flex flex-row gap-4 justify-end pb-5">
+                    {openSchedule && <ModalScheduleMail
+                        open={openSchedule}
+                        handleClose={() => setOpenSchedule(false)}
+                        schedule={scheduleMail}
+                        setSchedule={setScheduleMail}
+                        onClick={() => confirmSendMail(true)}
+                    />}
+                    <div className="flex flex-row gap-2 justify-end pb-2">
                         <Button onClick={() => setContent('')} className="bg-gray-200">Cancel</Button>
+                        <Button color="orange" className='bg-orange-500' appearance="primary" onClick={() => setOpenSchedule(true)}>
+                            Schedule mail
+                        </Button>
                         <AutoLoader
                             display={!(saveContentLoading || sendMailLoading)}
                             component={

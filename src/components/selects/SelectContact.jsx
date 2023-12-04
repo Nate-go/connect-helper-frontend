@@ -64,9 +64,6 @@ const SelectContact = ({contacts, setContacts}) => {
         const connectionIds = filteredTags.flatMap((tag) => tag.connections.map((connection) => connection.id));
         return connectionIds;
     }
-
-    console.log(contacts);
-
     return (
         <div className="w-full h-full flex flex-col gap-4" >
             <div className="grid grid-cols-4 gap-2">
