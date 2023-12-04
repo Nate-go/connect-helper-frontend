@@ -9,7 +9,7 @@ const PopupConfirm = ({ handleConfirm, handleCancel, message, open, setValue, da
             case ConfirmType.MULTI_SELECTION:
                 return (
                     <>
-                        <CheckPicker label="Tags" data={data} className='w-full' onChange={(value) => setValue(value)} />
+                        <CheckPicker label="Tags" data={data()} className='w-full' onChange={(value) => setValue(value)} />
                     </>
                 );
             case ConfirmType.ONE_SELECTION:

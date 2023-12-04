@@ -18,14 +18,29 @@ const SelectContact = ({contacts, setContacts}) => {
         handleGetTag(tagEndpoints.get, {});
     }, []);
 
-    const handleContact = (contact) => {
-        setContacts([...contacts, contact]);
+    const handleContact = (newContact) => {
+        const filteredContacts = contacts.filter(contact => contact.connection_id !== newContact.connection_id);
+        console.log('haha', filteredContacts);
+        setContacts([...filteredContacts, newContact]);
     }
 
     const handleConnection = (items) => {
-        setContacts(contacts.filter((contact) => {
+        const newConnectionIds = items.filter((item) => !connections.includes(item));
+        const newConnections = data?.filter((connection) => {
+            return newConnectionIds.includes(connection.id);
+        })
+        const defaultContacts = newConnections.map(connection => {
+            if (connection.contact_id != null) {
+                return connection.contacts?.find(contact => contact.id === connection.contact_id);
+            }
+            return null;
+        }).filter(contact => contact !== null);
+        const nonDefaultContacts = contacts.filter(contact => !defaultContacts.some(defaultContact => defaultContact.connection_id === contact.connection_id));
+        const newContacts = [...nonDefaultContacts, ...defaultContacts];
+        setContacts(newContacts.filter((contact) => {
             return items.includes(contact.connection_id);
         }));
+
         setConnections(items);
     }
 
@@ -40,7 +55,8 @@ const SelectContact = ({contacts, setContacts}) => {
         setTags(items);
         const connectionIds = getConnectionFromTags(items);
         const deleteConnectionIds = getConnectionFromTags(deleteIds);
-        setConnections(Array.from(new Set([...connections, ...connectionIds])).filter((item) => !deleteConnectionIds.includes(item)));
+        const newConnections = Array.from(new Set([...connections, ...connectionIds])).filter((item) => !deleteConnectionIds.includes(item))
+        handleConnection(newConnections);
     }
 
     const getConnectionFromTags = (tagIds) => {
@@ -48,6 +64,8 @@ const SelectContact = ({contacts, setContacts}) => {
         const connectionIds = filteredTags.flatMap((tag) => tag.connections.map((connection) => connection.id));
         return connectionIds;
     }
+
+    console.log(contacts);
 
     return (
         <div className="w-full h-full flex flex-col gap-4" >

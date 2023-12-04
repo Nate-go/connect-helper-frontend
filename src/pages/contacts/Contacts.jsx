@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Divider, InputGroup, Input, Panel } from "rsuite";
 import { ContactType } from "@/constants";
-import { EditIcon, CheckIcon, CloseIcon, TrashIcon } from "@/components/icons";
+import { EditIcon, CheckIcon, CloseIcon, TrashIcon, FaCrown } from "@/components/icons";
 import { getConstantTitle } from "@/helpers/constantHelpers";
 import { CreateContact } from "./components";
 import { contactEndpoints } from "@/apis";
 import { useApi } from '@/hooks';
 import { BaseLoader } from '@/components'
 
-const Contacts = ({ contacts, openConfirmation, setFetchContacts, contactLoading, connectionId, isMember }) => {
+const Contacts = ({ contacts, openConfirmation, setFetchContacts, contactLoading, connection, isMember, updateConnection }) => {
     let contactsByType = {
         [ContactType.MAIL]: [],
         [ContactType.PHONENUMBER]: [],
@@ -96,7 +96,7 @@ const Contacts = ({ contacts, openConfirmation, setFetchContacts, contactLoading
                                             </InputGroup.Button>
                                         </InputGroup>
                                     ) : (
-                                        <InputGroup key={contact.id} className="mt-3">
+                                            <InputGroup key={contact.id} className="mt-3">
                                             <InputGroup.Addon>Title</InputGroup.Addon>
                                             <Input value={contact.title} readOnly />
                                             <InputGroup.Addon>Content</InputGroup.Addon>
@@ -109,6 +109,12 @@ const Contacts = ({ contacts, openConfirmation, setFetchContacts, contactLoading
                                                     <InputGroup.Button className='hover:bg-red-500 text-red-500 hover:text-white' onClick={() => confirmDeleteContact(contact.id)}>
                                                         <TrashIcon />
                                                     </InputGroup.Button>
+                                                    {
+                                                        contact.id !== connection.contact_id &&
+                                                        <InputGroup.Button className='hover:bg-yellow-500 text-yellow-500 hover:text-white' onClick={() => updateConnection(contact.id)}>
+                                                            <FaCrown />
+                                                        </InputGroup.Button>
+                                                    }
                                                 </>
                                             }
                                         </InputGroup>
@@ -125,7 +131,7 @@ const Contacts = ({ contacts, openConfirmation, setFetchContacts, contactLoading
 
     return (
         <div className="flex flex-col w-full h-full gap-4">
-            {isMember() && <CreateContact connectionId={connectionId} setFetchContacts={setFetchContacts} />}
+            {isMember() && <CreateContact connectionId={connection?.id} setFetchContacts={setFetchContacts} />}
             {body()}
         </div>
     );

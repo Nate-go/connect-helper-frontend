@@ -16,6 +16,18 @@ import { toast } from 'react-toastify';
 
 const DrawerEditSchedule = ({ open, handleClose, openConfirmation, id}) => {
     const newDate = new Date();
+    const getFinishTime = (start) => {
+        const finishTime = new Date(new Date(start).getTime() + 10 * 60 * 1000);
+        return finishTime;
+    }
+
+    const limitTime = (start, finish) => {
+        if (finish < start) {
+            return start;
+        }
+
+        return finish;
+    }
 
     const [schedule, setSchedule] = useState(null);
     const [contacts, setContacts] = useState([]);
@@ -193,7 +205,7 @@ const DrawerEditSchedule = ({ open, handleClose, openConfirmation, id}) => {
                         </InputGroup>
                         <InputGroup>
                             <InputGroup.Addon>Content</InputGroup.Addon>
-                            <Input as="textarea" readOnly={!editable()} rows={2} value={schedule.content} onChange={(value) => setSchedule({ ...schedule, content: value })} />
+                            <Input as="textarea" readOnly={!editable()} rows={2} value={schedule.content ?? ''} onChange={(value) => setSchedule({ ...schedule, content: value })} />
                         </InputGroup>
                         <SingleSelect
                             data={getConstantData(ScheduleTypes)}
@@ -209,16 +221,14 @@ const DrawerEditSchedule = ({ open, handleClose, openConfirmation, id}) => {
                         <div className="flex flex-row items-center gap-3">
                             <SelectDateTime
                                 value={schedule.started_at}
-                                onChange={(value) => setSchedule({ ...schedule, started_at: value })}
+                                onChange={(value) => setSchedule({ ...schedule, started_at: limitTime(newDate, value), finished_at: limitTime(getFinishTime(limitTime(newDate, value)), schedule.finished_at) })}
                                 label="From"
-                                limitStart={newDate}
                                 readOnly={!editable()}
                             />
                             <SelectDateTime
                                 value={schedule.finished_at}
-                                onChange={(value) => setSchedule({ ...schedule, finished_at: value })}
+                                onChange={(value) => setSchedule({ ...schedule, finished_at: limitTime(getFinishTime(schedule.started_at), value) })}
                                 label="To"
-                                limitStart={schedule.started_at}
                                 readOnly={!editable()}
                             />
                         </div>
