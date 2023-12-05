@@ -15,7 +15,7 @@ const PopupConfirm = ({ handleConfirm, handleCancel, message, open, setValue, da
             case ConfirmType.ONE_SELECTION:
                 return (
                     <>
-                        <InputPicker data={data} className='w-full' onChange={(value) => setValue(value)} />
+                        <InputPicker data={data()} className='w-full' onChange={(value) => setValue(value)} />
                     </>
                 );
             default:

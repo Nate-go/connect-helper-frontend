@@ -246,6 +246,7 @@ const Connection = () => {
                                 openConfirmation={openConfirmation}
                                 tagData={tagData}
                                 setFetchTag={setFetchTag}
+                                setFetchData={setFetchConnection}
                             />
                             <AutoLoader
                                 display={connectionData?.data}

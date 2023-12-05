@@ -115,13 +115,18 @@ const SendMail = ({openConfirmation}) => {
                     />}
                     <div className="flex flex-row gap-2 justify-end pb-2">
                         <Button onClick={() => setContent('')} className="bg-gray-200">Cancel</Button>
-                        <Button color="orange" className='bg-orange-500' appearance="primary" onClick={() => setOpenSchedule(true)}>
-                            Schedule mail
-                        </Button>
                         <AutoLoader
                             display={!(saveContentLoading || sendMailLoading)}
                             component={
-                                <Button color="blue" className='bg-blue-600' appearance="primary" startIcon={<SentToUserIcon />} onClick={confirmSendMail}>
+                                <Button color="orange" className='bg-orange-500' appearance="primary" onClick={() => setOpenSchedule(true)}>
+                                    Schedule mail
+                                </Button>
+                            }
+                        />
+                        <AutoLoader
+                            display={!(saveContentLoading || sendMailLoading)}
+                            component={
+                                <Button color="blue" className='bg-blue-600' appearance="primary" startIcon={<SentToUserIcon />} onClick={() => confirmSendMail()}>
                                     Send mail
                                 </Button>
                             }

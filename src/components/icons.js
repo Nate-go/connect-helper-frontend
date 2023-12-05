@@ -40,6 +40,7 @@ import SearchIcon from '@rsuite/icons/Search';
 import TreemapIcon from '@rsuite/icons/Treemap';
 import CalendarIcon from '@rsuite/icons/Calendar';
 import ModelIcon from '@rsuite/icons/Model';
+import EmailIcon from '@rsuite/icons/Email';
 
 export {
     CogIcon,
@@ -87,5 +88,6 @@ export {
     SearchIcon,
     TreemapIcon,
     CalendarIcon,
-    ModelIcon
+    ModelIcon,
+    EmailIcon
 };

@@ -9,7 +9,7 @@ export const getIds = (data) => {
 export const fillNullValues = (data, fillValue) => {
     if (Array.isArray(data)) {
         return data.map(item => fillNullValues(item, fillValue));
-    } else if (data !== null && typeof data === 'object') {
+    } else if (data !== null && typeof(data) === 'object') {
         return Object.fromEntries(
             Object.entries(data).map(([key, value]) => [key, fillNullValues(value, fillValue)])
         );

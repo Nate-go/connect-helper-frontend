@@ -7,12 +7,12 @@ import {
     AngleRightIcon,
     DashboardIcon,
     GroupIcon,
-    AppSelectIcon,
     HelpOutlineIcon,
     PeopleBranchIcon,
     TreemapIcon,
     CalendarIcon,
-    ModelIcon
+    ModelIcon,
+    EmailIcon
 } from '@/components/icons.js';
 
 import { logo_image } from '@/assets/images'
@@ -101,6 +101,9 @@ const BaseBody = ({ children }) => {
                                     <>
                                         <Nav.Item className={itemStyle('/connections')} eventKey="/connections" onClick={() => handleNavigate('/connections')} active={activeKey('/connections')} icon={<PeopleBranchIcon />}>
                                             Connections
+                                        </Nav.Item>
+                                        <Nav.Item className={itemStyle('/email-schedules')} eventKey="/email-schedules" onClick={() => handleNavigate('/email-schedules')} active={activeKey('/email-schedules')} icon={<EmailIcon />}>
+                                            Email Schedules
                                         </Nav.Item>
                                         <Nav.Item className={itemStyle('/mail-templates')} eventKey="/mail-templates" onClick={() => handleNavigate('/mail-templates')} active={activeKey('/mail-templates')} icon={<TreemapIcon />}>
                                             Mail templates

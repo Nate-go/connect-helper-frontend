@@ -1,18 +1,18 @@
 import { Grid, Row, Col, Panel, Button, ButtonToolbar, useToaster } from 'rsuite';
 import { useState, useEffect } from 'react';
 
-import { GroupTemplateTable } from '@components/table';
-import { templateGroupEndpoints } from '@/apis'
+import { EmailScheduleTable } from '@components/table';
+import { emailScheduleEndpoints } from '@/apis'
 import PaginationDefault from '@/constants/PaginationDefault';
 import { BasePagination, AutoLoader } from '@/components';
 import { getIds } from '@/helpers/dataHelpers';
 import { useConfirmation, useApi } from '@/hooks';
 import { PopupConfirm } from '@/components/popups';
-import { ConfirmType, AccessStatus } from '@/constants';
-import { TemplateGroupToolbar, DrawerEditTemplateGroup } from './components';
+import { ConfirmType, ScheduleMailStatus } from '@/constants';
+import { EmailScheduleToolbar, DrawerEditEmailSchedule } from './components';
 import { getAuthentication } from '@/helpers/authenHelpers';
 
-const TemplateGroup = () => {
+const EmailSchedule = () => {
     const {
         isConfirmationOpen,
         openConfirmation,
@@ -34,49 +34,49 @@ const TemplateGroup = () => {
         statuses: []
     });
 
-    const [fetchTemplateGroup, setFetchTemplateGroup] = useState(true);
+    const [fetchEmailSchedule, setFetchEmailSchedule] = useState(true);
     const [checkedKeys, setCheckedKeys] = useState([]);
-    const [editTemplateGroup, setEditTemplateGroup] = useState({
+    const [editEmailSchedule, setEditEmailSchedule] = useState({
         open: false,
         item: null,
     })
 
-    const { data: templateGroupData, callApi: handleGetTemplateGroups, loading: templateGroupLoading } = useApi();
-    const { callApi: handleDeleteTemplateGroups, loading: deleteTemplateGroupLoading } = useApi();
-    const { callApi: handleUpdateTemplateGroups } = useApi();
+    const { data: emailScheduleData, callApi: handleGetEmailSchedules, loading: emailScheduleLoading } = useApi();
+    const { callApi: handleDeleteEmailSchedules, loading: deleteEmailScheduleLoading } = useApi();
+    const { callApi: handleUpdateEmailSchedules } = useApi();
 
     useEffect(() => {
-        if (!fetchTemplateGroup) return;
-        handleGetTemplateGroups(templateGroupEndpoints.get, {
+        if (!fetchEmailSchedule) return;
+        handleGetEmailSchedules(emailScheduleEndpoints.get, {
             params: {
                 ...pagination,
             }
         })
-        setFetchTemplateGroup(false);
+        setFetchEmailSchedule(false);
         setCheckedKeys([]);
-    }, [fetchTemplateGroup]);
+    }, [fetchEmailSchedule]);
 
     const handlePagination = (data) => {
         setPagination((prevPagination) => ({ ...prevPagination, ...data }));
-        setFetchTemplateGroup(true);
+        setFetchEmailSchedule(true);
     };
 
-    const deleteTemplateGroups = async (ids) => {
-        await handleDeleteTemplateGroups(
-            templateGroupEndpoints.delete,
+    const deleteEmailSchedules = async (ids) => {
+        await handleDeleteEmailSchedules(
+            emailScheduleEndpoints.delete,
             {
                 method: 'DELETE',
                 data: { ids }
             }
         );
 
-        setFetchTemplateGroup(true);
+        setFetchEmailSchedule(true);
     };
 
 
-    const updateTemplateGroups = async (updateData, ids) => {
-        await handleUpdateTemplateGroups(
-            templateGroupEndpoints.update,
+    const updateEmailSchedules = async (updateData, ids) => {
+        await handleUpdateEmailSchedules(
+            emailScheduleEndpoints.update,
             {
                 "method": "PUT",
                 data: {
@@ -86,15 +86,15 @@ const TemplateGroup = () => {
             }
         );
 
-        setFetchTemplateGroup(true);
+        setFetchEmailSchedule(true);
     }
 
-    const confirmDeleteTemplateGroup = (rowData) => {
-        openConfirmation(deleteTemplateGroups, [[rowData.id]], 'Are you sure to delete this template group ?');
+    const confirmDeleteEmailSchedule = (rowData) => {
+        openConfirmation(deleteEmailSchedules, [[rowData.id]], 'Are you sure to delete this template group ?');
     }
 
     const onEdit = (rowData) => {
-        setEditTemplateGroup({
+        setEditEmailSchedule({
             open: true,
             item: {
                 ...rowData
@@ -104,16 +104,16 @@ const TemplateGroup = () => {
 
     const confirmChangeStatus = () => {
         openConfirmation(
-            updateTemplateGroups,
+            updateEmailSchedules,
             [{ 'status': confirmValue }, getIds(checkedKeys)],
             'Select status to finish action change status',
-            Object.entries(AccessStatus).map(([label, value]) => ({ label, value })),
+            Object.entries(ScheduleMailStatus).map(([label, value]) => ({ label, value })),
             ConfirmType.ONE_SELECTION
         );
     }
 
-    const confirmDeleteTemplateGroups = () => {
-        openConfirmation(deleteTemplateGroups, [getIds(checkedKeys)], 'Are you sure to delete ' + checkedKeys.length + ' selected connection ?');
+    const confirmDeleteEmailSchedules = () => {
+        openConfirmation(deleteEmailSchedules, [getIds(checkedKeys)], 'Are you sure to delete ' + checkedKeys.length + ' selected connection ?');
     }
 
     return (
@@ -127,31 +127,31 @@ const TemplateGroup = () => {
                 setValue={setConfirmValue}
                 open={isConfirmationOpen}
             />
-            {editTemplateGroup.item &&
-                <DrawerEditTemplateGroup
-                    open={editTemplateGroup.open}
+            {editEmailSchedule.item &&
+                <DrawerEditEmailSchedule
+                    open={editEmailSchedule.open}
                     handleClose={() => { 
-                        setEditTemplateGroup({ open: false, item: null });
-                        setFetchTemplateGroup(true);
+                        setEditEmailSchedule({ open: false, item: null });
+                        setFetchEmailSchedule(true);
                     }}
                     openConfirmation={openConfirmation}
-                    templateGroupItem={editTemplateGroup.item}
+                    emailScheduleItem={editEmailSchedule.item}
                 />
             }
             <Panel header='Template groups' shaded className='w-full h-full'>
-                <TemplateGroupToolbar
+                <EmailScheduleToolbar
                     checkedKeys={checkedKeys}
-                    deleteTemplateGroups={confirmDeleteTemplateGroups}
+                    deleteEmailSchedules={confirmDeleteEmailSchedules}
                     changeStatus={confirmChangeStatus}
                     openConfirmation={openConfirmation}
-                    setFetch={setFetchTemplateGroup}
+                    setFetch={setFetchEmailSchedule}
                 />
                 <AutoLoader
-                    display={templateGroupData?.data}
+                    display={emailScheduleData?.data}
                     component={
                         <>
-                            <GroupTemplateTable items={templateGroupData?.data?.items} dataLoading={(templateGroupLoading || deleteTemplateGroupLoading )} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteTemplateGroup} onEdit={onEdit} />
-                            <BasePagination pagination={templateGroupData?.data?.pagination} handlePagination={handlePagination} />
+                            <EmailScheduleTable items={emailScheduleData?.data?.items} dataLoading={(emailScheduleLoading || deleteEmailScheduleLoading )} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteEmailSchedule} onEdit={onEdit} />
+                            <BasePagination pagination={emailScheduleData?.data?.pagination} handlePagination={handlePagination} />
                         </>
                     }
                 />
@@ -160,4 +160,4 @@ const TemplateGroup = () => {
     );
 };
 
-export default TemplateGroup
+export default EmailSchedule

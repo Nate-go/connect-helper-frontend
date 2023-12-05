@@ -4,7 +4,6 @@ import { ScheduleMailAfter } from "@/constants";
 import { getConstantData } from '@/helpers/constantHelpers'
 
 const ModalScheduleMail = ({open, handleClose, schedule, setSchedule, onClick}) => {
-    const newDate = new Date();
     const limitTime = (start, finish) => {
         if (finish < start) {
             return start;
@@ -21,7 +20,7 @@ const ModalScheduleMail = ({open, handleClose, schedule, setSchedule, onClick}) 
                 <div className="flex flex-col gap-3 items-center">
                     <SelectDateTime
                         value={schedule.started_at}
-                        onChange={(value) => setSchedule({ ...schedule, started_at: limitTime(newDate, value) })}
+                        onChange={(value) => setSchedule({ ...schedule, started_at: limitTime(new Date(), value) })}
                         label="Start"
                         placement='bottomStart'
                     />

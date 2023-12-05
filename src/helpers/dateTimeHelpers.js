@@ -1,6 +1,6 @@
 export const getDataTimeFormat = (dateTime) => {
     if(!dateTime) return '';
-    const dateObject = new Date(dateTime);
+    const dateObject = getDateTimeZone(dateTime);
     const formattedDateTime = `${dateObject.getMonth() + 1}/${dateObject.getDate()}/${dateObject.getFullYear()} ${dateObject.getHours()}:${String(dateObject.getMinutes()).padStart(2, '0')}:${String(dateObject.getSeconds()).padStart(2, '0')}`;
     return formattedDateTime;
 };
@@ -17,3 +17,4 @@ export const getDateTimeZone = (dateString) => {
     const timeZoneDate = new Date(utcDate.getTime() + (offset * 60 * 1000));
     return timeZoneDate;
 }
+
