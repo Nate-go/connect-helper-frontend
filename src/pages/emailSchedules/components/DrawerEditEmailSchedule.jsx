@@ -13,7 +13,7 @@ import { StatusSingleSelect, TemplateGenerator } from "@/components/selects";
 import SunEditor from 'suneditor-react';
 import { getConstantTitle } from "@/helpers/constantHelpers";
 
-const DrawerEditTemplateGroup = ({open, handleClose, openConfirmation, templateGroupItem}) => {
+const DrawerEditEmailSchedule = ({open, handleClose, openConfirmation, templateGroupItem}) => {
     const { SunEditorComponent, saveContent, loading: saveContentLoading, setContent } = MailContentEdit();
     const { generateTemplate, loadingGenerate } = TemplateGenerator();
 
@@ -318,4 +318,4 @@ const DrawerEditTemplateGroup = ({open, handleClose, openConfirmation, templateG
         </Drawer>
     );
 }
-export default DrawerEditTemplateGroup
+export default DrawerEditEmailSchedule
